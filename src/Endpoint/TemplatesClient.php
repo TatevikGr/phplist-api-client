@@ -6,7 +6,6 @@ namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
 use PhpList\RestApiClient\Exception\ApiException;
-use PhpList\RestApiClient\Exception\AuthenticationException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Exception\ValidationException;
 
