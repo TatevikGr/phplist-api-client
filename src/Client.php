@@ -53,13 +53,13 @@ class Client
     ) {
         $this->baseUrl = rtrim($baseUrl, '/');
         $this->logger = $logger ?? new NullLogger();
-        
+
         $defaultConfig = [
             'base_uri' => $this->baseUrl,
             'timeout' => 30,
             'http_errors' => false,
         ];
-        
+
         $this->httpClient = new GuzzleClient(array_merge($defaultConfig, $config));
     }
 
@@ -75,24 +75,24 @@ class Client
     public function login(string $username, string $password): array
     {
         $this->logger->info('Authenticating with the API', ['username' => $username]);
-        
+
         try {
-            $response = $this->httpClient->post("/api/v2/sessions", [
+            $response = $this->httpClient->post("sessions", [
                 'json' => [
                     'username' => $username,
                     'password' => $password,
                 ],
             ]);
-            
+
             $data = $this->handleResponse($response);
-            
+
             if (isset($data['key'])) {
                 $this->sessionId = $data['key'];
                 $this->logger->info('Successfully authenticated with the API');
             } else {
                 throw new AuthenticationException('Session ID not found in response');
             }
-            
+
             return $data;
         } catch (GuzzleException $e) {
             $this->logger->error('Authentication failed', ['error' => $e->getMessage()]);
@@ -120,18 +120,6 @@ class Client
     public function getSessionId(): ?string
     {
         return $this->sessionId;
-    }
-
-    /**
-     * Set the API version.
-     *
-     * @param string $version The API version
-     * @return self
-     */
-    public function setApiVersion(string $version): self
-    {
-        $this->apiVersion = $version;
-        return $this;
     }
 
     /**
@@ -198,19 +186,19 @@ class Client
     {
         $endpoint = ltrim($endpoint, '/');
         $url = "/api/v2/{$endpoint}";
-        
+
         // Add session ID to headers if available
         if ($this->sessionId) {
             $options['headers'] = $options['headers'] ?? [];
             $options['headers']['session'] = $this->sessionId;
         }
-        
+
         $this->logger->info('Making API request', [
             'method' => $method,
             'url' => $url,
             'options' => $options,
         ]);
-        
+
         try {
             $response = $this->httpClient->request($method, $url, $options);
             return $this->handleResponse($response);
@@ -235,17 +223,16 @@ class Client
         $statusCode = $response->getStatusCode();
         $body = (string) $response->getBody();
         $data = json_decode($body, true) ?? [];
-        
+
         $this->logger->debug('API response received', [
             'status_code' => $statusCode,
             'body' => $body,
         ]);
-        
+
         if ($statusCode >= 200 && $statusCode < 300) {
             return $data;
         }
-        
-        // Handle different error types based on status code
+
         switch ($statusCode) {
             case 401:
             case 403:

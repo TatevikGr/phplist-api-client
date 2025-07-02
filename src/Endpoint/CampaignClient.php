@@ -8,6 +8,8 @@ use PhpList\RestApiClient\Client;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Exception\ValidationException;
+use PhpList\RestApiClient\Request\Campaign\CreateCampaignRequest;
+use PhpList\RestApiClient\Request\Campaign\UpdateCampaignRequest;
 
 /**
  * Client for campaign-related API endpoints.
@@ -40,11 +42,11 @@ class CampaignClient
     public function getCampaigns(?int $afterId = null, int $limit = 25): array
     {
         $queryParams = ['limit' => $limit];
-        
+
         if ($afterId !== null) {
             $queryParams['after_id'] = $afterId;
         }
-        
+
         return $this->client->get('campaigns', $queryParams);
     }
 
@@ -64,29 +66,29 @@ class CampaignClient
     /**
      * Create a new campaign.
      *
-     * @param array $data The campaign data
+     * @param CreateCampaignRequest $request The campaign data
      * @return array The created campaign
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function createCampaign(array $data): array
+    public function createCampaign(CreateCampaignRequest $request): array
     {
-        return $this->client->post('campaigns', $data);
+        return $this->client->post('campaigns', $request->toArray());
     }
 
     /**
      * Update a campaign.
      *
      * @param int $id The campaign ID
-     * @param array $data The campaign data
+     * @param UpdateCampaignRequest $request The campaign data
      * @return array The updated campaign
      * @throws NotFoundException If the campaign is not found
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function updateCampaign(int $id, array $data): array
+    public function updateCampaign(int $id, UpdateCampaignRequest $request): array
     {
-        return $this->client->put("campaigns/{$id}", $data);
+        return $this->client->put("campaigns/{$id}", $request->toArray());
     }
 
     /**

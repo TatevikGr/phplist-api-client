@@ -40,11 +40,11 @@ class SubscriptionClient
     public function getSubscribers(?int $afterId = null, int $limit = 25): array
     {
         $queryParams = ['limit' => $limit];
-        
+
         if ($afterId !== null) {
             $queryParams['after_id'] = $afterId;
         }
-        
+
         return $this->client->get('subscribers', $queryParams);
     }
 
@@ -113,11 +113,11 @@ class SubscriptionClient
     public function getSubscriberLists(?int $afterId = null, int $limit = 25): array
     {
         $queryParams = ['limit' => $limit];
-        
+
         if ($afterId !== null) {
             $queryParams['after_id'] = $afterId;
         }
-        
+
         return $this->client->get('lists', $queryParams);
     }
 
@@ -201,5 +201,87 @@ class SubscriptionClient
     public function removeSubscriberFromList(int $subscriberId, int $listId): array
     {
         return $this->client->delete("subscribers/{$subscriberId}/lists/{$listId}");
+    }
+
+    /**
+     * Get attribute values for a subscriber.
+     *
+     * @param int $subscriberId The subscriber ID
+     * @return array The attribute values
+     * @throws NotFoundException If the subscriber is not found
+     * @throws ApiException If an API error occurs
+     */
+    public function getAttributeValues(int $subscriberId): array
+    {
+        return $this->client->get("subscribers/attribute-values/{$subscriberId}");
+    }
+
+    /**
+     * Get a specific attribute value for a subscriber.
+     *
+     * @param int $subscriberId The subscriber ID
+     * @param int $definitionId The attribute definition ID
+     * @return array The attribute value
+     * @throws NotFoundException If the subscriber or attribute definition is not found
+     * @throws ApiException If an API error occurs
+     */
+    public function getAttributeValue(int $subscriberId, int $definitionId): array
+    {
+        return $this->client->get("subscribers/attribute-values/{$subscriberId}/{$definitionId}");
+    }
+
+    /**
+     * Set a specific attribute value for a subscriber.
+     *
+     * @param int $subscriberId The subscriber ID
+     * @param int $definitionId The attribute definition ID
+     * @param array $data The attribute value data
+     * @return array The updated attribute value
+     * @throws NotFoundException If the subscriber or attribute definition is not found
+     * @throws ValidationException If validation fails
+     * @throws ApiException If an API error occurs
+     */
+    public function setAttributeValue(int $subscriberId, int $definitionId, array $data): array
+    {
+        return $this->client->put("subscribers/attribute-values/{$subscriberId}/{$definitionId}", $data);
+    }
+
+    /**
+     * Delete a specific attribute value for a subscriber.
+     *
+     * @param int $subscriberId The subscriber ID
+     * @param int $definitionId The attribute definition ID
+     * @return array The response data
+     * @throws NotFoundException If the subscriber or attribute definition is not found
+     * @throws ApiException If an API error occurs
+     */
+    public function deleteAttributeValue(int $subscriberId, int $definitionId): array
+    {
+        return $this->client->delete("subscribers/attribute-values/{$subscriberId}/{$definitionId}");
+    }
+
+    /**
+     * Export subscribers.
+     *
+     * @param array $filters Filters to apply to the export
+     * @return array The export data
+     * @throws ApiException If an API error occurs
+     */
+    public function exportSubscribers(array $filters = []): array
+    {
+        return $this->client->get('subscribers/export', $filters);
+    }
+
+    /**
+     * Import subscribers.
+     *
+     * @param array $data The import data
+     * @return array The import result
+     * @throws ValidationException If validation fails
+     * @throws ApiException If an API error occurs
+     */
+    public function importSubscribers(array $data): array
+    {
+        return $this->client->post('subscribers/import', $data);
     }
 }

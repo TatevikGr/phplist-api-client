@@ -32,7 +32,7 @@ $clients = ClientFactory::createAllClients('https://your-phplist-api-url.com');
 
 // Access individual clients
 $client = $clients['client'];
-$identityClient = $clients['identity'];
+$adminClient = $clients['admin'];
 $authClient = $clients['identity'];
 $campaignClient = $clients['campaign'];
 $subscriptionClient = $clients['subscription'];
@@ -47,6 +47,7 @@ $authClient = ClientFactory::createIdentityClient($client);
 
 ```php
 use PhpList\RestApiClient\Client;
+use PhpList\RestApiClient\Endpoint\AdminClient;
 use PhpList\RestApiClient\Endpoint\CampaignClient;
 use PhpList\RestApiClient\Endpoint\AuthClient;
 use PhpList\RestApiClient\Endpoint\SubscriptionClient;
@@ -56,7 +57,7 @@ use PhpList\RestApiClient\Endpoint\StatisticsClient;
 $client = new Client('https://your-phplist-api-url.com');
 
 // Create endpoint clients
-$identityClient = new IdentityClient($client);
+$adminClient = new AdminClient($client);
 $authClient = new AuthClient($client);
 $campaignClient = new CampaignClient($client);
 $subscriptionClient = new SubscriptionClient($client);
@@ -97,34 +98,36 @@ try {
     $campaign = $campaignClient->getCampaign(123);
 
     // Create a new campaign
-    $newCampaign = $campaignClient->createCampaign([
-        'content' => [
+    $createRequest = new \PhpList\RestApiClient\Request\Campaign\CreateCampaignRequest(
+        [
             'subject' => 'New Campaign',
             'body' => '<p>Hello, world!</p>',
         ],
-        'format' => [
+        [
             'html' => true,
             'text' => true,
         ],
-        'metadata' => [
+        [
             'title' => 'My Campaign',
             'description' => 'A test campaign',
         ],
-        'schedule' => [
+        [
             'send_at' => '2023-12-31 12:00:00',
         ],
-        'options' => [
+        [
             'track_opens' => true,
             'track_clicks' => true,
-        ],
-    ]);
+        ]
+    );
+    $newCampaign = $campaignClient->createCampaign($createRequest);
 
     // Update a campaign
-    $updatedCampaign = $campaignClient->updateCampaign(123, [
-        'content' => [
+    $updateRequest = new \PhpList\RestApiClient\Request\Campaign\UpdateCampaignRequest(
+        [
             'subject' => 'Updated Campaign',
-        ],
-    ]);
+        ]
+    );
+    $updatedCampaign = $campaignClient->updateCampaign(123, $updateRequest);
 
     // Delete a campaign
     $campaignClient->deleteCampaign(123);
@@ -166,6 +169,67 @@ try {
 
     // Remove a subscriber from a list
     $subscriptionClient->removeSubscriberFromList(456, 789);
+} catch (\PhpList\RestApiClient\Exception\ApiException $e) {
+    echo "API error: " . $e->getMessage();
+}
+```
+
+### Working with Administrators
+
+```php
+try {
+    // Get a list of administrators
+    $administrators = $adminClient->getAdministrators();
+
+    // Get a specific administrator
+    $administrator = $adminClient->getAdministrator(123);
+
+    // Create a new administrator
+    $createRequest = new \PhpList\RestApiClient\Request\Admin\CreateAdministratorRequest(
+        'admin',
+        'securepassword',
+        'admin@example.com',
+        false,
+        ['subscribers' => true, 'campaigns' => true]
+    );
+    $newAdministrator = $adminClient->createAdministrator($createRequest);
+
+    // Update an administrator
+    $updateRequest = new \PhpList\RestApiClient\Request\Admin\UpdateAdministratorRequest(
+        'admin', // login_name
+        null,    // password (not updating)
+        'updated.admin@example.com' // email
+    );
+    $updatedAdministrator = $adminClient->updateAdministrator(123, $updateRequest);
+
+    // Delete an administrator
+    $adminClient->deleteAdministrator(123);
+
+    // Get administrator attribute definitions
+    $attributeDefinitions = $adminClient->getAttributeDefinitions();
+
+    // Get a specific attribute definition
+    $attributeDefinition = $adminClient->getAttributeDefinition(456);
+
+    // Create a new attribute definition
+    $attrRequest = new \PhpList\RestApiClient\Request\Admin\CreateAdminAttributeDefinitionRequest(
+        'department',
+        'text',
+        10, // order
+        '', // default_value
+        false // required
+    );
+    $newAttributeDefinition = $adminClient->createAttributeDefinition($attrRequest);
+
+    // Get attribute values for an administrator
+    $attributeValues = $adminClient->getAttributeValues(123);
+
+    // Get a specific attribute value
+    $attributeValue = $adminClient->getAttributeValue(123, 456);
+
+    // Set an attribute value
+    $valueRequest = new \PhpList\RestApiClient\Request\Admin\SetAdminAttributeValueRequest('Marketing');
+    $adminClient->setAttributeValue(123, 456, $valueRequest);
 } catch (\PhpList\RestApiClient\Exception\ApiException $e) {
     echo "API error: " . $e->getMessage();
 }
@@ -246,6 +310,59 @@ $logger->pushHandler(new StreamHandler('path/to/your.log', Logger::DEBUG));
 
 // Create the client with the logger
 $client = new Client('https://your-phplist-api-url.com', [], $logger);
+```
+
+## Testing
+
+The library includes unit tests to ensure functionality works as expected. To run the tests:
+
+```bash
+# Run all tests
+vendor/bin/phpunit
+
+# Run a specific test class
+vendor/bin/phpunit tests/Endpoint/SubscriptionClientTest.php
+```
+
+### Writing Tests
+
+If you're contributing to the library, please add tests for your changes. Tests are located in the `tests` directory, which mirrors the structure of the `src` directory.
+
+Example of a test for an endpoint client:
+
+```php
+use PHPUnit\Framework\TestCase;
+use PhpList\RestApiClient\Client;
+use PhpList\RestApiClient\Endpoint\YourClient;
+
+class YourClientTest extends TestCase
+{
+    private $clientMock;
+    private $yourClient;
+
+    protected function setUp(): void
+    {
+        $this->clientMock = $this->createMock(Client::class);
+        $this->yourClient = new YourClient($this->clientMock);
+    }
+
+    public function testYourMethod(): void
+    {
+        // Arrange
+        $expectedResponse = ['key' => 'value'];
+
+        $this->clientMock->expects($this->once())
+            ->method('get')
+            ->with('your-endpoint')
+            ->willReturn($expectedResponse);
+
+        // Act
+        $result = $this->yourClient->yourMethod();
+
+        // Assert
+        $this->assertSame($expectedResponse, $result);
+    }
+}
 ```
 
 ## License

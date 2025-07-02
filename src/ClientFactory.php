@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace PhpList\RestApiClient;
 
+use PhpList\RestApiClient\Endpoint\AdminClient;
 use PhpList\RestApiClient\Endpoint\CampaignClient;
 use PhpList\RestApiClient\Endpoint\AuthClient;
 use PhpList\RestApiClient\Endpoint\StatisticsClient;
 use PhpList\RestApiClient\Endpoint\SubscriptionClient;
+use PhpList\RestApiClient\Endpoint\TemplatesClient;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -62,6 +64,17 @@ class ClientFactory
     }
 
     /**
+     * Create a new admin client.
+     *
+     * @param Client $client The API client
+     * @return AdminClient The admin client
+     */
+    public static function createAdminClient(Client $client): AdminClient
+    {
+        return new AdminClient($client);
+    }
+
+    /**
      * Create a new statistics client.
      *
      * @param Client $client The API client
@@ -70,6 +83,17 @@ class ClientFactory
     public static function createStatisticsClient(Client $client): StatisticsClient
     {
         return new StatisticsClient($client);
+    }
+
+    /**
+     * Create a new templates client.
+     *
+     * @param Client $client The API client
+     * @return TemplatesClient The templates client
+     */
+    public static function createTemplatesClient(Client $client): TemplatesClient
+    {
+        return new TemplatesClient($client);
     }
 
     /**
@@ -83,13 +107,15 @@ class ClientFactory
     public static function createAllClients(string $baseUrl, array $config = [], ?LoggerInterface $logger = null): array
     {
         $client = self::createClient($baseUrl, $config, $logger);
-        
+
         return [
             'client' => $client,
+            'admin' => self::createAdminClient($client),
             'campaign' => self::createCampaignClient($client),
             'identity' => self::createIdentityClient($client),
             'subscription' => self::createSubscriptionClient($client),
             'statistics' => self::createStatisticsClient($client),
+            'templates' => self::createTemplatesClient($client),
         ];
     }
 }
