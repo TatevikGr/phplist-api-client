@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace PhpList\RestApiClient\Request;
 
+use ReflectionClass;
+use ReflectionProperty;
+
 /**
  * Abstract base class for all API request classes.
  */
@@ -19,8 +22,8 @@ abstract class AbstractRequest implements RequestInterface
     public function toArray(): array
     {
         // Get all public properties of the class
-        $reflection = new \ReflectionClass($this);
-        $properties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
+        $reflection = new ReflectionClass($this);
+        $properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC);
         
         $data = [];
         foreach ($properties as $property) {

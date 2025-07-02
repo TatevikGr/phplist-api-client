@@ -233,23 +233,18 @@ class Client
             return $data;
         }
 
-        switch ($statusCode) {
-            case 401:
-            case 403:
-                throw new AuthenticationException($data['message'] ?? 'Authentication failed', $statusCode);
-            case 404:
-                throw new NotFoundException($data['message'] ?? 'Resource not found', $statusCode);
-            case 422:
-                throw new ValidationException(
-                    $data['message'] ?? 'Validation failed',
-                    $statusCode,
-                    $data['errors'] ?? []
-                );
-            default:
-                throw new ApiException(
-                    $data['message'] ?? 'API error occurred',
-                    $statusCode
-                );
-        }
+        throw match ($statusCode) {
+            401, 403 => new AuthenticationException($data['message'] ?? 'Authentication failed', $statusCode),
+            404 => new NotFoundException($data['message'] ?? 'Resource not found', $statusCode),
+            422 => new ValidationException(
+                message: $data['message'] ?? 'Validation failed',
+                statusCode: $statusCode,
+                errors: $data['errors'] ?? []
+            ),
+            default => new ApiException(
+                message: $data['message'] ?? 'API error occurred',
+                statusCode: $statusCode
+            ),
+        };
     }
 }

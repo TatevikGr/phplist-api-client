@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PhpList\RestApiClient\Exception;
 
+use Throwable;
+
 /**
  * Exception thrown when authentication fails.
  */
@@ -14,9 +16,9 @@ class AuthenticationException extends ApiException
      *
      * @param string $message The error message
      * @param int $statusCode The HTTP status code
-     * @param \Throwable|null $previous The previous exception
+     * @param Throwable|null $previous The previous exception
      */
-    public function __construct(string $message = 'Authentication failed', int $statusCode = 401, \Throwable $previous = null)
+    public function __construct(string $message = 'Authentication failed', int $statusCode = 401, Throwable $previous = null)
     {
         parent::__construct($message, $statusCode, $previous);
     }
