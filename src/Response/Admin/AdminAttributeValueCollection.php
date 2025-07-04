@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace PhpList\RestApiClient\Response\Admin;
 
-use PhpList\RestApiClient\Entity\AdminAttributeDefinition;
+use PhpList\RestApiClient\Entity\AdminAttributeValue;
 use PhpList\RestApiClient\Response\AbstractCollectionResponse;
 
 /**
- * Response class for a list of administrator attribute definitions.
+ * Response class for a list of administrator attribute values.
  */
-class AdminAttributeDefinitionListCollection extends AbstractCollectionResponse
+class AdminAttributeValueCollection extends AbstractCollectionResponse
 {
     /**
-     * @var AdminAttributeDefinition[] The list of attribute definitions
+     * @var AdminAttributeValue[] The list of attribute values
      */
     public array $items = [];
 
@@ -26,7 +26,7 @@ class AdminAttributeDefinitionListCollection extends AbstractCollectionResponse
     {
         $this->items = [];
         foreach ($data['items'] ?? $data as $item) {
-            $this->items[] = AdminAttributeDefinition::fromArray($item);
+            $this->items[] = AdminAttributeValue::fromArray($item);
         }
     }
 }

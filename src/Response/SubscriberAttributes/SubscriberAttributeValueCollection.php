@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace PhpList\RestApiClient\Response\Admin;
+namespace PhpList\RestApiClient\Response\SubscriberAttributes;
 
-use PhpList\RestApiClient\Entity\AdminAttributeValue;
+use PhpList\RestApiClient\Entity\SubscriberAttributeValue;
 use PhpList\RestApiClient\Response\AbstractCollectionResponse;
 
 /**
- * Response class for a list of administrator attribute values.
+ * Response class for a list of subscriber attribute values.
  */
-class AdminAttributeValueListCollection extends AbstractCollectionResponse
+class SubscriberAttributeValueCollection extends AbstractCollectionResponse
 {
     /**
-     * @var AdminAttributeValue[] The list of attribute values
+     * @var SubscriberAttributeValue[] The list of attribute values
      */
     public array $items = [];
 
@@ -26,7 +26,7 @@ class AdminAttributeValueListCollection extends AbstractCollectionResponse
     {
         $this->items = [];
         foreach ($data['items'] ?? $data as $item) {
-            $this->items[] = AdminAttributeValue::fromArray($item);
+            $this->items[] = SubscriberAttributeValue::fromArray($item);
         }
     }
 }

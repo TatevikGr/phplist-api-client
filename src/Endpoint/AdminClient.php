@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
+use PhpList\RestApiClient\Entity\Administrator;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Exception\ValidationException;
 use PhpList\RestApiClient\Request\Admin\CreateAdministratorRequest;
 use PhpList\RestApiClient\Request\Admin\UpdateAdministratorRequest;
+use PhpList\RestApiClient\Response\Admin\AdministratorCollection;
+use PhpList\RestApiClient\Response\DeleteResponse;
 
 /**
  * Client for administrator-related API endpoints.
@@ -36,10 +39,10 @@ class AdminClient
      *
      * @param int|null $afterId The ID to start from for pagination
      * @param int $limit The maximum number of items to return
-     * @return array The list of administrators
+     * @return AdministratorCollection The list of administrators
      * @throws ApiException If an API error occurs
      */
-    public function getAdministrators(?int $afterId = null, int $limit = 25): array
+    public function getAdministrators(?int $afterId = null, int $limit = 25): AdministratorCollection
     {
         $queryParams = ['limit' => $limit];
 
@@ -47,33 +50,36 @@ class AdminClient
             $queryParams['after_id'] = $afterId;
         }
 
-        return $this->client->get('administrators', $queryParams);
+        $data = $this->client->get('administrators', $queryParams);
+        return AdministratorCollection::fromArray($data);
     }
 
     /**
      * Get an administrator by ID.
      *
      * @param int $id The administrator ID
-     * @return array The administrator data
+     * @return Administrator The administrator data
      * @throws NotFoundException If the administrator is not found
      * @throws ApiException If an API error occurs
      */
-    public function getAdministrator(int $id): array
+    public function getAdministrator(int $id): Administrator
     {
-        return $this->client->get("administrators/{$id}");
+        $data = $this->client->get("administrators/{$id}");
+        return Administrator::fromArray($data);
     }
 
     /**
      * Create a new administrator.
      *
      * @param CreateAdministratorRequest $request The administrator data
-     * @return array The created administrator
+     * @return Administrator The created administrator
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function createAdministrator(CreateAdministratorRequest $request): array
+    public function createAdministrator(CreateAdministratorRequest $request): Administrator
     {
-        return $this->client->post('administrators', $request->toArray());
+        $data = $this->client->post('administrators', $request->toArray());
+        return Administrator::fromArray($data);
     }
 
     /**
@@ -81,26 +87,28 @@ class AdminClient
      *
      * @param int $id The administrator ID
      * @param UpdateAdministratorRequest $request The administrator data
-     * @return array The updated administrator
+     * @return Administrator The updated administrator
      * @throws NotFoundException If the administrator is not found
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function updateAdministrator(int $id, UpdateAdministratorRequest $request): array
+    public function updateAdministrator(int $id, UpdateAdministratorRequest $request): Administrator
     {
-        return $this->client->put("administrators/{$id}", $request->toArray());
+        $data = $this->client->put("administrators/{$id}", $request->toArray());
+        return Administrator::fromArray($data);
     }
 
     /**
      * Delete an administrator.
      *
      * @param int $id The administrator ID
-     * @return array The response data
+     * @return DeleteResponse The response data
      * @throws NotFoundException If the administrator is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteAdministrator(int $id): array
+    public function deleteAdministrator(int $id): DeleteResponse
     {
-        return $this->client->delete("administrators/{$id}");
+        $data = $this->client->delete("administrators/{$id}");
+        return DeleteResponse::fromArray($data);
     }
 }

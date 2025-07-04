@@ -226,10 +226,6 @@ try {
 
     // Get a specific attribute value
     $attributeValue = $adminClient->getAttributeValue(123, 456);
-
-    // Set an attribute value
-    $valueRequest = new \PhpList\RestApiClient\Request\Admin\SetAdminAttributeValueRequest('Marketing');
-    $adminClient->setAttributeValue(123, 456, $valueRequest);
 } catch (\PhpList\RestApiClient\Exception\ApiException $e) {
     echo "API error: " . $e->getMessage();
 }

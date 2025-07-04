@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
+use PhpList\RestApiClient\Entity\Subscriber;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Exception\ValidationException;
+use PhpList\RestApiClient\Response\DeleteResponse;
+use PhpList\RestApiClient\Response\Subscribers\SubscriberCollection;
 
 /**
  * Client for subscriber-related API endpoints.
@@ -34,10 +37,10 @@ class SubscribersClient
      *
      * @param int|null $afterId The ID to start from for pagination
      * @param int $limit The maximum number of items to return
-     * @return array The list of subscribers
+     * @return SubscriberCollection The list of subscribers
      * @throws ApiException If an API error occurs
      */
-    public function getSubscribers(?int $afterId = null, int $limit = 25): array
+    public function getSubscribers(?int $afterId = null, int $limit = 25): SubscriberCollection
     {
         $queryParams = ['limit' => $limit];
 
@@ -45,33 +48,36 @@ class SubscribersClient
             $queryParams['after_id'] = $afterId;
         }
 
-        return $this->client->get('subscribers', $queryParams);
+        $response = $this->client->get('subscribers', $queryParams);
+        return SubscriberCollection::fromArray($response);
     }
 
     /**
      * Get a subscriber by ID.
      *
      * @param int $id The subscriber ID
-     * @return array The subscriber data
+     * @return Subscriber The subscriber data
      * @throws NotFoundException If the subscriber is not found
      * @throws ApiException If an API error occurs
      */
-    public function getSubscriber(int $id): array
+    public function getSubscriber(int $id): Subscriber
     {
-        return $this->client->get("subscribers/{$id}");
+        $response = $this->client->get("subscribers/{$id}");
+        return Subscriber::fromArray($response);
     }
 
     /**
      * Create a new subscriber.
      *
      * @param array $data The subscriber data
-     * @return array The created subscriber
+     * @return Subscriber The created subscriber
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function createSubscriber(array $data): array
+    public function createSubscriber(array $data): Subscriber
     {
-        return $this->client->post('subscribers', $data);
+        $response = $this->client->post('subscribers', $data);
+        return Subscriber::fromArray($response);
     }
 
     /**
@@ -79,70 +85,28 @@ class SubscribersClient
      *
      * @param int $id The subscriber ID
      * @param array $data The subscriber data
-     * @return array The updated subscriber
+     * @return Subscriber The updated subscriber
      * @throws NotFoundException If the subscriber is not found
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function updateSubscriber(int $id, array $data): array
+    public function updateSubscriber(int $id, array $data): Subscriber
     {
-        return $this->client->put("subscribers/{$id}", $data);
+        $response = $this->client->put("subscribers/{$id}", $data);
+        return Subscriber::fromArray($response);
     }
 
     /**
      * Delete a subscriber.
      *
      * @param int $id The subscriber ID
-     * @return array The response data
+     * @return DeleteResponse The response data
      * @throws NotFoundException If the subscriber is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteSubscriber(int $id): array
+    public function deleteSubscriber(int $id): DeleteResponse
     {
-        return $this->client->delete("subscribers/{$id}");
-    }
-
-    /**
-     * Search for subscribers.
-     *
-     * @param string $query The search query
-     * @param int|null $afterId The ID to start from for pagination
-     * @param int $limit The maximum number of items to return
-     * @return array The search results
-     * @throws ApiException If an API error occurs
-     */
-    public function searchSubscribers(string $query, ?int $afterId = null, int $limit = 25): array
-    {
-        $queryParams = [
-            'query' => $query,
-            'limit' => $limit
-        ];
-
-        if ($afterId !== null) {
-            $queryParams['after_id'] = $afterId;
-        }
-
-        return $this->client->get('subscribers/search', $queryParams);
-    }
-
-    /**
-     * Get subscriber history.
-     *
-     * @param int $id The subscriber ID
-     * @param int|null $afterId The ID to start from for pagination
-     * @param int $limit The maximum number of items to return
-     * @return array The subscriber history
-     * @throws NotFoundException If the subscriber is not found
-     * @throws ApiException If an API error occurs
-     */
-    public function getSubscriberHistory(int $id, ?int $afterId = null, int $limit = 25): array
-    {
-        $queryParams = ['limit' => $limit];
-
-        if ($afterId !== null) {
-            $queryParams['after_id'] = $afterId;
-        }
-
-        return $this->client->get("subscribers/{$id}/history", $queryParams);
+        $response = $this->client->delete("subscribers/{$id}");
+        return DeleteResponse::fromArray($response);
     }
 }

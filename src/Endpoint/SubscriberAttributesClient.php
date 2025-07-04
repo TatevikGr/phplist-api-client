@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
+use PhpList\RestApiClient\Entity\SubscriberAttributeDefinition;
+use PhpList\RestApiClient\Entity\SubscriberAttributeValue;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Exception\ValidationException;
+use PhpList\RestApiClient\Response\DeleteResponse;
+use PhpList\RestApiClient\Response\SubscriberAttributes\SubscriberAttributeCollection;
+use PhpList\RestApiClient\Response\SubscriberAttributes\SubscriberAttributeValueCollection;
 
 /**
  * Client for subscriber attribute-related API endpoints.
@@ -34,10 +39,10 @@ class SubscriberAttributesClient
      *
      * @param int|null $afterId The ID to start from for pagination
      * @param int $limit The maximum number of items to return
-     * @return array The list of attribute definitions
+     * @return SubscriberAttributeCollection The list of attribute definitions
      * @throws ApiException If an API error occurs
      */
-    public function getAttributeDefinitions(?int $afterId = null, int $limit = 25): array
+    public function getAttributeDefinitions(?int $afterId = null, int $limit = 25): SubscriberAttributeCollection
     {
         $queryParams = ['limit' => $limit];
 
@@ -45,33 +50,36 @@ class SubscriberAttributesClient
             $queryParams['after_id'] = $afterId;
         }
 
-        return $this->client->get('subscribers/attributes', $queryParams);
+        $response = $this->client->get('subscribers/attributes', $queryParams);
+        return SubscriberAttributeCollection::fromArray($response);
     }
 
     /**
      * Get a subscriber attribute definition by ID.
      *
      * @param int $id The attribute definition ID
-     * @return array The attribute definition data
+     * @return SubscriberAttributeDefinition The attribute definition data
      * @throws NotFoundException If the attribute definition is not found
      * @throws ApiException If an API error occurs
      */
-    public function getAttributeDefinition(int $id): array
+    public function getAttributeDefinition(int $id): SubscriberAttributeDefinition
     {
-        return $this->client->get("subscribers/attributes/{$id}");
+        $response = $this->client->get("subscribers/attributes/{$id}");
+        return SubscriberAttributeDefinition::fromArray($response);
     }
 
     /**
      * Create a new subscriber attribute definition.
      *
      * @param array $data The attribute definition data
-     * @return array The created attribute definition
+     * @return SubscriberAttributeDefinition The created attribute definition
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function createAttributeDefinition(array $data): array
+    public function createAttributeDefinition(array $data): SubscriberAttributeDefinition
     {
-        return $this->client->post('subscribers/attributes', $data);
+        $response = $this->client->post('subscribers/attributes', $data);
+        return SubscriberAttributeDefinition::fromArray($response);
     }
 
     /**
@@ -79,40 +87,43 @@ class SubscriberAttributesClient
      *
      * @param int $id The attribute definition ID
      * @param array $data The attribute definition data
-     * @return array The updated attribute definition
+     * @return SubscriberAttributeDefinition The updated attribute definition
      * @throws NotFoundException If the attribute definition is not found
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function updateAttributeDefinition(int $id, array $data): array
+    public function updateAttributeDefinition(int $id, array $data): SubscriberAttributeDefinition
     {
-        return $this->client->put("subscribers/attributes/{$id}", $data);
+        $response = $this->client->put("subscribers/attributes/{$id}", $data);
+        return SubscriberAttributeDefinition::fromArray($response);
     }
 
     /**
      * Delete a subscriber attribute definition.
      *
      * @param int $id The attribute definition ID
-     * @return array The response data
+     * @return DeleteResponse The response data
      * @throws NotFoundException If the attribute definition is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteAttributeDefinition(int $id): array
+    public function deleteAttributeDefinition(int $id): DeleteResponse
     {
-        return $this->client->delete("subscribers/attributes/{$id}");
+        $response = $this->client->delete("subscribers/attributes/{$id}");
+        return DeleteResponse::fromArray($response);
     }
 
     /**
      * Get attribute values for a subscriber.
      *
      * @param int $subscriberId The subscriber ID
-     * @return array The attribute values
+     * @return SubscriberAttributeValueCollection The attribute values
      * @throws NotFoundException If the subscriber is not found
      * @throws ApiException If an API error occurs
      */
-    public function getAttributeValues(int $subscriberId): array
+    public function getAttributeValues(int $subscriberId): SubscriberAttributeValueCollection
     {
-        return $this->client->get("subscribers/attribute-values/{$subscriberId}");
+        $response = $this->client->get("subscribers/attribute-values/{$subscriberId}");
+        return SubscriberAttributeValueCollection::fromArray($response);
     }
 
     /**
@@ -120,13 +131,14 @@ class SubscriberAttributesClient
      *
      * @param int $subscriberId The subscriber ID
      * @param int $definitionId The attribute definition ID
-     * @return array The attribute value
+     * @return SubscriberAttributeValue The attribute value
      * @throws NotFoundException If the subscriber or attribute definition is not found
      * @throws ApiException If an API error occurs
      */
-    public function getAttributeValue(int $subscriberId, int $definitionId): array
+    public function getAttributeValue(int $subscriberId, int $definitionId): SubscriberAttributeValue
     {
-        return $this->client->get("subscribers/attribute-values/{$subscriberId}/{$definitionId}");
+        $response = $this->client->get("subscribers/attribute-values/{$subscriberId}/{$definitionId}");
+        return SubscriberAttributeValue::fromArray($response);
     }
 
     /**
@@ -135,14 +147,15 @@ class SubscriberAttributesClient
      * @param int $subscriberId The subscriber ID
      * @param int $definitionId The attribute definition ID
      * @param array $data The attribute value data
-     * @return array The updated attribute value
+     * @return SubscriberAttributeValue The updated attribute value
      * @throws NotFoundException If the subscriber or attribute definition is not found
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function setAttributeValue(int $subscriberId, int $definitionId, array $data): array
+    public function setAttributeValue(int $subscriberId, int $definitionId, array $data): SubscriberAttributeValue
     {
-        return $this->client->put("subscribers/attribute-values/{$subscriberId}/{$definitionId}", $data);
+        $response = $this->client->put("subscribers/attribute-values/{$subscriberId}/{$definitionId}", $data);
+        return SubscriberAttributeValue::fromArray($response);
     }
 
     /**
@@ -150,12 +163,13 @@ class SubscriberAttributesClient
      *
      * @param int $subscriberId The subscriber ID
      * @param int $definitionId The attribute definition ID
-     * @return array The response data
+     * @return DeleteResponse The response data
      * @throws NotFoundException If the subscriber or attribute definition is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteAttributeValue(int $subscriberId, int $definitionId): array
+    public function deleteAttributeValue(int $subscriberId, int $definitionId): DeleteResponse
     {
-        return $this->client->delete("subscribers/attribute-values/{$subscriberId}/{$definitionId}");
+        $response = $this->client->delete("subscribers/attribute-values/{$subscriberId}/{$definitionId}");
+        return DeleteResponse::fromArray($response);
     }
 }

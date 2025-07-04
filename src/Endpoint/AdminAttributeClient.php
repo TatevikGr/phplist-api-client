@@ -11,10 +11,9 @@ use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Exception\ValidationException;
 use PhpList\RestApiClient\Request\Admin\CreateAdminAttributeDefinitionRequest;
-use PhpList\RestApiClient\Request\Admin\SetAdminAttributeValueRequest;
 use PhpList\RestApiClient\Request\Admin\UpdateAdminAttributeDefinitionRequest;
-use PhpList\RestApiClient\Response\Admin\AdminAttributeDefinitionListCollection;
-use PhpList\RestApiClient\Response\Admin\AdminAttributeValueListCollection;
+use PhpList\RestApiClient\Response\Admin\AdminAttributeDefinitionCollection;
+use PhpList\RestApiClient\Response\Admin\AdminAttributeValueCollection;
 use PhpList\RestApiClient\Response\DeleteResponse;
 
 /**
@@ -42,10 +41,10 @@ class AdminAttributeClient
      *
      * @param int|null $afterId The ID to start from for pagination
      * @param int $limit The maximum number of items to return
-     * @return AdminAttributeDefinitionListCollection The list of attribute definitions
+     * @return AdminAttributeDefinitionCollection The list of attribute definitions
      * @throws ApiException If an API error occurs
      */
-    public function getAttributeDefinitions(?int $afterId = null, int $limit = 25): AdminAttributeDefinitionListCollection
+    public function getAttributeDefinitions(?int $afterId = null, int $limit = 25): AdminAttributeDefinitionCollection
     {
         $queryParams = ['limit' => $limit];
 
@@ -54,7 +53,7 @@ class AdminAttributeClient
         }
 
         $data = $this->client->get('administrators/attributes', $queryParams);
-        return AdminAttributeDefinitionListCollection::fromArray($data);
+        return AdminAttributeDefinitionCollection::fromArray($data);
     }
 
     /**
@@ -119,14 +118,14 @@ class AdminAttributeClient
      * Get attribute values for an administrator.
      *
      * @param int $adminId The administrator ID
-     * @return AdminAttributeValueListCollection The attribute values
+     * @return AdminAttributeValueCollection The attribute values
      * @throws NotFoundException If the administrator is not found
      * @throws ApiException If an API error occurs
      */
-    public function getAttributeValues(int $adminId): AdminAttributeValueListCollection
+    public function getAttributeValues(int $adminId): AdminAttributeValueCollection
     {
         $data = $this->client->get("administrators/attribute-values/{$adminId}");
-        return AdminAttributeValueListCollection::fromArray($data);
+        return AdminAttributeValueCollection::fromArray($data);
     }
 
     /**
@@ -149,15 +148,15 @@ class AdminAttributeClient
      *
      * @param int $adminId The administrator ID
      * @param int $definitionId The attribute definition ID
-     * @param SetAdminAttributeValueRequest $request The attribute value data
+     * @param string $value
      * @return AdminAttributeValue The updated attribute value
-     * @throws NotFoundException If the administrator or attribute definition is not found
-     * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function setAttributeValue(int $adminId, int $definitionId, SetAdminAttributeValueRequest $request): AdminAttributeValue
+    public function setAttributeValue(int $adminId, int $definitionId, string $value): AdminAttributeValue
     {
-        $data = $this->client->post("administrators/attribute-values/{$adminId}/{$definitionId}", $request->toArray());
+        $data = $this->client->post("administrators/attribute-values/{$adminId}/{$definitionId}", [
+            'value' => $value,
+        ]);
         return AdminAttributeValue::fromArray($data);
     }
 
