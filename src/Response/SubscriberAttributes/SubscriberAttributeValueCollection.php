@@ -26,7 +26,7 @@ class SubscriberAttributeValueCollection extends AbstractCollectionResponse
     {
         $this->items = [];
         foreach ($data['items'] ?? $data as $item) {
-            $this->items[] = SubscriberAttributeValue::fromArray($item);
+            $this->items[] = new SubscriberAttributeValue($item);
         }
     }
 }

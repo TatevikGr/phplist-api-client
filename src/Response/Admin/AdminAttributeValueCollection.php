@@ -26,7 +26,7 @@ class AdminAttributeValueCollection extends AbstractCollectionResponse
     {
         $this->items = [];
         foreach ($data['items'] ?? $data as $item) {
-            $this->items[] = AdminAttributeValue::fromArray($item);
+            $this->items[] = new AdminAttributeValue($item);
         }
     }
 }

@@ -51,7 +51,7 @@ class AdminClient
         }
 
         $data = $this->client->get('administrators', $queryParams);
-        return AdministratorCollection::fromArray($data);
+        return new AdministratorCollection($data);
     }
 
     /**
@@ -65,7 +65,7 @@ class AdminClient
     public function getAdministrator(int $id): Administrator
     {
         $data = $this->client->get("administrators/{$id}");
-        return Administrator::fromArray($data);
+        return new Administrator($data);
     }
 
     /**
@@ -79,7 +79,7 @@ class AdminClient
     public function createAdministrator(CreateAdministratorRequest $request): Administrator
     {
         $data = $this->client->post('administrators', $request->toArray());
-        return Administrator::fromArray($data);
+        return new Administrator($data);
     }
 
     /**
@@ -95,7 +95,7 @@ class AdminClient
     public function updateAdministrator(int $id, UpdateAdministratorRequest $request): Administrator
     {
         $data = $this->client->put("administrators/{$id}", $request->toArray());
-        return Administrator::fromArray($data);
+        return new Administrator($data);
     }
 
     /**
@@ -109,6 +109,6 @@ class AdminClient
     public function deleteAdministrator(int $id): DeleteResponse
     {
         $data = $this->client->delete("administrators/{$id}");
-        return DeleteResponse::fromArray($data);
+        return new DeleteResponse($data);
     }
 }

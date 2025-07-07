@@ -23,24 +23,20 @@ abstract class AbstractCollectionResponse extends AbstractResponse
      * Create a response object from an array of data returned by the API.
      *
      * @param array $data The response data as an array
-     * @return static The response object
+     * @return void The response object
      */
-    public static function fromArray(array $data): self
+
+    public function __construct(array $data)
     {
-        $instance = new static();
-        
         $paginationData = [
             'total' => $data['total'] ?? count($data['items'] ?? $data),
-            'limit' => $data['limit'] ?? 0,
+            'limit' => $data['limit'] ? (int)$data['limit'] : 0,
             'has_more' => $data['has_more'] ?? false,
             'next_cursor' => $data['next_cursor'] ?? null,
         ];
-        
-        $instance->pagination = CursorPagination::fromArray($paginationData);
-        
-        $instance->processItems($data);
-        
-        return $instance;
+
+        $this->pagination = new CursorPagination($paginationData);
+        $this->processItems($data);
     }
 
     /**

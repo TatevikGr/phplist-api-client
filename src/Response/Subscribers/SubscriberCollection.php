@@ -26,7 +26,7 @@ class SubscriberCollection extends AbstractCollectionResponse
     {
         $this->items = [];
         foreach ($data['items'] ?? $data as $item) {
-            $this->items[] = Subscriber::fromArray($item);
+            $this->items[] = new Subscriber($item);
         }
     }
 }

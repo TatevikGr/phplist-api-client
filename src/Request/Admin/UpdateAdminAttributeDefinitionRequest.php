@@ -29,7 +29,7 @@ class UpdateAdminAttributeDefinitionRequest extends AbstractRequest
     /**
      * @var string|null The default value
      */
-    public ?string $default_value = null;
+    public ?string $defaultValue = null;
 
     /**
      * @var bool|null Whether the attribute is required
@@ -39,7 +39,7 @@ class UpdateAdminAttributeDefinitionRequest extends AbstractRequest
     /**
      * @var string|null The table name
      */
-    public ?string $table_name = null;
+    public ?string $tableName = null;
 
     /**
      * UpdateAdminAttributeDefinitionRequest constructor.
@@ -47,23 +47,23 @@ class UpdateAdminAttributeDefinitionRequest extends AbstractRequest
      * @param string|null $name The attribute name
      * @param string|null $type The attribute type
      * @param int|null $order The attribute order
-     * @param string|null $default_value The default value
+     * @param string|null $defaultValue The default value
      * @param bool|null $required Whether the attribute is required
-     * @param string|null $table_name The table name
+     * @param string|null $tableName The table name
      */
     public function __construct(
         ?string $name = null,
         ?string $type = null,
         ?int $order = null,
-        ?string $default_value = null,
+        ?string $defaultValue = null,
         ?bool $required = null,
-        ?string $table_name = null
+        ?string $tableName = null
     ) {
         $this->name = $name;
         $this->type = $type;
         $this->order = $order;
-        $this->default_value = $default_value;
+        $this->defaultValue = $defaultValue;
         $this->required = $required;
-        $this->table_name = $table_name;
+        $this->tableName = $tableName;
     }
 }

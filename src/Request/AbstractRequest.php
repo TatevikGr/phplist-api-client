@@ -16,12 +16,13 @@ abstract class AbstractRequest implements RequestInterface
      * Convert the request to an array that can be passed to the API client.
      *
      * This method should be overridden by child classes if they need custom conversion logic.
+     * Get all public properties of the class
+     * Skip null values
      *
      * @return array The request data as an array
      */
     public function toArray(): array
     {
-        // Get all public properties of the class
         $reflection = new ReflectionClass($this);
         $properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC);
         
@@ -30,7 +31,6 @@ abstract class AbstractRequest implements RequestInterface
             $name = $property->getName();
             $value = $property->getValue($this);
             
-            // Skip null values
             if ($value !== null) {
                 $data[$name] = $value;
             }

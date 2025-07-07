@@ -79,7 +79,7 @@ class Client
         try {
             $response = $this->httpClient->post("sessions", [
                 'json' => [
-                    'username' => $username,
+                    'login_name' => $username,
                     'password' => $password,
                 ],
             ]);

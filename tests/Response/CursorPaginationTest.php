@@ -18,7 +18,7 @@ class CursorPaginationTest extends TestCase
             'next_cursor' => 129,
         ];
 
-        $pagination = CursorPagination::fromArray($data);
+        $pagination = new CursorPagination($data);
 
         $this->assertSame(100, $pagination->total);
         $this->assertSame(25, $pagination->limit);
@@ -32,7 +32,7 @@ class CursorPaginationTest extends TestCase
             'total' => 100,
         ];
 
-        $pagination = CursorPagination::fromArray($data);
+        $pagination = new CursorPagination($data);
 
         $this->assertSame(100, $pagination->total);
         $this->assertSame(0, $pagination->limit);
@@ -42,11 +42,12 @@ class CursorPaginationTest extends TestCase
 
     public function testToArray(): void
     {
-        $pagination = new CursorPagination();
-        $pagination->total = 100;
-        $pagination->limit = 25;
-        $pagination->has_more = true;
-        $pagination->next_cursor = 129;
+        $pagination = new CursorPagination([
+            'total' => 100,
+            'limit' => 25,
+            'has_more' => true,
+            'next_cursor' => 129,
+        ]);
 
         $data = $pagination->toArray();
 

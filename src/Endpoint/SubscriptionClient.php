@@ -11,6 +11,7 @@ use PhpList\RestApiClient\Exception\ValidationException;
 
 /**
  * Client for subscription-related API endpoints.
+ * @SuppressWarnings("TooManyPublicMethods")
  */
 class SubscriptionClient
 {

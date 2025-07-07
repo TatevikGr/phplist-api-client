@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace PhpList\RestApiClient\Entity;
 
+use DateTimeImmutable;
+use DateTimeInterface;
+use Exception;
+use InvalidArgumentException;
 use PhpList\RestApiClient\Response\AbstractResponse;
 
 /**
@@ -19,7 +23,7 @@ class Administrator extends AbstractResponse
     /**
      * @var string The login name
      */
-    public string $login_name;
+    public string $loginName;
 
     /**
      * @var string The email address
@@ -29,10 +33,26 @@ class Administrator extends AbstractResponse
     /**
      * @var bool Whether the administrator is a super user
      */
-    public bool $super_user;
+    public bool $superUser;
 
     /**
-     * @var string The creation date
+     * @var DateTimeInterface The creation date
      */
-    public string $created_at;
+    public DateTimeInterface $createdAt;
+
+    /**
+     * @throws Exception
+     */
+    public function __construct(array $data)
+    {
+        $this->id = isset($data['id']) ? (int)$data['id'] : 0;
+        $this->loginName = isset($data['login_name']) ? (string)$data['login_name'] : '';
+        $this->email = isset($data['email']) ? (string)$data['email'] : '';
+        $this->superUser = isset($data['super_user']) && (bool)$data['super_user'];
+
+        if (empty($data['created_at'])) {
+            throw new InvalidArgumentException('created_at is required');
+        }
+        $this->createdAt  = new DateTimeImmutable($data['created_at']);
+    }
 }

@@ -15,6 +15,7 @@ use PhpList\RestApiClient\Request\Admin\UpdateAdminAttributeDefinitionRequest;
 use PhpList\RestApiClient\Response\Admin\AdminAttributeDefinitionCollection;
 use PhpList\RestApiClient\Response\Admin\AdminAttributeValueCollection;
 use PhpList\RestApiClient\Response\DeleteResponse;
+use ReflectionException;
 
 /**
  * Client for administrator-related API endpoints.
@@ -53,7 +54,7 @@ class AdminAttributeClient
         }
 
         $data = $this->client->get('administrators/attributes', $queryParams);
-        return AdminAttributeDefinitionCollection::fromArray($data);
+        return new AdminAttributeDefinitionCollection($data);
     }
 
     /**
@@ -67,7 +68,7 @@ class AdminAttributeClient
     public function getAttributeDefinition(int $id): AdminAttributeDefinition
     {
         $data = $this->client->get("administrators/attributes/{$id}");
-        return AdminAttributeDefinition::fromArray($data);
+        return new AdminAttributeDefinition($data);
     }
 
     /**
@@ -81,7 +82,7 @@ class AdminAttributeClient
     public function createAttributeDefinition(CreateAdminAttributeDefinitionRequest $request): AdminAttributeDefinition
     {
         $data = $this->client->post('administrators/attributes', $request->toArray());
-        return AdminAttributeDefinition::fromArray($data);
+        return new AdminAttributeDefinition($data);
     }
 
     /**
@@ -97,7 +98,7 @@ class AdminAttributeClient
     public function updateAttributeDefinition(int $id, UpdateAdminAttributeDefinitionRequest $request): AdminAttributeDefinition
     {
         $data = $this->client->put("administrators/attributes/{$id}", $request->toArray());
-        return AdminAttributeDefinition::fromArray($data);
+        return new AdminAttributeDefinition($data);
     }
 
     /**
@@ -111,7 +112,7 @@ class AdminAttributeClient
     public function deleteAttributeDefinition(int $id): DeleteResponse
     {
         $data = $this->client->delete("administrators/attributes/{$id}");
-        return DeleteResponse::fromArray($data);
+        return new DeleteResponse($data);
     }
 
     /**
@@ -120,12 +121,18 @@ class AdminAttributeClient
      * @param int $adminId The administrator ID
      * @return AdminAttributeValueCollection The attribute values
      * @throws NotFoundException If the administrator is not found
-     * @throws ApiException If an API error occurs
+     * @throws ApiException|ReflectionException If an API error occurs
      */
-    public function getAttributeValues(int $adminId): AdminAttributeValueCollection
+    public function getAttributeValues(int $adminId, ?int $afterId = null, int $limit = 25): AdminAttributeValueCollection
     {
-        $data = $this->client->get("administrators/attribute-values/{$adminId}");
-        return AdminAttributeValueCollection::fromArray($data);
+        $queryParams = ['limit' => $limit];
+
+        if ($afterId !== null) {
+            $queryParams['after_id'] = $afterId;
+        }
+
+        $data = $this->client->get("administrators/attribute-values/{$adminId}", $queryParams);
+        return new AdminAttributeValueCollection($data);
     }
 
     /**
@@ -140,7 +147,7 @@ class AdminAttributeClient
     public function getAttributeValue(int $adminId, int $definitionId): AdminAttributeValue
     {
         $data = $this->client->get("administrators/attribute-values/{$adminId}/{$definitionId}");
-        return AdminAttributeValue::fromArray($data);
+        return new AdminAttributeValue($data);
     }
 
     /**
@@ -157,7 +164,7 @@ class AdminAttributeClient
         $data = $this->client->post("administrators/attribute-values/{$adminId}/{$definitionId}", [
             'value' => $value,
         ]);
-        return AdminAttributeValue::fromArray($data);
+        return new AdminAttributeValue($data);
     }
 
     /**
@@ -172,6 +179,6 @@ class AdminAttributeClient
     public function deleteAttributeValue(int $adminId, int $definitionId): DeleteResponse
     {
         $data = $this->client->delete("administrators/attribute-values/{$adminId}/{$definitionId}");
-        return DeleteResponse::fromArray($data);
+        return new DeleteResponse($data);
     }
 }

@@ -44,24 +44,16 @@ class SubscriberAttributeValue extends AbstractResponse
         return $data;
     }
 
-    /**
-     * @param array $data
-     * @return static
-     */
-    public static function fromArray(array $data): self
+    public function __construct(array $data)
     {
-        $instance = new static();
-
         foreach ($data as $key => $value) {
             if ($key === 'subscriber' && is_array($value)) {
-                $instance->subscriber = Subscriber::fromArray($value);
+                $this->subscriber = new Subscriber($value);
             } elseif ($key === 'definition' && is_array($value)) {
-                $instance->definition = SubscriberAttributeDefinition::fromArray($value);
-            } elseif (property_exists($instance, $key)) {
-                $instance->$key = $value;
+                $this->definition = new SubscriberAttributeDefinition($value);
+            } elseif (property_exists($this, $key)) {
+                $this->$key = $value;
             }
         }
-
-        return $instance;
     }
 }

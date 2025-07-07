@@ -49,7 +49,7 @@ class SubscribersClient
         }
 
         $response = $this->client->get('subscribers', $queryParams);
-        return SubscriberCollection::fromArray($response);
+        return new SubscriberCollection($response);
     }
 
     /**
@@ -63,7 +63,7 @@ class SubscribersClient
     public function getSubscriber(int $id): Subscriber
     {
         $response = $this->client->get("subscribers/{$id}");
-        return Subscriber::fromArray($response);
+        return new Subscriber($response);
     }
 
     /**
@@ -77,7 +77,7 @@ class SubscribersClient
     public function createSubscriber(array $data): Subscriber
     {
         $response = $this->client->post('subscribers', $data);
-        return Subscriber::fromArray($response);
+        return new Subscriber($response);
     }
 
     /**
@@ -93,7 +93,7 @@ class SubscribersClient
     public function updateSubscriber(int $id, array $data): Subscriber
     {
         $response = $this->client->put("subscribers/{$id}", $data);
-        return Subscriber::fromArray($response);
+        return new Subscriber($response);
     }
 
     /**
@@ -107,6 +107,6 @@ class SubscribersClient
     public function deleteSubscriber(int $id): DeleteResponse
     {
         $response = $this->client->delete("subscribers/{$id}");
-        return DeleteResponse::fromArray($response);
+        return new DeleteResponse($response);
     }
 }

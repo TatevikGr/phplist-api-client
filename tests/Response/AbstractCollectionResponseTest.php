@@ -75,11 +75,12 @@ class AbstractCollectionResponseTest extends TestCase
     public function testToArray(): void
     {
         $response = new TestCollectionResponse();
-        $response->pagination = new CursorPagination();
-        $response->pagination->total = 100;
-        $response->pagination->limit = 25;
-        $response->pagination->has_more = true;
-        $response->pagination->next_cursor = 129;
+        $response->pagination = new CursorPagination([
+            'total' => 100,
+            'limit' => 25,
+            'has_more' => true,
+            'next_cursor' => 129,
+        ]);
         $response->items = [
             ['id' => 1, 'name' => 'Item 1'],
             ['id' => 2, 'name' => 'Item 2'],

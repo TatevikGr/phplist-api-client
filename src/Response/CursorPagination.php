@@ -22,28 +22,24 @@ class CursorPagination
     /**
      * @var bool Whether there are more items available
      */
-    public bool $has_more;
+    public bool $hasMore;
 
     /**
      * @var int|null The cursor for the next page of items
      */
-    public ?int $next_cursor;
+    public ?int $nextCursor;
 
     /**
      * Create a pagination object from an array of data.
      *
      * @param array $data The pagination data as an array
-     * @return static The pagination object
      */
-    public static function fromArray(array $data): self
+    public function __construct(array $data)
     {
-        $instance = new static();
-        $instance->total = $data['total'] ?? 0;
-        $instance->limit = $data['limit'] ?? 0;
-        $instance->has_more = $data['has_more'] ?? false;
-        $instance->next_cursor = $data['next_cursor'] ?? null;
-        
-        return $instance;
+        $this->total = $data['total'] ?? 0;
+        $this->limit = $data['limit'] ?? 0;
+        $this->hasMore = $data['has_more'] ?? false;
+        $this->nextCursor = $data['next_cursor'] ?? null;
     }
 
     /**
@@ -56,8 +52,8 @@ class CursorPagination
         return [
             'total' => $this->total,
             'limit' => $this->limit,
-            'has_more' => $this->has_more,
-            'next_cursor' => $this->next_cursor,
+            'has_more' => $this->hasMore,
+            'next_cursor' => $this->nextCursor,
         ];
     }
 }

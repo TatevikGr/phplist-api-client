@@ -17,16 +17,11 @@ class CampaignCollection extends AbstractCollectionResponse
      */
     public array $items = [];
 
-    /**
-     * Process the items in the collection.
-     *
-     * @param array $data The response data as an array
-     */
     protected function processItems(array $data): void
     {
         $this->items = [];
         foreach ($data['items'] ?? $data as $item) {
-            $this->items[] = Campaign::fromArray($item);
+            $this->items[] = new Campaign($item);
         }
     }
 }

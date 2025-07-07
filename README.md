@@ -20,30 +20,7 @@ composer require phplist/rest-api-client
 
 ### Initialization
 
-You can initialize the client in two ways:
-
-#### Method 1: Using the ClientFactory (Recommended)
-
-```php
-use PhpList\RestApiClient\ClientFactory;
-
-// Create all clients at once
-$clients = ClientFactory::createAllClients('https://your-phplist-api-url.com');
-
-// Access individual clients
-$client = $clients['client'];
-$adminClient = $clients['admin'];
-$authClient = $clients['identity'];
-$campaignClient = $clients['campaign'];
-$subscriptionClient = $clients['subscription'];
-$statisticsClient = $clients['statistics'];
-
-// Or create clients individually
-$client = ClientFactory::createClient('https://your-phplist-api-url.com');
-$authClient = ClientFactory::createIdentityClient($client);
-```
-
-#### Method 2: Manual Initialization
+You can initialize the client like this:
 
 ```php
 use PhpList\RestApiClient\Client;

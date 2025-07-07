@@ -14,7 +14,7 @@ class CreateAdministratorRequest extends AbstractRequest
     /**
      * @var string The login name
      */
-    public string $login_name;
+    public string $loginName;
 
     /**
      * @var string The password
@@ -29,7 +29,7 @@ class CreateAdministratorRequest extends AbstractRequest
     /**
      * @var bool Whether the administrator is a super user
      */
-    public bool $super_user;
+    public bool $superUser;
 
     /**
      * @var array|null The administrator privileges
@@ -39,23 +39,23 @@ class CreateAdministratorRequest extends AbstractRequest
     /**
      * CreateAdministratorRequest constructor.
      *
-     * @param string $login_name The login name
+     * @param string $loginName The login name
      * @param string $password The password
      * @param string $email The email address
-     * @param bool $super_user Whether the administrator is a super user
+     * @param bool $superUser Whether the administrator is a super user
      * @param array|null $privileges The administrator privileges
      */
     public function __construct(
-        string $login_name,
+        string $loginName,
         string $password,
         string $email,
-        bool $super_user,
+        bool $superUser,
         ?array $privileges = null
     ) {
-        $this->login_name = $login_name;
+        $this->loginName = $loginName;
         $this->password = $password;
         $this->email = $email;
-        $this->super_user = $super_user;
+        $this->superUser = $superUser;
         $this->privileges = $privileges;
     }
 }

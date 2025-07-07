@@ -1,0 +1,39 @@
+name: phpList REST API Build
+on: [push, pull_request]
+jobs:
+  main:
+    name: phpList rest api client
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['8.1']
+        dependencies: ['latest', 'oldest']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, dom, fileinfo, mysql
+          coverage: xdebug
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: Install dependencies
+        run: composer update --with-dependencies --prefer-stable --prefer-dist
+      - name: Install current dependencies from composer.lock
+        run: composer install
+      - name: Running static analysis
+        run: vendor/bin/phpstan analyse -l 5 src/ tests/;
+      - name: Running PHPMD
+        run: vendor/bin/phpmd src/ text phpMdRules.xml;
+      - name: Running PHP_CodeSniffer
+        run: vendor/bin/phpcs --standard=phpCodeSnifferRuleset src/ tests/;

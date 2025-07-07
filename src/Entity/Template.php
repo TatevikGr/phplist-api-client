@@ -40,4 +40,17 @@ class Template extends AbstractResponse
      * @var ?array
      */
     public ?array $images = null;
+
+    public function __construct(array $data)
+    {
+        $this->id = isset($data['id']) ? (int)$data['id'] : 0;
+        $this->title = isset($data['title']) ? (string)$data['title'] : '';
+        $this->text = isset($data['text']) ? (string)$data['text'] : null;
+        $this->content = isset($data['content']) ? (string)$data['content'] : null;
+        $this->order = isset($data['order']) ? (string)$data['order'] : null;
+
+        $this->images  = isset($data['images']) && is_array($data['images'])
+            ? $data['images']
+            : null;
+    }
 }

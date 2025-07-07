@@ -18,4 +18,10 @@ class DeleteResponse extends AbstractResponse
      * @var string|null A message about the operation
      */
     public ?string $message = null;
+
+    public function __construct(array $data)
+    {
+        $this->success = isset($data['success']) && (bool)$data['success'];
+        $this->message = $data['text_message'] ?? null;
+    }
 }
