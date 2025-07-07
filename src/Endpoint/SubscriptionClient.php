@@ -59,7 +59,7 @@ class SubscriptionClient
      */
     public function getSubscriber(int $id): array
     {
-        return $this->client->get("subscribers/{$id}");
+        return $this->client->get('subscribers/' . $id);
     }
 
     /**
@@ -87,7 +87,7 @@ class SubscriptionClient
      */
     public function updateSubscriber(int $id, array $data): array
     {
-        return $this->client->put("subscribers/{$id}", $data);
+        return $this->client->put('subscribers/' . $id, $data);
     }
 
     /**
@@ -100,7 +100,7 @@ class SubscriptionClient
      */
     public function deleteSubscriber(int $id): array
     {
-        return $this->client->delete("subscribers/{$id}");
+        return $this->client->delete('subscribers/' . $id);
     }
 
     /**
@@ -132,7 +132,7 @@ class SubscriptionClient
      */
     public function getSubscriberList(int $id): array
     {
-        return $this->client->get("lists/{$id}");
+        return $this->client->get('lists/' . $id);
     }
 
     /**
@@ -160,7 +160,7 @@ class SubscriptionClient
      */
     public function updateSubscriberList(int $id, array $data): array
     {
-        return $this->client->put("lists/{$id}", $data);
+        return $this->client->put('lists/' . $id, $data);
     }
 
     /**
@@ -173,7 +173,7 @@ class SubscriptionClient
      */
     public function deleteSubscriberList(int $id): array
     {
-        return $this->client->delete("lists/{$id}");
+        return $this->client->delete('lists/' . $id);
     }
 
     /**
@@ -187,7 +187,7 @@ class SubscriptionClient
      */
     public function addSubscriberToList(int $subscriberId, int $listId): array
     {
-        return $this->client->post("subscribers/{$subscriberId}/lists/{$listId}");
+        return $this->client->post('subscribers/' . $subscriberId . '/lists/' . $listId);
     }
 
     /**
@@ -201,7 +201,7 @@ class SubscriptionClient
      */
     public function removeSubscriberFromList(int $subscriberId, int $listId): array
     {
-        return $this->client->delete("subscribers/{$subscriberId}/lists/{$listId}");
+        return $this->client->delete('subscribers/' . $subscriberId . '/lists/' . $listId);
     }
 
     /**
@@ -214,7 +214,7 @@ class SubscriptionClient
      */
     public function getAttributeValues(int $subscriberId): array
     {
-        return $this->client->get("subscribers/attribute-values/{$subscriberId}");
+        return $this->client->get('subscribers/attribute-values/' . $subscriberId);
     }
 
     /**
@@ -228,7 +228,7 @@ class SubscriptionClient
      */
     public function getAttributeValue(int $subscriberId, int $definitionId): array
     {
-        return $this->client->get("subscribers/attribute-values/{$subscriberId}/{$definitionId}");
+        return $this->client->get('subscribers/attribute-values/' . $subscriberId . '/' . $definitionId);
     }
 
     /**
@@ -244,7 +244,7 @@ class SubscriptionClient
      */
     public function setAttributeValue(int $subscriberId, int $definitionId, array $data): array
     {
-        return $this->client->put("subscribers/attribute-values/{$subscriberId}/{$definitionId}", $data);
+        return $this->client->put('subscribers/attribute-values/' . $subscriberId . '/' . $definitionId, $data);
     }
 
     /**
@@ -258,7 +258,7 @@ class SubscriptionClient
      */
     public function deleteAttributeValue(int $subscriberId, int $definitionId): array
     {
-        return $this->client->delete("subscribers/attribute-values/{$subscriberId}/{$definitionId}");
+        return $this->client->delete('subscribers/attribute-values/' . $subscriberId . '/' . $definitionId);
     }
 
     /**

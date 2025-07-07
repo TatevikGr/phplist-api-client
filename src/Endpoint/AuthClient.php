@@ -38,8 +38,7 @@ class AuthClient
      * Logout the current user.
      *
      * @return array The response data
-     * @throws AuthenticationException If not authenticated
-     * @throws ApiException If an API error occurs
+     * @throws AuthenticationException If not authenticated or an API error occurs
      */
     public function logout(): array
     {
@@ -48,7 +47,7 @@ class AuthClient
         if (!$sessionId) {
             throw new AuthenticationException('Not authenticated');
         }
-        $result = $this->client->delete("sessions/{$sessionId}");
+        $result = $this->client->delete('sessions/' . $sessionId);
         $this->client->setSessionId('');
 
         return $result;

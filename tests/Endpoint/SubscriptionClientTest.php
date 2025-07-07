@@ -72,7 +72,7 @@ class SubscriptionClientTest extends TestCase
 
         $this->clientMock->expects($this->once())
             ->method('get')
-            ->with("subscribers/{$subscriberId}")
+            ->with('subscribers/' . $subscriberId)
             ->willReturn($expectedResponse);
 
         $result = $this->subscriptionClient->getSubscriber($subscriberId);
@@ -85,7 +85,7 @@ class SubscriptionClientTest extends TestCase
 
         $this->clientMock->expects($this->once())
             ->method('get')
-            ->with("subscribers/{$subscriberId}")
+            ->with('subscribers/' . $subscriberId)
             ->willThrowException(new NotFoundException('Subscriber not found'));
 
         $this->expectException(NotFoundException::class);
@@ -126,7 +126,9 @@ class SubscriptionClientTest extends TestCase
         $this->clientMock->expects($this->once())
             ->method('post')
             ->with('subscribers', $subscriberData)
-            ->willThrowException(new ValidationException('Validation failed', 422, ['email' => ['Invalid email format']]));
+            ->willThrowException(
+                new ValidationException('Validation failed', 422, ['email' => ['Invalid email format']])
+            );
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('Validation failed');
@@ -150,7 +152,7 @@ class SubscriptionClientTest extends TestCase
 
         $this->clientMock->expects($this->once())
             ->method('put')
-            ->with("subscribers/{$subscriberId}", $subscriberData)
+            ->with('subscribers/' . $subscriberId, $subscriberData)
             ->willReturn($expectedResponse);
 
         $result = $this->subscriptionClient->updateSubscriber($subscriberId, $subscriberData);
@@ -164,7 +166,7 @@ class SubscriptionClientTest extends TestCase
 
         $this->clientMock->expects($this->once())
             ->method('delete')
-            ->with("subscribers/{$subscriberId}")
+            ->with('subscribers/' . $subscriberId)
             ->willReturn($expectedResponse);
 
         $result = $this->subscriptionClient->deleteSubscriber($subscriberId);
@@ -179,7 +181,7 @@ class SubscriptionClientTest extends TestCase
 
         $this->clientMock->expects($this->once())
             ->method('post')
-            ->with("subscribers/{$subscriberId}/lists/{$listId}")
+            ->with('subscribers/' . $subscriberId . '/lists/' . $listId)
             ->willReturn($expectedResponse);
 
         $result = $this->subscriptionClient->addSubscriberToList($subscriberId, $listId);
@@ -194,7 +196,7 @@ class SubscriptionClientTest extends TestCase
 
         $this->clientMock->expects($this->once())
             ->method('delete')
-            ->with("subscribers/{$subscriberId}/lists/{$listId}")
+            ->with('subscribers/' . $subscriberId . '/lists/' . $listId)
             ->willReturn($expectedResponse);
 
         $result = $this->subscriptionClient->removeSubscriberFromList($subscriberId, $listId);

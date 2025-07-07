@@ -5,26 +5,7 @@ declare(strict_types=1);
 namespace PhpList\RestApiClient\Tests\Response;
 
 use PHPUnit\Framework\TestCase;
-use PhpList\RestApiClient\Response\AbstractCollectionResponse;
 use PhpList\RestApiClient\Response\CursorPagination;
-
-class TestCollectionResponse extends AbstractCollectionResponse
-{
-    /**
-     * @var array The list of items in the collection
-     */
-    public array $items = [];
-
-    /**
-     * Process the items in the collection.
-     *
-     * @param array $data The response data as an array
-     */
-    protected function processItems(array $data): void
-    {
-        $this->items = $data['items'] ?? $data;
-    }
-}
 
 class AbstractCollectionResponseTest extends TestCase
 {

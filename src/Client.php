@@ -69,15 +69,14 @@ class Client
      * @param string $username The username
      * @param string $password The password
      * @return array The authentication response data
-     * @throws AuthenticationException If authentication fails
-     * @throws ApiException If an API error occurs
+     * @throws AuthenticationException If authentication fails or an API error occurs
      */
     public function login(string $username, string $password): array
     {
         $this->logger->info('Authenticating with the API', ['username' => $username]);
 
         try {
-            $response = $this->httpClient->post("sessions", [
+            $response = $this->httpClient->post('sessions', [
                 'json' => [
                     'login_name' => $username,
                     'password' => $password,
@@ -185,7 +184,7 @@ class Client
     private function request(string $method, string $endpoint, array $options = []): array
     {
         $endpoint = ltrim($endpoint, '/');
-        $url = "/api/v2/{$endpoint}";
+        $url = '/api/v2/' . $endpoint;
 
         // Add session ID to headers if available
         if ($this->sessionId) {
@@ -233,6 +232,22 @@ class Client
             return $data;
         }
 
+        return $this->handleErrorResponse($statusCode, $data);
+    }
+
+    /**
+     * Handle error responses by throwing appropriate exceptions.
+     *
+     * @param int $statusCode The HTTP status code
+     * @param array $data The response data
+     * @return never
+     * @throws ApiException If an API error occurs
+     * @throws AuthenticationException If authentication fails
+     * @throws NotFoundException If the resource is not found
+     * @throws ValidationException If validation fails
+     */
+    private function handleErrorResponse(int $statusCode, array $data): never
+    {
         throw match ($statusCode) {
             401, 403 => new AuthenticationException($data['message'] ?? 'Authentication failed', $statusCode),
             404 => new NotFoundException($data['message'] ?? 'Resource not found', $statusCode),

@@ -36,4 +36,4 @@ jobs:
       - name: Running PHPMD
         run: vendor/bin/phpmd src/ text phpMdRules.xml;
       - name: Running PHP_CodeSniffer
-        run: vendor/bin/phpcs --standard=phpCodeSnifferRuleset src/ tests/;
+        run: vendor/bin/phpcs --standard=phpCodeSnifferRules.xml src/ tests/;

@@ -67,7 +67,7 @@ class AdminAttributeClient
      */
     public function getAttributeDefinition(int $id): AdminAttributeDefinition
     {
-        $data = $this->client->get("administrators/attributes/{$id}");
+        $data = $this->client->get('administrators/attributes/' . $id);
         return new AdminAttributeDefinition($data);
     }
 
@@ -95,9 +95,11 @@ class AdminAttributeClient
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function updateAttributeDefinition(int $id, UpdateAdminAttributeDefinitionRequest $request): AdminAttributeDefinition
-    {
-        $data = $this->client->put("administrators/attributes/{$id}", $request->toArray());
+    public function updateAttributeDefinition(
+        int $id,
+        UpdateAdminAttributeDefinitionRequest $request
+    ): AdminAttributeDefinition {
+        $data = $this->client->put('administrators/attributes/' . $id, $request->toArray());
         return new AdminAttributeDefinition($data);
     }
 
@@ -111,7 +113,7 @@ class AdminAttributeClient
      */
     public function deleteAttributeDefinition(int $id): DeleteResponse
     {
-        $data = $this->client->delete("administrators/attributes/{$id}");
+        $data = $this->client->delete('administrators/attributes/' . $id);
         return new DeleteResponse($data);
     }
 
@@ -123,15 +125,18 @@ class AdminAttributeClient
      * @throws NotFoundException If the administrator is not found
      * @throws ApiException|ReflectionException If an API error occurs
      */
-    public function getAttributeValues(int $adminId, ?int $afterId = null, int $limit = 25): AdminAttributeValueCollection
-    {
+    public function getAttributeValues(
+        int $adminId,
+        ?int $afterId = null,
+        int $limit = 25
+    ): AdminAttributeValueCollection {
         $queryParams = ['limit' => $limit];
 
         if ($afterId !== null) {
             $queryParams['after_id'] = $afterId;
         }
 
-        $data = $this->client->get("administrators/attribute-values/{$adminId}", $queryParams);
+        $data = $this->client->get('administrators/attribute-values/' . $adminId, $queryParams);
         return new AdminAttributeValueCollection($data);
     }
 
@@ -146,7 +151,7 @@ class AdminAttributeClient
      */
     public function getAttributeValue(int $adminId, int $definitionId): AdminAttributeValue
     {
-        $data = $this->client->get("administrators/attribute-values/{$adminId}/{$definitionId}");
+        $data = $this->client->get('administrators/attribute-values/' . $adminId . '/' . $definitionId);
         return new AdminAttributeValue($data);
     }
 
@@ -161,7 +166,7 @@ class AdminAttributeClient
      */
     public function setAttributeValue(int $adminId, int $definitionId, string $value): AdminAttributeValue
     {
-        $data = $this->client->post("administrators/attribute-values/{$adminId}/{$definitionId}", [
+        $data = $this->client->post('administrators/attribute-values/' . $adminId . '/' . $definitionId, [
             'value' => $value,
         ]);
         return new AdminAttributeValue($data);
@@ -178,7 +183,7 @@ class AdminAttributeClient
      */
     public function deleteAttributeValue(int $adminId, int $definitionId): DeleteResponse
     {
-        $data = $this->client->delete("administrators/attribute-values/{$adminId}/{$definitionId}");
+        $data = $this->client->delete('administrators/attribute-values/' . $adminId . '/' . $definitionId);
         return new DeleteResponse($data);
     }
 }

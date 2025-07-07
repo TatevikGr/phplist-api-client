@@ -76,8 +76,7 @@ class Subscriber extends AbstractResponse
         $this->htmlEmail = isset($data['html_email']) && (bool)$data['html_email'];
         $this->disabled = isset($data['disabled']) && (bool)$data['disabled'];
 
-        $this->subscribedLists = isset($data['subscribed_lists']) && is_array($data['subscribed_lists'])
-            ? $data['subscribed_lists']
-            : null;
+        $hasLists = isset($data['subscribed_lists']) && is_array($data['subscribed_lists']);
+        $this->subscribedLists = $hasLists ? $data['subscribed_lists'] : null;
     }
 }

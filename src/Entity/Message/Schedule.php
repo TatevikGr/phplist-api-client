@@ -42,18 +42,12 @@ class Schedule extends AbstractResponse
     {
         $this->repeatInterval = isset($data['repeat_interval']) ? (int)$data['repeat_interval'] : null;
 
-        $this->repeatUntil = isset($data['repeat_until'])
-            ? new DateTimeImmutable($data['repeat_until'])
-            : null;
+        $this->repeatUntil = isset($data['repeat_until']) ? new DateTimeImmutable($data['repeat_until']) : null;
 
         $this->requeueInterval = isset($data['requeue_interval']) ? (int)$data['requeue_interval'] : null;
 
-        $this->requeueUntil = isset($data['requeue_until'])
-            ? new DateTimeImmutable($data['requeue_until'])
-            : null;
+        $this->requeueUntil = isset($data['requeue_until']) ? new DateTimeImmutable($data['requeue_until']) : null;
 
-        $this->embargo = isset($data['embargo'])
-            ? new DateTimeImmutable($data['embargo'])
-            : null;
+        $this->embargo = isset($data['embargo']) ? new DateTimeImmutable($data['embargo']) : null;
     }
 }

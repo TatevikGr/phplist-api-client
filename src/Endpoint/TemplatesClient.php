@@ -58,7 +58,7 @@ class TemplatesClient
      */
     public function getTemplate(string $id): array
     {
-        return $this->client->get("templates/{$id}");
+        return $this->client->get('templates/' . $id);
     }
 
     /**
@@ -84,6 +84,6 @@ class TemplatesClient
      */
     public function deleteTemplate(string $id): array
     {
-        return $this->client->delete("templates/{$id}");
+        return $this->client->delete('templates/' . $id);
     }
 }

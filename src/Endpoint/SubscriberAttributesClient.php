@@ -64,7 +64,7 @@ class SubscriberAttributesClient
      */
     public function getAttributeDefinition(int $id): SubscriberAttributeDefinition
     {
-        $response = $this->client->get("subscribers/attributes/{$id}");
+        $response = $this->client->get('subscribers/attributes/' . $id);
         return new SubscriberAttributeDefinition($response);
     }
 
@@ -94,7 +94,7 @@ class SubscriberAttributesClient
      */
     public function updateAttributeDefinition(int $id, array $data): SubscriberAttributeDefinition
     {
-        $response = $this->client->put("subscribers/attributes/{$id}", $data);
+        $response = $this->client->put('subscribers/attributes/' . $id, $data);
         return new SubscriberAttributeDefinition($response);
     }
 
@@ -108,7 +108,7 @@ class SubscriberAttributesClient
      */
     public function deleteAttributeDefinition(int $id): DeleteResponse
     {
-        $response = $this->client->delete("subscribers/attributes/{$id}");
+        $response = $this->client->delete('subscribers/attributes/' . $id);
         return new DeleteResponse($response);
     }
 
@@ -122,7 +122,7 @@ class SubscriberAttributesClient
      */
     public function getAttributeValues(int $subscriberId): SubscriberAttributeValueCollection
     {
-        $response = $this->client->get("subscribers/attribute-values/{$subscriberId}");
+        $response = $this->client->get('subscribers/attribute-values/' . $subscriberId);
         return new SubscriberAttributeValueCollection($response);
     }
 
@@ -137,7 +137,7 @@ class SubscriberAttributesClient
      */
     public function getAttributeValue(int $subscriberId, int $definitionId): SubscriberAttributeValue
     {
-        $response = $this->client->get("subscribers/attribute-values/{$subscriberId}/{$definitionId}");
+        $response = $this->client->get('subscribers/attribute-values/' . $subscriberId . '/' . $definitionId);
         return new SubscriberAttributeValue($response);
     }
 
@@ -154,7 +154,7 @@ class SubscriberAttributesClient
      */
     public function setAttributeValue(int $subscriberId, int $definitionId, array $data): SubscriberAttributeValue
     {
-        $response = $this->client->put("subscribers/attribute-values/{$subscriberId}/{$definitionId}", $data);
+        $response = $this->client->put('subscribers/attribute-values/' . $subscriberId . '/' . $definitionId, $data);
         return new SubscriberAttributeValue($response);
     }
 
@@ -169,7 +169,7 @@ class SubscriberAttributesClient
      */
     public function deleteAttributeValue(int $subscriberId, int $definitionId): DeleteResponse
     {
-        $response = $this->client->delete("subscribers/attribute-values/{$subscriberId}/{$definitionId}");
+        $response = $this->client->delete('subscribers/attribute-values/' . $subscriberId . '/' . $definitionId);
         return new DeleteResponse($response);
     }
 }

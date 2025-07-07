@@ -64,7 +64,7 @@ class CampaignClient
      */
     public function getCampaign(int $id): Campaign
     {
-        $response = $this->client->get("campaigns/{$id}");
+        $response = $this->client->get('campaigns/' . $id);
         return new Campaign($response);
     }
 
@@ -94,7 +94,7 @@ class CampaignClient
      */
     public function updateCampaign(int $id, UpdateCampaignRequest $request): Campaign
     {
-        $response = $this->client->put("campaigns/{$id}", $request->toArray());
+        $response = $this->client->put('campaigns/' . $id, $request->toArray());
         return new Campaign($response);
     }
 
@@ -108,7 +108,7 @@ class CampaignClient
      */
     public function deleteCampaign(int $id): DeleteResponse
     {
-        $response = $this->client->delete("campaigns/{$id}");
+        $response = $this->client->delete('campaigns/' . $id);
         return new DeleteResponse($response);
     }
 }

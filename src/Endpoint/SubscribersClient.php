@@ -62,7 +62,7 @@ class SubscribersClient
      */
     public function getSubscriber(int $id): Subscriber
     {
-        $response = $this->client->get("subscribers/{$id}");
+        $response = $this->client->get('subscribers/' . $id);
         return new Subscriber($response);
     }
 
@@ -92,7 +92,7 @@ class SubscribersClient
      */
     public function updateSubscriber(int $id, array $data): Subscriber
     {
-        $response = $this->client->put("subscribers/{$id}", $data);
+        $response = $this->client->put('subscribers/' . $id, $data);
         return new Subscriber($response);
     }
 
@@ -106,7 +106,7 @@ class SubscribersClient
      */
     public function deleteSubscriber(int $id): DeleteResponse
     {
-        $response = $this->client->delete("subscribers/{$id}");
+        $response = $this->client->delete('subscribers/' . $id);
         return new DeleteResponse($response);
     }
 }

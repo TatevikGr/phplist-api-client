@@ -41,7 +41,7 @@ class Administrator extends AbstractResponse
     public DateTimeInterface $createdAt;
 
     /**
-     * @throws Exception
+     * @throws Exception|InvalidArgumentException If created_at is missing or date is invalid
      */
     public function __construct(array $data)
     {

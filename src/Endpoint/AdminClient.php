@@ -64,7 +64,7 @@ class AdminClient
      */
     public function getAdministrator(int $id): Administrator
     {
-        $data = $this->client->get("administrators/{$id}");
+        $data = $this->client->get('administrators/' . $id);
         return new Administrator($data);
     }
 
@@ -94,7 +94,7 @@ class AdminClient
      */
     public function updateAdministrator(int $id, UpdateAdministratorRequest $request): Administrator
     {
-        $data = $this->client->put("administrators/{$id}", $request->toArray());
+        $data = $this->client->put('administrators/' . $id, $request->toArray());
         return new Administrator($data);
     }
 
@@ -108,7 +108,7 @@ class AdminClient
      */
     public function deleteAdministrator(int $id): DeleteResponse
     {
-        $data = $this->client->delete("administrators/{$id}");
+        $data = $this->client->delete('administrators/' . $id);
         return new DeleteResponse($data);
     }
 }
