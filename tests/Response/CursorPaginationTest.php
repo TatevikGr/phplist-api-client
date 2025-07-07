@@ -22,8 +22,8 @@ class CursorPaginationTest extends TestCase
 
         $this->assertSame(100, $pagination->total);
         $this->assertSame(25, $pagination->limit);
-        $this->assertTrue($pagination->has_more);
-        $this->assertSame(129, $pagination->next_cursor);
+        $this->assertTrue($pagination->hasMore);
+        $this->assertSame(129, $pagination->nextCursor);
     }
 
     public function testFromArrayWithDefaults(): void
@@ -36,8 +36,8 @@ class CursorPaginationTest extends TestCase
 
         $this->assertSame(100, $pagination->total);
         $this->assertSame(0, $pagination->limit);
-        $this->assertFalse($pagination->has_more);
-        $this->assertNull($pagination->next_cursor);
+        $this->assertFalse($pagination->hasMore);
+        $this->assertNull($pagination->nextCursor);
     }
 
     public function testToArray(): void

@@ -56,7 +56,7 @@ abstract class AbstractCollectionResponse extends AbstractResponse
     {
         $data = $this->pagination->toArray();
         $data['items'] = $this->getItemsAsArray();
-        
+
         return $data;
     }
 
@@ -70,13 +70,13 @@ abstract class AbstractCollectionResponse extends AbstractResponse
     {
         $items = [];
         foreach ($this->items as $item) {
-            if (method_exists($item, 'toArray')) {
+            if (is_object($item) && method_exists($item, 'toArray')) {
                 $items[] = $item->toArray();
             } else {
                 $items[] = $item;
             }
         }
-        
+
         return $items;
     }
 }

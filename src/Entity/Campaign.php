@@ -59,11 +59,11 @@ class Campaign extends AbstractResponse
 
     private const MAPPINGS = [
         'template'          => Template::class,
-        'message_content'   => Content::class,
-        'message_format'    => Format::class,
-        'message_metadata'  => Metadata::class,
-        'message_schedule'  => Schedule::class,
-        'message_options'   => Options::class,
+        'messageContent'   => Content::class,
+        'messageFormat'    => Format::class,
+        'messageMetadata'  => Metadata::class,
+        'messageSchedule'  => Schedule::class,
+        'messageOptions'   => Options::class,
     ];
 
     /**

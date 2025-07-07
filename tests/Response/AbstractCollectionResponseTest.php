@@ -41,13 +41,13 @@ class AbstractCollectionResponseTest extends TestCase
             ],
         ];
 
-        $response = TestCollectionResponse::fromArray($data);
+        $response = new TestCollectionResponse($data);
 
         $this->assertInstanceOf(CursorPagination::class, $response->pagination);
         $this->assertSame(100, $response->pagination->total);
         $this->assertSame(25, $response->pagination->limit);
-        $this->assertTrue($response->pagination->has_more);
-        $this->assertSame(129, $response->pagination->next_cursor);
+        $this->assertTrue($response->pagination->hasMore);
+        $this->assertSame(129, $response->pagination->nextCursor);
         $this->assertCount(2, $response->items);
         $this->assertSame(['id' => 1, 'name' => 'Item 1'], $response->items[0]);
         $this->assertSame(['id' => 2, 'name' => 'Item 2'], $response->items[1]);
@@ -62,19 +62,30 @@ class AbstractCollectionResponseTest extends TestCase
             ],
         ];
 
-        $response = TestCollectionResponse::fromArray($data);
+        $response = new TestCollectionResponse($data);
 
         $this->assertInstanceOf(CursorPagination::class, $response->pagination);
         $this->assertSame(2, $response->pagination->total);
         $this->assertSame(0, $response->pagination->limit);
-        $this->assertFalse($response->pagination->has_more);
-        $this->assertNull($response->pagination->next_cursor);
+        $this->assertFalse($response->pagination->hasMore);
+        $this->assertNull($response->pagination->nextCursor);
         $this->assertCount(2, $response->items);
     }
 
     public function testToArray(): void
     {
-        $response = new TestCollectionResponse();
+        $response = new TestCollectionResponse([
+            'items' => [
+                ['id' => 1, 'name' => 'Item 1'],
+                ['id' => 2, 'name' => 'Item 2'],
+            ],
+            'pagination' => [
+                'total' => 100,
+                'limit' => 25,
+                'has_more' => true,
+                'next_cursor' => 129,
+            ]
+        ]);
         $response->pagination = new CursorPagination([
             'total' => 100,
             'limit' => 25,

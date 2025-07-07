@@ -54,7 +54,7 @@ class ClientTest extends TestCase
             ->method('post')
             ->with('sessions', [
                 'json' => [
-                    'username' => $username,
+                    'login_name' => $username,
                     'password' => $password,
                 ],
             ])
