@@ -33,7 +33,8 @@ abstract class AbstractResponse implements ResponseInterface
             $value = $property->getValue($this);
 
             $snakeName = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $name));
-            $data[$snakeName] = $value;        }
+            $data[$snakeName] = $value;
+        }
         
         return $data;
     }

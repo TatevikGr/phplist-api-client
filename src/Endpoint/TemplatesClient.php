@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
+use PhpList\RestApiClient\Entity\Template;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Exception\ValidationException;
+use PhpList\RestApiClient\Request\Template\CreateTemplateRequest;
+use PhpList\RestApiClient\Response\DeleteResponse;
+use PhpList\RestApiClient\Response\TemplateCollection;
 
 /**
  * Client for templates-related API endpoints.
@@ -34,10 +38,10 @@ class TemplatesClient
      *
      * @param int|null $afterId The ID to start from for pagination
      * @param int $limit The maximum number of items to return
-     * @return array The list of templates
+     * @return TemplateCollection The list of templates
      * @throws ApiException If an API error occurs
      */
-    public function getTemplates(?int $afterId = null, int $limit = 25): array
+    public function getTemplates(?int $afterId = null, int $limit = 25): TemplateCollection
     {
         $queryParams = ['limit' => $limit];
 
@@ -45,45 +49,49 @@ class TemplatesClient
             $queryParams['after_id'] = $afterId;
         }
 
-        return $this->client->get('templates', $queryParams);
+        $response = $this->client->get('templates', $queryParams);
+        return new TemplateCollection($response);
     }
 
     /**
      * Get a template by ID.
      *
      * @param string $id The template ID
-     * @return array The template data
+     * @return Template The template data
      * @throws NotFoundException If the template is not found
      * @throws ApiException If an API error occurs
      */
-    public function getTemplate(string $id): array
+    public function getTemplate(string $id): Template
     {
-        return $this->client->get('templates/' . $id);
+        $response = $this->client->get('templates/' . $id);
+        return new Template($response);
     }
 
     /**
      * Create a new template.
      *
-     * @param array $data The template data
-     * @return array The created template
+     * @param CreateTemplateRequest $request The template request
+     * @return Template The created template
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function createTemplate(array $data): array
+    public function createTemplate(CreateTemplateRequest $request): Template
     {
-        return $this->client->post('templates', $data);
+        $response = $this->client->post('templates', $request->toArray());
+        return new Template($response);
     }
 
     /**
      * Delete a template.
      *
      * @param string $id The template ID
-     * @return array The response data
+     * @return DeleteResponse The response data
      * @throws NotFoundException If the template is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteTemplate(string $id): array
+    public function deleteTemplate(string $id): DeleteResponse
     {
-        return $this->client->delete('templates/' . $id);
+        $response = $this->client->delete('templates/' . $id);
+        return new DeleteResponse($response);
     }
 }

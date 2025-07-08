@@ -7,6 +7,11 @@ namespace PhpList\RestApiClient\Endpoint;
 use PhpList\RestApiClient\Client;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
+use PhpList\RestApiClient\Response\Statistics\CampaignStatisticsCollection;
+use PhpList\RestApiClient\Response\Statistics\ViewOpensCollection;
+use PhpList\RestApiClient\Response\Statistics\TopDomainsCollection;
+use PhpList\RestApiClient\Response\Statistics\DomainConfirmationsCollection;
+use PhpList\RestApiClient\Response\Statistics\TopLocalPartsCollection;
 
 /**
  * Client for statistics and analytics-related API endpoints.
@@ -31,18 +36,19 @@ class StatisticsClient
     /**
      * Get campaign statistics.
      *
-     * @return array The campaign statistics
+     * @return CampaignStatisticsCollection The campaign statistics
      * @throws ApiException If an API error occurs
      * @throws NotFoundException If the campaign is not found
      */
-    public function getCampaignStatistics(?int $afterId = null, int $limit = 25): array
+    public function getCampaignStatistics(?int $afterId = null, int $limit = 25): CampaignStatisticsCollection
     {
         $queryParams = ['limit' => $limit];
 
         if ($afterId !== null) {
             $queryParams['after_id'] = $afterId;
         }
-        return $this->client->get('analytics/campaigns', $queryParams);
+        $response = $this->client->get('analytics/campaigns', $queryParams);
+        return new CampaignStatisticsCollection($response);
     }
 
     /**
@@ -50,17 +56,18 @@ class StatisticsClient
      *
      * @param int|null $afterId
      * @param int $limit
-     * @return array The time period statistics
+     * @return ViewOpensCollection The time period statistics
      * @throws ApiException If an API error occurs
      */
-    public function getStatisticsOfViewOpens(?int $afterId = null, int $limit = 25): array
+    public function getStatisticsOfViewOpens(?int $afterId = null, int $limit = 25): ViewOpensCollection
     {
         $queryParams = ['limit' => $limit];
 
         if ($afterId !== null) {
             $queryParams['after_id'] = $afterId;
         }
-        return $this->client->get('analytics/view-opens', $queryParams);
+        $response = $this->client->get('analytics/view-opens', $queryParams);
+        return new ViewOpensCollection($response);
     }
 
     /**
@@ -68,44 +75,47 @@ class StatisticsClient
      *
      * @param int $limit Maximum number of domains to return
      * @param int $minSubscribers Minimum number of subscribers per domain
-     * @return array The top domains statistics
+     * @return TopDomainsCollection The top domains statistics
      * @throws ApiException If an API error occurs
      */
-    public function getTopDomains(int $limit = 20, int $minSubscribers = 5): array
+    public function getTopDomains(int $limit = 20, int $minSubscribers = 5): TopDomainsCollection
     {
         $queryParams = [
             'limit' => $limit,
             'min_subscribers' => $minSubscribers
         ];
 
-        return $this->client->get('analytics/domains/top', $queryParams);
+        $response = $this->client->get('analytics/domains/top', $queryParams);
+        return new TopDomainsCollection($response);
     }
 
     /**
      * Get domain confirmation statistics.
      *
      * @param int $limit Maximum number of domains to return
-     * @return array The domain confirmation statistics
+     * @return DomainConfirmationsCollection The domain confirmation statistics
      * @throws ApiException If an API error occurs
      */
-    public function getDomainConfirmationStatistics(int $limit = 50): array
+    public function getDomainConfirmationStatistics(int $limit = 50): DomainConfirmationsCollection
     {
         $queryParams = ['limit' => $limit];
 
-        return $this->client->get('analytics/domains/confirmation', $queryParams);
+        $response = $this->client->get('analytics/domains/confirmation', $queryParams);
+        return new DomainConfirmationsCollection($response);
     }
 
     /**
      * Get top local-parts statistics.
      *
      * @param int $limit Maximum number of local-parts to return
-     * @return array The top local-parts statistics
+     * @return TopLocalPartsCollection The top local-parts statistics
      * @throws ApiException If an API error occurs
      */
-    public function getTopLocalParts(int $limit = 25): array
+    public function getTopLocalParts(int $limit = 25): TopLocalPartsCollection
     {
         $queryParams = ['limit' => $limit];
 
-        return $this->client->get('analytics/local-parts/top', $queryParams);
+        $response = $this->client->get('analytics/local-parts/top', $queryParams);
+        return new TopLocalPartsCollection($response);
     }
 }

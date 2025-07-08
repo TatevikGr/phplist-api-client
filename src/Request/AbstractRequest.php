@@ -25,17 +25,26 @@ abstract class AbstractRequest implements RequestInterface
     {
         $reflection = new ReflectionClass($this);
         $properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC);
-        
+
         $data = [];
         foreach ($properties as $property) {
             $name = $property->getName();
             $value = $property->getValue($this);
-            
+
             if ($value !== null) {
-                $data[$name] = $value;
+                $snakeName = self::camelToSnake($name);
+                $data[$snakeName] = $value;
             }
         }
-        
+
         return $data;
+    }
+
+    /**
+     * Helper to convert camelCase → snake_case
+     */
+    protected static function camelToSnake(string $input): string
+    {
+        return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $input));
     }
 }
