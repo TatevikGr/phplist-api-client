@@ -53,9 +53,7 @@ class Metadata extends AbstractResponse
         $this->processed = isset($data['processed']) ? (bool)$data['processed'] : null;
         $this->views = isset($data['views']) ? (int)$data['views'] : null;
         $this->bounceCount = isset($data['bounce_count']) ? (int)$data['bounce_count'] : null;
-
         $this->entered = !empty($data['entered']) ? new DateTimeImmutable($data['entered']) : null;
-
         $this->sent = !empty($data['sent']) ? new DateTimeImmutable($data['sent']) : null;
     }
 }

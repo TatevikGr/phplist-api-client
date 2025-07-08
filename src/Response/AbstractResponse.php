@@ -31,9 +31,9 @@ abstract class AbstractResponse implements ResponseInterface
         foreach ($properties as $property) {
             $name = $property->getName();
             $value = $property->getValue($this);
-            
-            $data[$name] = $value;
-        }
+
+            $snakeName = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $name));
+            $data[$snakeName] = $value;        }
         
         return $data;
     }

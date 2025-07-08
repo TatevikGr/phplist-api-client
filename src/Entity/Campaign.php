@@ -71,7 +71,8 @@ class Campaign extends AbstractResponse
      */
     public function toArray(): array
     {
-        $data = parent::toArray();
+        $data['id'] = $this->id;
+        $data['unique_id'] = $this->uniqueId;
 
         if ($this->template instanceof Template) {
             $data['template'] = $this->template->toArray();
