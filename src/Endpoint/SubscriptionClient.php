@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace PhpList\RestApiClient\Endpoint;
 
+use Exception;
 use PhpList\RestApiClient\Client;
+use PhpList\RestApiClient\Entity\SubscriberList;
+use PhpList\RestApiClient\Entity\Subscription;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
-use PhpList\RestApiClient\Exception\ValidationException;
+use PhpList\RestApiClient\Request\CreateSubscriberListRequest;
+use PhpList\RestApiClient\Response\DeleteResponse;
+use PhpList\RestApiClient\Response\Subscribers\SubscriberCollection;
+use PhpList\RestApiClient\Response\Subscribers\SubscriberListCollection;
 
 /**
  * Client for subscription-related API endpoints.
@@ -31,87 +37,14 @@ class SubscriptionClient
     }
 
     /**
-     * Get a list of subscribers.
-     *
-     * @param int|null $afterId The ID to start from for pagination
-     * @param int $limit The maximum number of items to return
-     * @return array The list of subscribers
-     * @throws ApiException If an API error occurs
-     */
-    public function getSubscribers(?int $afterId = null, int $limit = 25): array
-    {
-        $queryParams = ['limit' => $limit];
-
-        if ($afterId !== null) {
-            $queryParams['after_id'] = $afterId;
-        }
-
-        return $this->client->get('subscribers', $queryParams);
-    }
-
-    /**
-     * Get a subscriber by ID.
-     *
-     * @param int $id The subscriber ID
-     * @return array The subscriber data
-     * @throws NotFoundException If the subscriber is not found
-     * @throws ApiException If an API error occurs
-     */
-    public function getSubscriber(int $id): array
-    {
-        return $this->client->get('subscribers/' . $id);
-    }
-
-    /**
-     * Create a new subscriber.
-     *
-     * @param array $data The subscriber data
-     * @return array The created subscriber
-     * @throws ValidationException If validation fails
-     * @throws ApiException If an API error occurs
-     */
-    public function createSubscriber(array $data): array
-    {
-        return $this->client->post('subscribers', $data);
-    }
-
-    /**
-     * Update a subscriber.
-     *
-     * @param int $id The subscriber ID
-     * @param array $data The subscriber data
-     * @return array The updated subscriber
-     * @throws NotFoundException If the subscriber is not found
-     * @throws ValidationException If validation fails
-     * @throws ApiException If an API error occurs
-     */
-    public function updateSubscriber(int $id, array $data): array
-    {
-        return $this->client->put('subscribers/' . $id, $data);
-    }
-
-    /**
-     * Delete a subscriber.
-     *
-     * @param int $id The subscriber ID
-     * @return array The response data
-     * @throws NotFoundException If the subscriber is not found
-     * @throws ApiException If an API error occurs
-     */
-    public function deleteSubscriber(int $id): array
-    {
-        return $this->client->delete('subscribers/' . $id);
-    }
-
-    /**
      * Get a list of subscriber lists.
      *
      * @param int|null $afterId The ID to start from for pagination
      * @param int $limit The maximum number of items to return
-     * @return array The list of subscriber lists
+     * @return SubscriberListCollection The list of subscriber lists
      * @throws ApiException If an API error occurs
      */
-    public function getSubscriberLists(?int $afterId = null, int $limit = 25): array
+    public function getSubscriberLists(?int $afterId = null, int $limit = 25): SubscriberListCollection
     {
         $queryParams = ['limit' => $limit];
 
@@ -119,170 +52,106 @@ class SubscriptionClient
             $queryParams['after_id'] = $afterId;
         }
 
-        return $this->client->get('lists', $queryParams);
+        $response = $this->client->get('lists', $queryParams);
+        return new SubscriberListCollection($response);
     }
 
     /**
      * Get a subscriber list by ID.
      *
      * @param int $id The subscriber list ID
-     * @return array The subscriber list data
-     * @throws NotFoundException If the subscriber list is not found
+     * @return SubscriberList The subscriber list data
      * @throws ApiException If an API error occurs
+     * @throws Exception
      */
-    public function getSubscriberList(int $id): array
+    public function getSubscriberList(int $id): SubscriberList
     {
-        return $this->client->get('lists/' . $id);
+        $response = $this->client->get('lists/' . $id);
+        return new SubscriberList($response);
     }
 
     /**
      * Create a new subscriber list.
      *
-     * @param array $data The subscriber list data
-     * @return array The created subscriber list
-     * @throws ValidationException If validation fails
+     * @param CreateSubscriberListRequest $request
+     * @return SubscriberList The created subscriber list
      * @throws ApiException If an API error occurs
+     * @throws Exception
      */
-    public function createSubscriberList(array $data): array
+    public function createSubscriberList(CreateSubscriberListRequest $request): SubscriberList
     {
-        return $this->client->post('lists', $data);
-    }
-
-    /**
-     * Update a subscriber list.
-     *
-     * @param int $id The subscriber list ID
-     * @param array $data The subscriber list data
-     * @return array The updated subscriber list
-     * @throws NotFoundException If the subscriber list is not found
-     * @throws ValidationException If validation fails
-     * @throws ApiException If an API error occurs
-     */
-    public function updateSubscriberList(int $id, array $data): array
-    {
-        return $this->client->put('lists/' . $id, $data);
+        return new SubscriberList($this->client->post('lists', $request->toArray()));
     }
 
     /**
      * Delete a subscriber list.
      *
      * @param int $id The subscriber list ID
-     * @return array The response data
+     * @return DeleteResponse The response data
      * @throws NotFoundException If the subscriber list is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteSubscriberList(int $id): array
+    public function deleteSubscriberList(int $id): DeleteResponse
     {
-        return $this->client->delete('lists/' . $id);
+        return new DeleteResponse($this->client->delete('lists/' . $id));
     }
 
     /**
-     * Add a subscriber to a list.
-     *
-     * @param int $subscriberId The subscriber ID
-     * @param int $listId The list ID
-     * @return array The response data
-     * @throws NotFoundException If the subscriber or list is not found
-     * @throws ApiException If an API error occurs
+     * Get total number of subscribers of a list
+     * @throws ApiException
      */
-    public function addSubscriberToList(int $subscriberId, int $listId): array
+    public function getSubscribersCountForList(int $id): array
     {
-        return $this->client->post('subscribers/' . $subscriberId . '/lists/' . $listId);
+        return $this->client->get('lists/' . $id . '/count');
     }
 
     /**
-     * Remove a subscriber from a list.
+     * Gets a paginated list of subscribers for a list
      *
-     * @param int $subscriberId The subscriber ID
-     * @param int $listId The list ID
-     * @return array The response data
-     * @throws NotFoundException If the subscriber or list is not found
+     * @param int|null $afterId The ID to start from for pagination
+     * @param int $limit The maximum number of items to return
+     * @return SubscriberCollection The list of subscribers
      * @throws ApiException If an API error occurs
      */
-    public function removeSubscriberFromList(int $subscriberId, int $listId): array
+    public function getSubscribersOfList(int $listId, ?int $afterId = null, int $limit = 25): SubscriberCollection
     {
-        return $this->client->delete('subscribers/' . $subscriberId . '/lists/' . $listId);
+        $queryParams = ['limit' => $limit];
+
+        if ($afterId !== null) {
+            $queryParams['after_id'] = $afterId;
+        }
+
+        $response = $this->client->get('lists/' . $listId . '/subscribers', $queryParams);
+        return new SubscriberCollection($response);
     }
 
     /**
-     * Get attribute values for a subscriber.
+     * Create subscription / add subscribers to list
      *
-     * @param int $subscriberId The subscriber ID
-     * @return array The attribute values
-     * @throws NotFoundException If the subscriber is not found
+     * @param array $emails
+     * @param int $listId
+     * @return Subscription
      * @throws ApiException If an API error occurs
+     * @throws Exception
      */
-    public function getAttributeValues(int $subscriberId): array
+    public function createSubscription(array $emails, int $listId): Subscription
     {
-        return $this->client->get('subscribers/attribute-values/' . $subscriberId);
+        $response = $this->client->post('lists/' . $listId . '/subscribers', ['emails' => $emails]);
+        return new Subscription($response);
     }
 
     /**
-     * Get a specific attribute value for a subscriber.
+     * Delete subscription / remove subscribers from a list
      *
-     * @param int $subscriberId The subscriber ID
-     * @param int $definitionId The attribute definition ID
-     * @return array The attribute value
-     * @throws NotFoundException If the subscriber or attribute definition is not found
+     * @param array $emails
+     * @param int $listId
+     * @return DeleteResponse
      * @throws ApiException If an API error occurs
+     * @throws Exception
      */
-    public function getAttributeValue(int $subscriberId, int $definitionId): array
+    public function deleteSubscription(array $emails, int $listId): DeleteResponse
     {
-        return $this->client->get('subscribers/attribute-values/' . $subscriberId . '/' . $definitionId);
-    }
-
-    /**
-     * Set a specific attribute value for a subscriber.
-     *
-     * @param int $subscriberId The subscriber ID
-     * @param int $definitionId The attribute definition ID
-     * @param array $data The attribute value data
-     * @return array The updated attribute value
-     * @throws NotFoundException If the subscriber or attribute definition is not found
-     * @throws ValidationException If validation fails
-     * @throws ApiException If an API error occurs
-     */
-    public function setAttributeValue(int $subscriberId, int $definitionId, array $data): array
-    {
-        return $this->client->put('subscribers/attribute-values/' . $subscriberId . '/' . $definitionId, $data);
-    }
-
-    /**
-     * Delete a specific attribute value for a subscriber.
-     *
-     * @param int $subscriberId The subscriber ID
-     * @param int $definitionId The attribute definition ID
-     * @return array The response data
-     * @throws NotFoundException If the subscriber or attribute definition is not found
-     * @throws ApiException If an API error occurs
-     */
-    public function deleteAttributeValue(int $subscriberId, int $definitionId): array
-    {
-        return $this->client->delete('subscribers/attribute-values/' . $subscriberId . '/' . $definitionId);
-    }
-
-    /**
-     * Export subscribers.
-     *
-     * @param array $filters Filters to apply to the export
-     * @return array The export data
-     * @throws ApiException If an API error occurs
-     */
-    public function exportSubscribers(array $filters = []): array
-    {
-        return $this->client->get('subscribers/export', $filters);
-    }
-
-    /**
-     * Import subscribers.
-     *
-     * @param array $data The import data
-     * @return array The import result
-     * @throws ValidationException If validation fails
-     * @throws ApiException If an API error occurs
-     */
-    public function importSubscribers(array $data): array
-    {
-        return $this->client->post('subscribers/import', $data);
+        $response = $this->client->delete('lists/' . $listId . '/subscribers', ['emails' => $emails]);
+        return new DeleteResponse($response);
     }
 }

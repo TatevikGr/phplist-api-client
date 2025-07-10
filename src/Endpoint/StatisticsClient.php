@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
+use PhpList\RestApiClient\Entity\Statistics\DomainConfirmation;
+use PhpList\RestApiClient\Entity\Statistics\TopLocalPart;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Response\Statistics\CampaignStatisticsCollection;
 use PhpList\RestApiClient\Response\Statistics\ViewOpensCollection;
 use PhpList\RestApiClient\Response\Statistics\TopDomainsCollection;
-use PhpList\RestApiClient\Response\Statistics\DomainConfirmationsCollection;
-use PhpList\RestApiClient\Response\Statistics\TopLocalPartsCollection;
 
 /**
  * Client for statistics and analytics-related API endpoints.
@@ -93,29 +93,29 @@ class StatisticsClient
      * Get domain confirmation statistics.
      *
      * @param int $limit Maximum number of domains to return
-     * @return DomainConfirmationsCollection The domain confirmation statistics
+     * @return DomainConfirmation The domain confirmation statistics
      * @throws ApiException If an API error occurs
      */
-    public function getDomainConfirmationStatistics(int $limit = 50): DomainConfirmationsCollection
+    public function getDomainConfirmationStatistics(int $limit = 50): DomainConfirmation
     {
         $queryParams = ['limit' => $limit];
 
         $response = $this->client->get('analytics/domains/confirmation', $queryParams);
-        return new DomainConfirmationsCollection($response);
+        return new DomainConfirmation($response);
     }
 
     /**
      * Get top local-parts statistics.
      *
      * @param int $limit Maximum number of local-parts to return
-     * @return TopLocalPartsCollection The top local-parts statistics
+     * @return TopLocalPart The top local-parts statistics
      * @throws ApiException If an API error occurs
      */
-    public function getTopLocalParts(int $limit = 25): TopLocalPartsCollection
+    public function getTopLocalParts(int $limit = 25): TopLocalPart
     {
         $queryParams = ['limit' => $limit];
 
         $response = $this->client->get('analytics/local-parts/top', $queryParams);
-        return new TopLocalPartsCollection($response);
+        return new TopLocalPart($response);
     }
 }

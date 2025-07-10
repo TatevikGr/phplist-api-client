@@ -167,9 +167,9 @@ class Client
      * @return array The response data
      * @throws ApiException If an API error occurs
      */
-    public function delete(string $endpoint): array
+    public function delete(string $endpoint, array $queryParams = []): array
     {
-        return $this->request('DELETE', $endpoint);
+        return $this->request('DELETE', $endpoint, ['query' => $queryParams]);
     }
 
     /**
@@ -208,6 +208,14 @@ class Client
     }
 
     /**
+     * @throws ApiException
+     */
+    public function postMultipart(string $endpoint, array $multipart): array
+    {
+        return $this->request('POST', $endpoint, ['multipart' => $multipart]);
+    }
+
+    /**
      * Handle the API response.
      *
      * @param ResponseInterface $response The HTTP response
@@ -232,7 +240,7 @@ class Client
             return $data;
         }
 
-        return $this->handleErrorResponse($statusCode, $data);
+        $this->handleErrorResponse($statusCode, $data);
     }
 
     /**

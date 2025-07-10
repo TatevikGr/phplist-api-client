@@ -9,6 +9,10 @@ use PhpList\RestApiClient\Entity\Subscriber;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Exception\ValidationException;
+use PhpList\RestApiClient\Request\Subscriber\CreateSubscriberRequest;
+use PhpList\RestApiClient\Request\Subscriber\ExportSubscriberRequest;
+use PhpList\RestApiClient\Request\Subscriber\ImportSubscribersRequest;
+use PhpList\RestApiClient\Request\Subscriber\UpdateSubscriberRequest;
 use PhpList\RestApiClient\Response\DeleteResponse;
 use PhpList\RestApiClient\Response\Subscribers\SubscriberCollection;
 
@@ -33,26 +37,6 @@ class SubscribersClient
     }
 
     /**
-     * Get a list of subscribers.
-     *
-     * @param int|null $afterId The ID to start from for pagination
-     * @param int $limit The maximum number of items to return
-     * @return SubscriberCollection The list of subscribers
-     * @throws ApiException If an API error occurs
-     */
-    public function getSubscribers(?int $afterId = null, int $limit = 25): SubscriberCollection
-    {
-        $queryParams = ['limit' => $limit];
-
-        if ($afterId !== null) {
-            $queryParams['after_id'] = $afterId;
-        }
-
-        $response = $this->client->get('subscribers', $queryParams);
-        return new SubscriberCollection($response);
-    }
-
-    /**
      * Get a subscriber by ID.
      *
      * @param int $id The subscriber ID
@@ -69,14 +53,13 @@ class SubscribersClient
     /**
      * Create a new subscriber.
      *
-     * @param array $data The subscriber data
+     * @param CreateSubscriberRequest $request
      * @return Subscriber The created subscriber
-     * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function createSubscriber(array $data): Subscriber
+    public function createSubscriber(CreateSubscriberRequest $request): Subscriber
     {
-        $response = $this->client->post('subscribers', $data);
+        $response = $this->client->post('subscribers', $request->toArray());
         return new Subscriber($response);
     }
 
@@ -84,15 +67,13 @@ class SubscribersClient
      * Update a subscriber.
      *
      * @param int $id The subscriber ID
-     * @param array $data The subscriber data
+     * @param UpdateSubscriberRequest $request
      * @return Subscriber The updated subscriber
-     * @throws NotFoundException If the subscriber is not found
-     * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function updateSubscriber(int $id, array $data): Subscriber
+    public function updateSubscriber(int $id, UpdateSubscriberRequest $request): Subscriber
     {
-        $response = $this->client->put('subscribers/' . $id, $data);
+        $response = $this->client->put('subscribers/' . $id, $request->toArray());
         return new Subscriber($response);
     }
 
@@ -108,5 +89,44 @@ class SubscribersClient
     {
         $response = $this->client->delete('subscribers/' . $id);
         return new DeleteResponse($response);
+    }
+
+    /**
+     * Export subscribers.
+     *
+     * @param ExportSubscriberRequest|null $filters Filters to apply to the export
+     * @return array The export data
+     * @throws ApiException If an API error occurs
+     */
+    public function exportSubscribers(?ExportSubscriberRequest $filters = null): array
+    {
+        return $this->client->get('subscribers/export', $filters->toArray());
+    }
+
+    /**
+     * Import subscribers.
+     *
+     * @param ImportSubscribersRequest $data The import data
+     * @return array The import result
+     * @throws ApiException If an API error occurs
+     */
+    public function importSubscribers(ImportSubscribersRequest $data): array
+    {
+        $multipart = [
+            [
+                'name' => 'file',
+                'contents' => $data->file,
+            ],
+            [
+                'name' => 'list_id',
+                'contents' => $data->list_id,
+            ],
+            [
+                'name' => 'update_existing',
+                'contents' => $data->update_existing ? '1' : '0',
+            ]
+        ];
+
+        return $this->client->postMultipart('subscribers/import', $multipart);
     }
 }

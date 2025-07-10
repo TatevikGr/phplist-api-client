@@ -28,7 +28,7 @@ class CampaignStatistic extends AbstractResponse
     public int $sent;
 
     /**
-     * @var DateTimeImmutable The campaign sent date
+     * @var ?DateTimeImmutable The campaign sent date
      */
     public ?DateTimeImmutable $dateSent;
 

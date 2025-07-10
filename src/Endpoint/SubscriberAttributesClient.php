@@ -9,7 +9,8 @@ use PhpList\RestApiClient\Entity\SubscriberAttributeDefinition;
 use PhpList\RestApiClient\Entity\SubscriberAttributeValue;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
-use PhpList\RestApiClient\Exception\ValidationException;
+use PhpList\RestApiClient\Request\SubscriberAttribute\CreateSubscriberAttributeDefinitionRequest;
+use PhpList\RestApiClient\Request\SubscriberAttribute\UpdateSubscriberAttributeDefinitionRequest;
 use PhpList\RestApiClient\Response\DeleteResponse;
 use PhpList\RestApiClient\Response\SubscriberAttributes\SubscriberAttributeCollection;
 use PhpList\RestApiClient\Response\SubscriberAttributes\SubscriberAttributeValueCollection;
@@ -71,14 +72,14 @@ class SubscriberAttributesClient
     /**
      * Create a new subscriber attribute definition.
      *
-     * @param array $data The attribute definition data
+     * @param CreateSubscriberAttributeDefinitionRequest $request
      * @return SubscriberAttributeDefinition The created attribute definition
-     * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function createAttributeDefinition(array $data): SubscriberAttributeDefinition
-    {
-        $response = $this->client->post('subscribers/attributes', $data);
+    public function createAttributeDefinition(
+        CreateSubscriberAttributeDefinitionRequest $request
+    ): SubscriberAttributeDefinition {
+        $response = $this->client->post('subscribers/attributes', $request->toArray());
         return new SubscriberAttributeDefinition($response);
     }
 
@@ -86,15 +87,15 @@ class SubscriberAttributesClient
      * Update a subscriber attribute definition.
      *
      * @param int $id The attribute definition ID
-     * @param array $data The attribute definition data
+     * @param UpdateSubscriberAttributeDefinitionRequest $request
      * @return SubscriberAttributeDefinition The updated attribute definition
-     * @throws NotFoundException If the attribute definition is not found
-     * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function updateAttributeDefinition(int $id, array $data): SubscriberAttributeDefinition
-    {
-        $response = $this->client->put('subscribers/attributes/' . $id, $data);
+    public function updateAttributeDefinition(
+        int $id,
+        UpdateSubscriberAttributeDefinitionRequest $request
+    ): SubscriberAttributeDefinition {
+        $response = $this->client->put('subscribers/attributes/' . $id, $request->toArray());
         return new SubscriberAttributeDefinition($response);
     }
 
@@ -120,9 +121,14 @@ class SubscriberAttributesClient
      * @throws NotFoundException If the subscriber is not found
      * @throws ApiException If an API error occurs
      */
-    public function getAttributeValues(int $subscriberId): SubscriberAttributeValueCollection
+    public function getAttributeValues(int $subscriberId, ?int $afterId = null): SubscriberAttributeValueCollection
     {
-        $response = $this->client->get('subscribers/attribute-values/' . $subscriberId);
+        $queryParams = [];
+        if ($afterId !== null) {
+            $queryParams['after_id'] = $afterId;
+        }
+
+        $response = $this->client->get('subscribers/attribute-values/' . $subscriberId, $queryParams);
         return new SubscriberAttributeValueCollection($response);
     }
 
@@ -146,14 +152,16 @@ class SubscriberAttributesClient
      *
      * @param int $subscriberId The subscriber ID
      * @param int $definitionId The attribute definition ID
-     * @param array $data The attribute value data
+     * @param string|null $value
      * @return SubscriberAttributeValue The updated attribute value
-     * @throws NotFoundException If the subscriber or attribute definition is not found
-     * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function setAttributeValue(int $subscriberId, int $definitionId, array $data): SubscriberAttributeValue
+    public function setAttributeValue(int $subscriberId, int $definitionId, ?string $value = null): SubscriberAttributeValue
     {
+        $data = [];
+        if ($value !== null) {
+            $data['value'] = $value;
+        }
         $response = $this->client->put('subscribers/attribute-values/' . $subscriberId . '/' . $definitionId, $data);
         return new SubscriberAttributeValue($response);
     }
