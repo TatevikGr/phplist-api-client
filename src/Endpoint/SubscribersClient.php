@@ -8,13 +8,11 @@ use PhpList\RestApiClient\Client;
 use PhpList\RestApiClient\Entity\Subscriber;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
-use PhpList\RestApiClient\Exception\ValidationException;
 use PhpList\RestApiClient\Request\Subscriber\CreateSubscriberRequest;
 use PhpList\RestApiClient\Request\Subscriber\ExportSubscriberRequest;
 use PhpList\RestApiClient\Request\Subscriber\ImportSubscribersRequest;
 use PhpList\RestApiClient\Request\Subscriber\UpdateSubscriberRequest;
 use PhpList\RestApiClient\Response\DeleteResponse;
-use PhpList\RestApiClient\Response\Subscribers\SubscriberCollection;
 
 /**
  * Client for subscriber-related API endpoints.
@@ -119,11 +117,11 @@ class SubscribersClient
             ],
             [
                 'name' => 'list_id',
-                'contents' => $data->list_id,
+                'contents' => $data->listId,
             ],
             [
                 'name' => 'update_existing',
-                'contents' => $data->update_existing ? '1' : '0',
+                'contents' => $data->updateExisting ? '1' : '0',
             ]
         ];
 
