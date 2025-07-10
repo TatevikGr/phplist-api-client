@@ -11,23 +11,26 @@ class UpdateSubscriberRequest extends AbstractRequest
     public string $email;
     public bool $confirmed = false;
     public bool $blacklisted = false;
-    public bool $html_email = false;
+    public bool $htmlEmail = false;
     public bool $disabled = false;
-    public ?string $additional_data = null;
+    public ?string $additionalData = null;
 
+    /**
+     * @SuppressWarnings("BooleanArgumentFlag")
+     */
     public function __construct(
         string $email,
         bool $confirmed = false,
         bool $blacklisted = false,
-        bool $html_email = false,
+        bool $htmlEmail = false,
         bool $disabled = false,
-        ?string $additional_data = null
+        ?string $additionalData = null
     ) {
         $this->email = $email;
         $this->confirmed = $confirmed;
         $this->blacklisted = $blacklisted;
-        $this->html_email = $html_email;
+        $this->htmlEmail = $htmlEmail;
         $this->disabled = $disabled;
-        $this->additional_data = $additional_data;
+        $this->additionalData = $additionalData;
     }
 }

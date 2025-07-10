@@ -60,9 +60,8 @@ class SubscriberList extends AbstractResponse
     {
         $this->id = isset($data['id']) ? (int)$data['id'] : 0;
         $this->name = isset($data['name']) ? (string)$data['name'] : '';
-        $this->createdAt = isset($data['created_at'])
-            ? new DateTimeImmutable($data['created_at'])
-            : new DateTimeImmutable('@0');
+        $createdAt = $data['created_at'] ?? '@0';
+        $this->createdAt = new DateTimeImmutable($createdAt);
         $this->description = isset($data['description']) ? (string)$data['description'] : null;
         $this->listPosition = isset($data['list_position']) ? (int)$data['list_position'] : null;
         $this->subjectPrefix = isset($data['subject_prefix']) ? (string)$data['subject_prefix'] : null;

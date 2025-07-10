@@ -156,8 +156,11 @@ class SubscriberAttributesClient
      * @return SubscriberAttributeValue The updated attribute value
      * @throws ApiException If an API error occurs
      */
-    public function setAttributeValue(int $subscriberId, int $definitionId, ?string $value = null): SubscriberAttributeValue
-    {
+    public function setAttributeValue(
+        int $subscriberId,
+        int $definitionId,
+        ?string $value = null
+    ): SubscriberAttributeValue {
         $data = [];
         if ($value !== null) {
             $data['value'] = $value;

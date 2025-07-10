@@ -8,10 +8,10 @@ use PhpList\RestApiClient\Request\AbstractRequest;
 
 class ExportSubscriberRequest extends AbstractRequest
 {
-    public string $date_type = 'any';
-    public ?int $list_id = null;
-    public ?string $date_from = null;
-    public ?string $date_to = null;
+    public string $dateType = 'any';
+    public ?int $listId = null;
+    public ?string $dateFrom = null;
+    public ?string $dateTo = null;
     public array $columns = [
         'id',
         'email',
@@ -27,10 +27,10 @@ class ExportSubscriberRequest extends AbstractRequest
     ];
 
     public function __construct(
-        string $date_type = 'any',
-        ?int $list_id = null,
-        ?string $date_from = null,
-        ?string $date_to = null,
+        string $dateType = 'any',
+        ?int $listId = null,
+        ?string $dateFrom = null,
+        ?string $dateTo = null,
         array $columns = [
             'id',
             'email',
@@ -45,10 +45,10 @@ class ExportSubscriberRequest extends AbstractRequest
             'extraData'
         ]
     ) {
-        $this->date_type = $date_type;
-        $this->list_id = $list_id;
-        $this->date_from = $date_from;
-        $this->date_to = $date_to;
+        $this->dateType = $dateType;
+        $this->listId = $listId;
+        $this->dateFrom = $dateFrom;
+        $this->dateTo = $dateTo;
         $this->columns = $columns;
     }
 }

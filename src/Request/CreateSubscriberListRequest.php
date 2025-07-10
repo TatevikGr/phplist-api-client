@@ -21,6 +21,9 @@ class CreateSubscriberListRequest extends AbstractRequest
     /** @var string|null The list description */
     public ?string $description = null;
 
+    /**
+     * @SuppressWarnings("BooleanArgumentFlag")
+     */
     public function __construct(
         string $name,
         bool $public = false,
