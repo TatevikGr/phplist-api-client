@@ -37,3 +37,21 @@ jobs:
         run: vendor/bin/phpmd src/ text phpMdRules.xml;
       - name: Running PHP_CodeSniffer
         run: vendor/bin/phpcs --standard=phpCodeSnifferRules.xml src/ tests/;
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Prism
+        run: npm install -g @stoplight/prism-cli
+
+      - name: Start Prism Mock Server
+        run: prism mock ./openapi.yaml &
+
+      - name: Run PHPUnit
+        env:
+          API_BASE_URL: http://127.0.0.1:4010/api/v2/
+        run: vendor/bin/phpunit --testdox
+      - name: Run PHPUnit with Coverage
+        run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml

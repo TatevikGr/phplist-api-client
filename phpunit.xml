@@ -21,4 +21,8 @@
             <directory>src</directory>
         </include>
     </source>
+    <php>
+        <env name="API_BASE_URL" value="http://127.0.0.1:4010"/>
+        <ini name="variables_order" value="EGPCS"/>
+    </php>
 </phpunit>
