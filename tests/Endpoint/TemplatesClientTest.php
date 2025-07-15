@@ -16,7 +16,7 @@ class TemplatesClientTest extends TestCase
 
     protected function setUp(): void
     {
-        $baseUrl = getenv('API_BASE_URL') ?: 'http://localhost/api/v2/';
+        $baseUrl = getenv('API_BASE_URL') ?: 'http://localhost';
         $this->client = new Client($baseUrl);
         $this->templatesClient = new TemplatesClient($this->client);
     }
