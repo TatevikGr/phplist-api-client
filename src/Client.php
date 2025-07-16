@@ -76,7 +76,7 @@ class Client
         $this->logger->info('Authenticating with the API', ['username' => $username]);
 
         try {
-            $response = $this->httpClient->post('sessions', [
+            $response = $this->httpClient->post('api/v2/sessions', [
                 'json' => [
                     'login_name' => $username,
                     'password' => $password,
@@ -189,7 +189,7 @@ class Client
         // Add session ID to headers if available
         if ($this->sessionId) {
             $options['headers'] = $options['headers'] ?? [];
-            $options['headers']['session'] = $this->sessionId;
+            $options['headers']['php-auth-pw'] = $this->sessionId;
         }
 
         $this->logger->info('Making API request', [

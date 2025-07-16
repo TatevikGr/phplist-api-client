@@ -52,7 +52,7 @@ class ClientTest extends TestCase
 
         $this->guzzleClientMock->expects($this->once())
             ->method('post')
-            ->with('sessions', [
+            ->with('api/v2/sessions', [
                 'json' => [
                     'login_name' => $username,
                     'password' => $password,
@@ -229,7 +229,7 @@ class ClientTest extends TestCase
                 'GET',
                 '/api/v2/test-endpoint',
                 $this->callback(function ($options) use ($sessionId) {
-                    return isset($options['headers']['session']) && $options['headers']['session'] === $sessionId;
+                    return ($options['headers']['php-auth-pw'] ?? null) === $sessionId;
                 })
             )
             ->willReturn($response);
