@@ -12,10 +12,12 @@ class AbstractCollectionResponseTest extends TestCase
     public function testFromArray(): void
     {
         $data = [
-            'total' => 100,
-            'limit' => 25,
-            'has_more' => true,
-            'next_cursor' => 129,
+            'pagination' => [
+                'total' => 100,
+                'limit' => 25,
+                'has_more' => true,
+                'next_cursor' => 129,
+            ],
             'items' => [
                 ['id' => 1, 'name' => 'Item 1'],
                 ['id' => 2, 'name' => 'Item 2'],

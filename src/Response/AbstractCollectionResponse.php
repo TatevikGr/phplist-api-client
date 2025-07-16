@@ -28,14 +28,15 @@ abstract class AbstractCollectionResponse extends AbstractResponse
 
     public function __construct(array $data)
     {
-        $paginationData = [
-            'total' => $data['total'] ?? count($data['items'] ?? $data),
-            'limit' => $data['limit'] ? (int)$data['limit'] : 0,
-            'has_more' => $data['has_more'] ?? false,
-            'next_cursor' => $data['next_cursor'] ?? null,
+        $paginationData = $data['pagination'] ?? [];
+        $pagination = [
+            'total' => $paginationData['total'] ?? count($data['items'] ?? $data),
+            'limit' => (int)($paginationData['limit'] ?? null),
+            'has_more' => $paginationData['has_more'] ?? false,
+            'next_cursor' => $paginationData['next_cursor'] ?? null,
         ];
 
-        $this->pagination = new CursorPagination($paginationData);
+        $this->pagination = new CursorPagination($pagination);
         $this->processItems($data);
     }
 

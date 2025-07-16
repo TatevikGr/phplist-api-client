@@ -9,6 +9,7 @@ namespace PhpList\RestApiClient\Response;
  */
 class CursorPagination
 {
+    public const DEFAULT_LIMIT = 25;
     /**
      * @var int The total number of items
      */
@@ -37,7 +38,7 @@ class CursorPagination
     public function __construct(array $data)
     {
         $this->total = $data['total'] ?? 0;
-        $this->limit = $data['limit'] ?? 0;
+        $this->limit = $data['limit'] ?? self::DEFAULT_LIMIT;
         $this->hasMore = $data['has_more'] ?? false;
         $this->nextCursor = $data['next_cursor'] ?? null;
     }

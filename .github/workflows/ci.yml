@@ -38,9 +38,6 @@ jobs:
       - name: Running PHP_CodeSniffer
         run: vendor/bin/phpcs --standard=phpCodeSnifferRules.xml src/ tests/;
 
-      - name: Install wait-on
-        run: npm install -g wait-on
-
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
@@ -54,13 +51,12 @@ jobs:
 
       - name: Start Prism Mock Server
         run: prism mock ./openapi.json &
-#
-#      - name: Wait for Prism Mock Server
-#        run: wait-on http://127.0.0.1:4010/sessions
 
       - name: Run PHPUnit
         env:
           API_BASE_URL: http://127.0.0.1:4010/
         run: vendor/bin/phpunit --testdox
       - name: Run PHPUnit with Coverage
+        env:
+          API_BASE_URL: http://127.0.0.1:4010/
         run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml

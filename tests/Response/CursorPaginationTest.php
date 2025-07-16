@@ -35,7 +35,7 @@ class CursorPaginationTest extends TestCase
         $pagination = new CursorPagination($data);
 
         $this->assertSame(100, $pagination->total);
-        $this->assertSame(0, $pagination->limit);
+        $this->assertSame(CursorPagination::DEFAULT_LIMIT, $pagination->limit);
         $this->assertFalse($pagination->hasMore);
         $this->assertNull($pagination->nextCursor);
     }
