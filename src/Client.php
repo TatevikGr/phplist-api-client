@@ -186,7 +186,6 @@ class Client
         $endpoint = ltrim($endpoint, '/');
         $url = '/api/v2/' . $endpoint;
 
-        // Add session ID to headers if available
         if ($this->sessionId) {
             $options['headers'] = $options['headers'] ?? [];
             $options['headers']['php-auth-pw'] = $this->sessionId;
@@ -260,7 +259,7 @@ class Client
         throw match ($statusCode) {
             401, 403 => new AuthenticationException($data['message'] ?? 'Authentication failed', $statusCode),
             404 => new NotFoundException($data['message'] ?? 'Resource not found', $statusCode),
-            422 => new ValidationException(
+            400,422 => new ValidationException(
                 message: $data['message'] ?? 'Validation failed',
                 statusCode: $statusCode,
                 errors: $data['errors'] ?? []
