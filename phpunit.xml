@@ -22,7 +22,7 @@
         </include>
     </source>
     <php>
-        <env name="API_BASE_URL" value="http://api.phplist.local"/>
+        <env name="API_BASE_URL" value="http://127.0.0.1:4010/"/>
         <env name="API_USERNAME" value="admin"/>
         <env name="API_PASSWORD" value="admin"/>
         <ini name="variables_order" value="EGPCS"/>

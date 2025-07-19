@@ -237,6 +237,7 @@ class Client
         ]);
 
         if ($statusCode >= 200 && $statusCode < 300) {
+            $data['success'] = true;
             return $data;
         }
 
