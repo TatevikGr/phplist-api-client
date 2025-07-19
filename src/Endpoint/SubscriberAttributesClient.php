@@ -11,7 +11,6 @@ use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Request\SubscriberAttribute\CreateSubscriberAttributeDefinitionRequest;
 use PhpList\RestApiClient\Request\SubscriberAttribute\UpdateSubscriberAttributeDefinitionRequest;
-use PhpList\RestApiClient\Response\DeleteResponse;
 use PhpList\RestApiClient\Response\SubscriberAttributes\SubscriberAttributeCollection;
 use PhpList\RestApiClient\Response\SubscriberAttributes\SubscriberAttributeValueCollection;
 
@@ -103,14 +102,12 @@ class SubscriberAttributesClient
      * Delete a subscriber attribute definition.
      *
      * @param int $id The attribute definition ID
-     * @return DeleteResponse The response data
      * @throws NotFoundException If the attribute definition is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteAttributeDefinition(int $id): DeleteResponse
+    public function deleteAttributeDefinition(int $id): void
     {
-        $response = $this->client->delete('subscribers/attributes/' . $id);
-        return new DeleteResponse($response);
+        $this->client->delete('subscribers/attributes/' . $id);
     }
 
     /**
@@ -174,13 +171,11 @@ class SubscriberAttributesClient
      *
      * @param int $subscriberId The subscriber ID
      * @param int $definitionId The attribute definition ID
-     * @return DeleteResponse The response data
      * @throws NotFoundException If the subscriber or attribute definition is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteAttributeValue(int $subscriberId, int $definitionId): DeleteResponse
+    public function deleteAttributeValue(int $subscriberId, int $definitionId): void
     {
-        $response = $this->client->delete('subscribers/attribute-values/' . $subscriberId . '/' . $definitionId);
-        return new DeleteResponse($response);
+        $this->client->delete('subscribers/attribute-values/' . $subscriberId . '/' . $definitionId);
     }
 }

@@ -236,7 +236,6 @@ class Client
         ]);
 
         if ($statusCode >= 200 && $statusCode < 300) {
-            $data['success'] = true;
             return $data;
         }
 
@@ -262,7 +261,7 @@ class Client
             400,422 => new ValidationException(
                 message: $data['message'] ?? 'Validation failed',
                 statusCode: $statusCode,
-                errors: $data['errors'] ?? []
+                errors: $data['errors'] ?? [],
             ),
             default => new ApiException(
                 message: $data['message'] ?? 'API error occurred',

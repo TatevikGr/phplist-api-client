@@ -10,7 +10,6 @@ use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Exception\ValidationException;
 use PhpList\RestApiClient\Request\Template\CreateTemplateRequest;
-use PhpList\RestApiClient\Response\DeleteResponse;
 use PhpList\RestApiClient\Response\TemplateCollection;
 
 /**
@@ -85,13 +84,11 @@ class TemplatesClient
      * Delete a template.
      *
      * @param string $id The template ID
-     * @return DeleteResponse The response data
      * @throws NotFoundException If the template is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteTemplate(string $id): DeleteResponse
+    public function deleteTemplate(string $id): void
     {
-        $response = $this->client->delete('templates/' . $id);
-        return new DeleteResponse($response);
+        $this->client->delete('templates/' . $id);
     }
 }

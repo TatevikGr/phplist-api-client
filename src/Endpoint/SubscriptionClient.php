@@ -11,7 +11,6 @@ use PhpList\RestApiClient\Entity\Subscription;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Request\CreateSubscriberListRequest;
-use PhpList\RestApiClient\Response\DeleteResponse;
 use PhpList\RestApiClient\Response\Subscribers\SubscriberCollection;
 use PhpList\RestApiClient\Response\Subscribers\SubscriberListCollection;
 
@@ -87,13 +86,12 @@ class SubscriptionClient
      * Delete a subscriber list.
      *
      * @param int $id The subscriber list ID
-     * @return DeleteResponse The response data
      * @throws NotFoundException If the subscriber list is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteSubscriberList(int $id): DeleteResponse
+    public function deleteSubscriberList(int $id): void
     {
-        return new DeleteResponse($this->client->delete('lists/' . $id));
+        $this->client->delete('lists/' . $id);
     }
 
     /**
@@ -145,13 +143,11 @@ class SubscriptionClient
      *
      * @param array $emails
      * @param int $listId
-     * @return DeleteResponse
      * @throws ApiException If an API error occurs
      * @throws Exception
      */
-    public function deleteSubscription(array $emails, int $listId): DeleteResponse
+    public function deleteSubscription(array $emails, int $listId): void
     {
-        $response = $this->client->delete('lists/' . $listId . '/subscribers', ['emails' => $emails]);
-        return new DeleteResponse($response);
+        $this->client->delete('lists/' . $listId . '/subscribers', ['emails' => $emails]);
     }
 }

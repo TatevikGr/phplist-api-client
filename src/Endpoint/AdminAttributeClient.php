@@ -14,7 +14,6 @@ use PhpList\RestApiClient\Request\Admin\CreateAdminAttributeDefinitionRequest;
 use PhpList\RestApiClient\Request\Admin\UpdateAdminAttributeDefinitionRequest;
 use PhpList\RestApiClient\Response\Admin\AdminAttributeDefinitionCollection;
 use PhpList\RestApiClient\Response\Admin\AdminAttributeValueCollection;
-use PhpList\RestApiClient\Response\DeleteResponse;
 use ReflectionException;
 
 /**
@@ -107,14 +106,12 @@ class AdminAttributeClient
      * Delete an administrator attribute definition.
      *
      * @param int $id The attribute definition ID
-     * @return DeleteResponse The response data
      * @throws NotFoundException If the attribute definition is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteAttributeDefinition(int $id): DeleteResponse
+    public function deleteAttributeDefinition(int $id): void
     {
-        $data = $this->client->delete('administrators/attributes/' . $id);
-        return new DeleteResponse($data);
+        $this->client->delete('administrators/attributes/' . $id);
     }
 
     /**
@@ -177,13 +174,11 @@ class AdminAttributeClient
      *
      * @param int $adminId The administrator ID
      * @param int $definitionId The attribute definition ID
-     * @return DeleteResponse The response data
      * @throws NotFoundException If the administrator or attribute definition is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteAttributeValue(int $adminId, int $definitionId): DeleteResponse
+    public function deleteAttributeValue(int $adminId, int $definitionId): void
     {
-        $data = $this->client->delete('administrators/attribute-values/' . $adminId . '/' . $definitionId);
-        return new DeleteResponse($data);
+        $this->client->delete('administrators/attribute-values/' . $adminId . '/' . $definitionId);
     }
 }

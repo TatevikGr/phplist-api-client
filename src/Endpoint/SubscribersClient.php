@@ -12,7 +12,6 @@ use PhpList\RestApiClient\Request\Subscriber\CreateSubscriberRequest;
 use PhpList\RestApiClient\Request\Subscriber\ExportSubscriberRequest;
 use PhpList\RestApiClient\Request\Subscriber\ImportSubscribersRequest;
 use PhpList\RestApiClient\Request\Subscriber\UpdateSubscriberRequest;
-use PhpList\RestApiClient\Response\DeleteResponse;
 
 /**
  * Client for subscriber-related API endpoints.
@@ -79,14 +78,12 @@ class SubscribersClient
      * Delete a subscriber.
      *
      * @param int $id The subscriber ID
-     * @return DeleteResponse The response data
      * @throws NotFoundException If the subscriber is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteSubscriber(int $id): DeleteResponse
+    public function deleteSubscriber(int $id): void
     {
-        $response = $this->client->delete('subscribers/' . $id);
-        return new DeleteResponse($response);
+        $this->client->delete('subscribers/' . $id);
     }
 
     /**

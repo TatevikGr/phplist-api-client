@@ -12,7 +12,6 @@ use PhpList\RestApiClient\Response\Admin\AdministratorCollection;
 use PhpList\RestApiClient\Entity\Administrator;
 use PhpList\RestApiClient\Request\Admin\CreateAdministratorRequest;
 use PhpList\RestApiClient\Request\Admin\UpdateAdministratorRequest;
-use PhpList\RestApiClient\Response\DeleteResponse;
 
 class AdminClientTest extends TestCase
 {
@@ -43,7 +42,6 @@ class AdminClientTest extends TestCase
 
     public function testCanCreateUpdateAndDeleteAdministrator(): void
     {
-        $uniqueId = uniqid();
         $loginName = 'admin';
         $email = 'admin@example.com';
         
@@ -80,8 +78,7 @@ class AdminClientTest extends TestCase
         $this->assertEquals($updatedEmail, $updatedAdmin->email);
         $this->assertEquals(true, $updatedAdmin->superUser);
         
-        $deleteResponse = $this->adminClient->deleteAdministrator($createdAdmin->id);
-        $this->assertInstanceOf(DeleteResponse::class, $deleteResponse);
-        $this->assertTrue($deleteResponse->success);
+        $this->adminClient->deleteAdministrator($createdAdmin->id);
+        $this->assertTrue(true);
     }
 }

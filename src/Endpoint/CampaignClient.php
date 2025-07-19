@@ -12,7 +12,6 @@ use PhpList\RestApiClient\Exception\ValidationException;
 use PhpList\RestApiClient\Request\Campaign\CreateCampaignRequest;
 use PhpList\RestApiClient\Request\Campaign\UpdateCampaignRequest;
 use PhpList\RestApiClient\Response\Campaign\CampaignCollection;
-use PhpList\RestApiClient\Response\DeleteResponse;
 
 /**
  * Client for campaign-related API endpoints.
@@ -102,13 +101,11 @@ class CampaignClient
      * Delete a campaign.
      *
      * @param int $id The campaign ID
-     * @return DeleteResponse The response data
      * @throws NotFoundException If the campaign is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteCampaign(int $id): DeleteResponse
+    public function deleteCampaign(int $id): void
     {
-        $response = $this->client->delete('campaigns/' . $id);
-        return new DeleteResponse($response);
+        $this->client->delete('campaigns/' . $id);
     }
 }

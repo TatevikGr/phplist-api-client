@@ -12,7 +12,6 @@ use PhpList\RestApiClient\Exception\ValidationException;
 use PhpList\RestApiClient\Request\Admin\CreateAdministratorRequest;
 use PhpList\RestApiClient\Request\Admin\UpdateAdministratorRequest;
 use PhpList\RestApiClient\Response\Admin\AdministratorCollection;
-use PhpList\RestApiClient\Response\DeleteResponse;
 
 /**
  * Client for administrator-related API endpoints.
@@ -102,13 +101,11 @@ class AdminClient
      * Delete an administrator.
      *
      * @param int $id The administrator ID
-     * @return DeleteResponse The response data
      * @throws NotFoundException If the administrator is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteAdministrator(int $id): DeleteResponse
+    public function deleteAdministrator(int $id): void
     {
-        $data = $this->client->delete('administrators/' . $id);
-        return new DeleteResponse($data);
+        $this->client->delete('administrators/' . $id);
     }
 }

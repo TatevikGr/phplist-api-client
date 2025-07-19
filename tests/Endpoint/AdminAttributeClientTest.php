@@ -14,7 +14,6 @@ use PhpList\RestApiClient\Entity\AdminAttributeDefinition;
 use PhpList\RestApiClient\Entity\AdminAttributeValue;
 use PhpList\RestApiClient\Request\Admin\CreateAdminAttributeDefinitionRequest;
 use PhpList\RestApiClient\Request\Admin\UpdateAdminAttributeDefinitionRequest;
-use PhpList\RestApiClient\Response\DeleteResponse;
 
 class AdminAttributeClientTest extends TestCase
 {
@@ -67,9 +66,8 @@ class AdminAttributeClientTest extends TestCase
         $this->assertInstanceOf(AdminAttributeDefinition::class, $updatedDefinition);
         $this->assertEquals($updateRequest->name, $updatedDefinition->name);
         
-        $deleteResponse = $this->adminAttributeClient->deleteAttributeDefinition($createdDefinition->id);
-        $this->assertInstanceOf(DeleteResponse::class, $deleteResponse);
-        $this->assertTrue($deleteResponse->success);
+        $this->adminAttributeClient->deleteAttributeDefinition($createdDefinition->id);
+        $this->assertTrue(true);
     }
 
     public function testCanSetAndDeleteAttributeValue(): void
@@ -92,10 +90,8 @@ class AdminAttributeClientTest extends TestCase
         $this->assertInstanceOf(AdminAttributeValue::class, $getValue);
         $this->assertEquals($testValue, $getValue->value);
 
-        $deleteResponse = $this->adminAttributeClient->deleteAttributeValue($adminId, $definition->id);
-        $this->assertInstanceOf(DeleteResponse::class, $deleteResponse);
-        $this->assertTrue($deleteResponse->success);
-
+        $this->adminAttributeClient->deleteAttributeValue($adminId, $definition->id);
         $this->adminAttributeClient->deleteAttributeDefinition($definition->id);
+        $this->assertTrue(true);
     }
 }
