@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace PhpList\RestApiClient\Response\Statistics;
 
 use PhpList\RestApiClient\Entity\Statistics\TopDomain;
-use PhpList\RestApiClient\Response\AbstractCollectionResponse;
 
 /**
  * Response class for a collection of top domain statistics.
  */
-class TopDomainsCollection extends AbstractCollectionResponse
+class TopDomainsCollection
 {
     /**
      * @var TopDomain[] The list of top domain statistics
      */
-    public array $items = [];
+    public array $domains = [];
+    public int $total;
 
-    protected function processItems(array $data): void
+    public function __construct(array $data)
     {
-        $this->items = [];
-        foreach ($data['items'] ?? $data as $item) {
-            $this->items[] = new TopDomain($item);
+        $this->total = (int)$data['total'];
+        foreach ($data['domains'] as $item) {
+            $this->domains[] = new TopDomain($item);
         }
     }
 }

@@ -42,7 +42,7 @@ class CampaignStatistic extends AbstractResponse
      */
     public int $forwards;
 
-    public int $uniqueViews;
+    public float $uniqueViews;
 
     public int $totalClicks;
 
@@ -57,7 +57,7 @@ class CampaignStatistic extends AbstractResponse
         $this->bounces = isset($data['bounces']) ? (int)$data['bounces'] : 0;
         $this->forwards = isset($data['forwards']) ? (int)$data['forwards'] : 0;
         $this->uniqueViews = isset($data['unique_views']) ? (float)$data['unique_views'] : 0;
-        $this->totalClicks = isset($data['total_clicks']) ? (float)$data['total_clicks'] : 0;
+        $this->totalClicks = isset($data['total_clicks']) ? (int)$data['total_clicks'] : 0;
         $this->uniqueClicks = isset($data['unique_clicks']) ? (string)$data['unique_clicks'] : 0;
     }
 }
