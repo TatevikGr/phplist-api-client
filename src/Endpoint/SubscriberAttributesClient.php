@@ -162,7 +162,7 @@ class SubscriberAttributesClient
         if ($value !== null) {
             $data['value'] = $value;
         }
-        $response = $this->client->put('subscribers/attribute-values/' . $subscriberId . '/' . $definitionId, $data);
+        $response = $this->client->post('subscribers/attribute-values/' . $subscriberId . '/' . $definitionId, $data);
         return new SubscriberAttributeValue($response);
     }
 

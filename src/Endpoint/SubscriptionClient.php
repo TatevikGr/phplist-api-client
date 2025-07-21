@@ -128,14 +128,14 @@ class SubscriptionClient
      *
      * @param array $emails
      * @param int $listId
-     * @return Subscription
+     * @return Subscription[]
      * @throws ApiException If an API error occurs
      * @throws Exception
      */
-    public function createSubscription(array $emails, int $listId): Subscription
+    public function createSubscriptions(array $emails, int $listId): array
     {
         $response = $this->client->post('lists/' . $listId . '/subscribers', ['emails' => $emails]);
-        return new Subscription($response);
+        return array_map(fn($item) => new Subscription($item), $response);
     }
 
     /**
@@ -148,6 +148,13 @@ class SubscriptionClient
      */
     public function deleteSubscription(array $emails, int $listId): void
     {
-        $this->client->delete('lists/' . $listId . '/subscribers', ['emails' => $emails]);
+        $query = [];
+        if (count($emails) === 1) {
+            $query['emails'] = $emails[0];
+        } else {
+            $query['emails'] = $emails;
+        }
+
+        $this->client->delete('lists/' . $listId . '/subscribers', $query);
     }
 }

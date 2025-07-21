@@ -119,7 +119,7 @@ class SubscribersClient
             [
                 'name' => 'update_existing',
                 'contents' => $data->updateExisting ? '1' : '0',
-            ]
+            ],
         ];
 
         return $this->client->postMultipart('subscribers/import', $multipart);
