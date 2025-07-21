@@ -37,16 +37,16 @@ abstract class AbstractCollectionResponse extends AbstractResponse
         ];
 
         $this->pagination = new CursorPagination($pagination);
-        $this->processItems($data);
+        $this->processItems($data['items'] ?? []);
     }
 
     /**
      * Process the items in the collection.
      * This method should be implemented by child classes.
      *
-     * @param array $data The response data as an array
+     * @param array $items The response data as an array
      */
-    abstract protected function processItems(array $data): void;
+    abstract protected function processItems(array $items): void;
 
     /**
      * Convert the response to an array.

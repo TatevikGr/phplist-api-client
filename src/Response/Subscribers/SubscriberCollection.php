@@ -20,12 +20,12 @@ class SubscriberCollection extends AbstractCollectionResponse
     /**
      * Process the items in the collection.
      *
-     * @param array $data The response data as an array
+     * @param array $items The response data as an array
      */
-    protected function processItems(array $data): void
+    protected function processItems(array $items): void
     {
         $this->items = [];
-        foreach ($data['items'] ?? $data as $item) {
+        foreach ($items as $item) {
             $this->items[] = new Subscriber($item);
         }
     }

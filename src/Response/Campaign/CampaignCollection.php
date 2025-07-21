@@ -17,10 +17,10 @@ class CampaignCollection extends AbstractCollectionResponse
      */
     public array $items = [];
 
-    protected function processItems(array $data): void
+    protected function processItems(array $items): void
     {
         $this->items = [];
-        foreach ($data['items'] ?? $data as $item) {
+        foreach ($items as $item) {
             $this->items[] = new Campaign($item);
         }
     }
