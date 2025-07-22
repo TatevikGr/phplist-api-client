@@ -3443,6 +3443,7 @@
                                     },
                                     "update_existing": {
                                         "description": "Weather to update existing subscribers or not",
+                                        "type": "string",
                                         "default": "0",
                                         "enum": [
                                             "0",
