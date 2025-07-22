@@ -69,7 +69,7 @@ class SubscribersClientTest extends TestCase
     public function testCanImportSubscribers(): void
     {
         $csvData = "email,name\n" .
-            "imported_" . uniqid() . "@example.com,Imported User\n";
+            'imported_" . uniqid() . "@example.com,Imported User\n';
 
         file_put_contents($this->filePath, $csvData);
 
