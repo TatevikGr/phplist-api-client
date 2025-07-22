@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PhpList\RestApiClient\Exception;
 
+use Throwable;
+
 /**
  * Exception thrown when validation fails for API requests.
  */
@@ -20,13 +22,13 @@ class ValidationException extends ApiException
      * @param string $message The error message
      * @param int $statusCode The HTTP status code
      * @param array $errors The validation errors
-     * @param \Throwable|null $previous The previous exception
+     * @param Throwable|null $previous The previous exception
      */
     public function __construct(
         string $message = 'Validation failed',
         int $statusCode = 422,
         array $errors = [],
-        \Throwable $previous = null
+        Throwable $previous = null
     ) {
         $this->errors = $errors;
         parent::__construct($message, $statusCode, $previous);

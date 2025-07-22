@@ -53,13 +53,13 @@ class Client
     ) {
         $this->baseUrl = rtrim($baseUrl, '/');
         $this->logger = $logger ?? new NullLogger();
-        
+
         $defaultConfig = [
             'base_uri' => $this->baseUrl,
             'timeout' => 30,
             'http_errors' => false,
         ];
-        
+
         $this->httpClient = new GuzzleClient(array_merge($defaultConfig, $config));
     }
 
@@ -69,30 +69,29 @@ class Client
      * @param string $username The username
      * @param string $password The password
      * @return array The authentication response data
-     * @throws AuthenticationException If authentication fails
-     * @throws ApiException If an API error occurs
+     * @throws AuthenticationException If authentication fails or an API error occurs
      */
     public function login(string $username, string $password): array
     {
         $this->logger->info('Authenticating with the API', ['username' => $username]);
-        
+
         try {
-            $response = $this->httpClient->post("/api/v2/sessions", [
+            $response = $this->httpClient->post('api/v2/sessions', [
                 'json' => [
-                    'username' => $username,
+                    'login_name' => $username,
                     'password' => $password,
                 ],
             ]);
-            
+
             $data = $this->handleResponse($response);
-            
+
             if (isset($data['key'])) {
                 $this->sessionId = $data['key'];
                 $this->logger->info('Successfully authenticated with the API');
             } else {
                 throw new AuthenticationException('Session ID not found in response');
             }
-            
+
             return $data;
         } catch (GuzzleException $e) {
             $this->logger->error('Authentication failed', ['error' => $e->getMessage()]);
@@ -120,18 +119,6 @@ class Client
     public function getSessionId(): ?string
     {
         return $this->sessionId;
-    }
-
-    /**
-     * Set the API version.
-     *
-     * @param string $version The API version
-     * @return self
-     */
-    public function setApiVersion(string $version): self
-    {
-        $this->apiVersion = $version;
-        return $this;
     }
 
     /**
@@ -180,9 +167,9 @@ class Client
      * @return array The response data
      * @throws ApiException If an API error occurs
      */
-    public function delete(string $endpoint): array
+    public function delete(string $endpoint, array $queryParams = []): array
     {
-        return $this->request('DELETE', $endpoint);
+        return $this->request('DELETE', $endpoint, ['query' => $queryParams]);
     }
 
     /**
@@ -197,20 +184,19 @@ class Client
     private function request(string $method, string $endpoint, array $options = []): array
     {
         $endpoint = ltrim($endpoint, '/');
-        $url = "/api/v2/{$endpoint}";
-        
-        // Add session ID to headers if available
+        $url = '/api/v2/' . $endpoint;
+
         if ($this->sessionId) {
             $options['headers'] = $options['headers'] ?? [];
-            $options['headers']['session'] = $this->sessionId;
+            $options['headers']['php-auth-pw'] = $this->sessionId;
         }
-        
+
         $this->logger->info('Making API request', [
             'method' => $method,
             'url' => $url,
             'options' => $options,
         ]);
-        
+
         try {
             $response = $this->httpClient->request($method, $url, $options);
             return $this->handleResponse($response);
@@ -218,6 +204,14 @@ class Client
             $this->logger->error('API request failed', ['error' => $e->getMessage()]);
             throw new ApiException('API request failed: ' . $e->getMessage(), 0, $e);
         }
+    }
+
+    /**
+     * @throws ApiException
+     */
+    public function postMultipart(string $endpoint, array $multipart): array
+    {
+        return $this->request('POST', $endpoint, ['multipart' => $multipart]);
     }
 
     /**
@@ -235,34 +229,44 @@ class Client
         $statusCode = $response->getStatusCode();
         $body = (string) $response->getBody();
         $data = json_decode($body, true) ?? [];
-        
+
         $this->logger->debug('API response received', [
             'status_code' => $statusCode,
             'body' => $body,
         ]);
-        
+
         if ($statusCode >= 200 && $statusCode < 300) {
             return $data;
         }
-        
-        // Handle different error types based on status code
-        switch ($statusCode) {
-            case 401:
-            case 403:
-                throw new AuthenticationException($data['message'] ?? 'Authentication failed', $statusCode);
-            case 404:
-                throw new NotFoundException($data['message'] ?? 'Resource not found', $statusCode);
-            case 422:
-                throw new ValidationException(
-                    $data['message'] ?? 'Validation failed',
-                    $statusCode,
-                    $data['errors'] ?? []
-                );
-            default:
-                throw new ApiException(
-                    $data['message'] ?? 'API error occurred',
-                    $statusCode
-                );
-        }
+
+        $this->handleErrorResponse($statusCode, $data);
+    }
+
+    /**
+     * Handle error responses by throwing appropriate exceptions.
+     *
+     * @param int $statusCode The HTTP status code
+     * @param array $data The response data
+     * @return never
+     * @throws ApiException If an API error occurs
+     * @throws AuthenticationException If authentication fails
+     * @throws NotFoundException If the resource is not found
+     * @throws ValidationException If validation fails
+     */
+    private function handleErrorResponse(int $statusCode, array $data): never
+    {
+        throw match ($statusCode) {
+            401, 403 => new AuthenticationException($data['message'] ?? 'Authentication failed', $statusCode),
+            404 => new NotFoundException($data['message'] ?? 'Resource not found', $statusCode),
+            400,422 => new ValidationException(
+                message: $data['message'] ?? 'Validation failed',
+                statusCode: $statusCode,
+                errors: $data['errors'] ?? [],
+            ),
+            default => new ApiException(
+                message: $data['message'] ?? 'API error occurred',
+                statusCode: $statusCode
+            ),
+        };
     }
 }

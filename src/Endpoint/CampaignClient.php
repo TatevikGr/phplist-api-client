@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
+use PhpList\RestApiClient\Entity\Campaign;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Exception\ValidationException;
+use PhpList\RestApiClient\Request\Campaign\CreateCampaignRequest;
+use PhpList\RestApiClient\Request\Campaign\UpdateCampaignRequest;
+use PhpList\RestApiClient\Response\Campaign\CampaignCollection;
 
 /**
  * Client for campaign-related API endpoints.
@@ -34,71 +38,74 @@ class CampaignClient
      *
      * @param int|null $afterId The ID to start from for pagination
      * @param int $limit The maximum number of items to return
-     * @return array The list of campaigns
+     * @return CampaignCollection The list of campaigns
      * @throws ApiException If an API error occurs
      */
-    public function getCampaigns(?int $afterId = null, int $limit = 25): array
+    public function getCampaigns(?int $afterId = null, int $limit = 25): CampaignCollection
     {
         $queryParams = ['limit' => $limit];
-        
+
         if ($afterId !== null) {
             $queryParams['after_id'] = $afterId;
         }
-        
-        return $this->client->get('campaigns', $queryParams);
+
+        $response = $this->client->get('campaigns', $queryParams);
+        return new CampaignCollection($response);
     }
 
     /**
      * Get a campaign by ID.
      *
      * @param int $id The campaign ID
-     * @return array The campaign data
+     * @return Campaign The campaign data
      * @throws NotFoundException If the campaign is not found
      * @throws ApiException If an API error occurs
      */
-    public function getCampaign(int $id): array
+    public function getCampaign(int $id): Campaign
     {
-        return $this->client->get("campaigns/{$id}");
+        $response = $this->client->get('campaigns/' . $id);
+        return new Campaign($response);
     }
 
     /**
      * Create a new campaign.
      *
-     * @param array $data The campaign data
-     * @return array The created campaign
+     * @param CreateCampaignRequest $request The campaign data
+     * @return Campaign The created campaign
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function createCampaign(array $data): array
+    public function createCampaign(CreateCampaignRequest $request): Campaign
     {
-        return $this->client->post('campaigns', $data);
+        $response = $this->client->post('campaigns', $request->toArray());
+        return new Campaign($response);
     }
 
     /**
      * Update a campaign.
      *
      * @param int $id The campaign ID
-     * @param array $data The campaign data
-     * @return array The updated campaign
+     * @param UpdateCampaignRequest $request The campaign data
+     * @return Campaign The updated campaign
      * @throws NotFoundException If the campaign is not found
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function updateCampaign(int $id, array $data): array
+    public function updateCampaign(int $id, UpdateCampaignRequest $request): Campaign
     {
-        return $this->client->put("campaigns/{$id}", $data);
+        $response = $this->client->put('campaigns/' . $id, $request->toArray());
+        return new Campaign($response);
     }
 
     /**
      * Delete a campaign.
      *
      * @param int $id The campaign ID
-     * @return array The response data
      * @throws NotFoundException If the campaign is not found
      * @throws ApiException If an API error occurs
      */
-    public function deleteCampaign(int $id): array
+    public function deleteCampaign(int $id): void
     {
-        return $this->client->delete("campaigns/{$id}");
+        $this->client->delete('campaigns/' . $id);
     }
 }
