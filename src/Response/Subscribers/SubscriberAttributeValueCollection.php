@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace PhpList\RestApiClient\Response\SubscriberAttributes;
+namespace PhpList\RestApiClient\Response\Subscribers;
 
-use PhpList\RestApiClient\Entity\SubscriberAttributeDefinition;
+use PhpList\RestApiClient\Entity\SubscriberAttributeValue;
 use PhpList\RestApiClient\Response\AbstractCollectionResponse;
 
 /**
- * Response class for a list of subscriber attribute definitions.
+ * Response class for a list of subscriber attribute values.
  */
-class SubscriberAttributeCollection extends AbstractCollectionResponse
+class SubscriberAttributeValueCollection extends AbstractCollectionResponse
 {
     /**
-     * @var SubscriberAttributeDefinition[] The list of attribute definitions
+     * @var SubscriberAttributeValue[] The list of attribute values
      */
     public array $items = [];
 
@@ -26,7 +26,7 @@ class SubscriberAttributeCollection extends AbstractCollectionResponse
     {
         $this->items = [];
         foreach ($items as $item) {
-            $this->items[] = new SubscriberAttributeDefinition($item);
+            $this->items[] = new SubscriberAttributeValue($item);
         }
     }
 }

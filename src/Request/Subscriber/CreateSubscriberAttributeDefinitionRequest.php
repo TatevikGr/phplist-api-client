@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PhpList\RestApiClient\Request\SubscriberAttribute;
+namespace PhpList\RestApiClient\Request\Subscriber;
 
 use PhpList\RestApiClient\Request\AbstractRequest;
 

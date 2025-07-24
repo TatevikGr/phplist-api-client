@@ -9,10 +9,10 @@ use PhpList\RestApiClient\Entity\SubscriberAttributeDefinition;
 use PhpList\RestApiClient\Entity\SubscriberAttributeValue;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
-use PhpList\RestApiClient\Request\SubscriberAttribute\CreateSubscriberAttributeDefinitionRequest;
-use PhpList\RestApiClient\Request\SubscriberAttribute\UpdateSubscriberAttributeDefinitionRequest;
-use PhpList\RestApiClient\Response\SubscriberAttributes\SubscriberAttributeCollection;
-use PhpList\RestApiClient\Response\SubscriberAttributes\SubscriberAttributeValueCollection;
+use PhpList\RestApiClient\Request\Subscriber\CreateSubscriberAttributeDefinitionRequest;
+use PhpList\RestApiClient\Request\Subscriber\UpdateSubscriberAttributeDefinitionRequest;
+use PhpList\RestApiClient\Response\Subscribers\SubscriberAttributeCollection;
+use PhpList\RestApiClient\Response\Subscribers\SubscriberAttributeValueCollection;
 
 /**
  * Client for subscriber attribute-related API endpoints.
