@@ -10,8 +10,10 @@ use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Request\Subscriber\CreateSubscriberRequest;
 use PhpList\RestApiClient\Request\Subscriber\ExportSubscriberRequest;
+use PhpList\RestApiClient\Request\Subscriber\GetSubscriberHistoryRequest;
 use PhpList\RestApiClient\Request\Subscriber\ImportSubscribersRequest;
 use PhpList\RestApiClient\Request\Subscriber\UpdateSubscriberRequest;
+use PhpList\RestApiClient\Response\Subscribers\SubscriberHistoryCollection;
 
 /**
  * Client for subscriber-related API endpoints.
@@ -123,5 +125,53 @@ class SubscribersClient
         ];
 
         return $this->client->postMultipart('subscribers/import', $multipart);
+    }
+
+    /**
+     * Get a subscriber history by filter.
+     *
+     * @param int $id The subscriber ID
+     * @return SubscriberHistoryCollection The subscriber history data
+     * @throws NotFoundException If the subscriber is not found
+     * @throws ApiException If an API error occurs
+     */
+    public function getSubscriberHistory(
+        int $id,
+        ?GetSubscriberHistoryRequest $filters = null
+    ): SubscriberHistoryCollection {
+        $query = $filters ? $filters->toArray() : [];
+        $response = $this->client->get('subscribers/' . $id .'/history', $query);
+        return new SubscriberHistoryCollection($response);
+    }
+
+    /**
+     * Confirm a subscriber by uniqueId.
+     *
+     * This endpoint returns text/html content. The raw string response is returned as-is.
+     *
+     * @param string $uniqueId Unique identifier for the subscriber confirmation
+     * @return string Raw HTML/text response from the API
+     * @throws ApiException If an API error occurs or the subscriber is not found/invalid
+     */
+    public function confirmSubscriber(string $uniqueId): string
+    {
+        return $this->client->getRaw('subscribers/confirm', [
+            'uniqueId' => $uniqueId,
+        ]);
+    }
+
+    /**
+     * Reset bounce count for a subscriber and return the updated subscriber.
+     *
+     * POST /api/v2/subscribers/{subscriberId}/reset-bounce-count
+     *
+     * @param int $subscriberId The subscriber ID
+     * @return Subscriber Updated subscriber data
+     * @throws ApiException If an API error occurs
+     */
+    public function resetBounceCount(int $subscriberId): Subscriber
+    {
+        $response = $this->client->post('subscribers/' . $subscriberId . '/reset-bounce-count', []);
+        return new Subscriber($response);
     }
 }

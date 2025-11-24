@@ -17,16 +17,20 @@ class ImportSubscribersRequest extends AbstractRequest
     /** @var bool $updateExisting Whether to update existing subscribers or not */
     public bool $updateExisting = false;
 
+    public bool $skipInvalidEmails = false;
+
     /**
      * @SuppressWarnings("BooleanArgumentFlag")
      */
     public function __construct(
         $file,
         ?int $listId = null,
-        bool $updateExisting = false
+        bool $updateExisting = false,
+        bool $skipInvalidEmails = false
     ) {
         $this->file = $file;
         $this->listId = $listId;
         $this->updateExisting = $updateExisting;
+        $this->skipInvalidEmails = $skipInvalidEmails;
     }
 }

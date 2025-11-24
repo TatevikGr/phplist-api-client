@@ -34,9 +34,10 @@ class UpdateSubscriberAttributeDefinitionRequest extends AbstractRequest
     public ?bool $required = null;
 
     /**
-     * @var string|null The table name
+     * @var array<int, array{id?: int|null, name: string, list_order?: int|null}>|null
+     * Options for dynamic list attributes
      */
-    public ?string $tableName = null;
+    public ?array $options = null;
 
     /**
      * @param string|null $name The attribute name
@@ -44,7 +45,6 @@ class UpdateSubscriberAttributeDefinitionRequest extends AbstractRequest
      * @param int|null $order The attribute order
      * @param string|null $defaultValue The default value
      * @param bool|null $required Whether the attribute is required
-     * @param string|null $tableName The table name
      */
     public function __construct(
         ?string $name = null,
@@ -52,13 +52,13 @@ class UpdateSubscriberAttributeDefinitionRequest extends AbstractRequest
         ?int $order = null,
         ?string $defaultValue = null,
         ?bool $required = null,
-        ?string $tableName = null
+        ?array $options = null,
     ) {
         $this->name = $name;
         $this->type = $type;
         $this->order = $order;
         $this->defaultValue = $defaultValue;
         $this->required = $required;
-        $this->tableName = $tableName;
+        $this->options = $options;
     }
 }

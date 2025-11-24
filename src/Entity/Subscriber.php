@@ -61,9 +61,6 @@ class Subscriber extends AbstractResponse
      */
     public ?array $subscribedLists = null;
 
-    /**
-     * @SuppressWarnings("CyclomaticComplexity")
-     */
     public function __construct(array $data)
     {
         $this->id = isset($data['id']) ? (int)$data['id'] : 0;

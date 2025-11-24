@@ -9,6 +9,7 @@ use ReflectionProperty;
 
 /**
  * Abstract base class for all API request classes.
+ * @SuppressWarnings("NumberOfChildren")
  */
 abstract class AbstractRequest implements RequestInterface
 {

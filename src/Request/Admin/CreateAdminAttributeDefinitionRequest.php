@@ -37,11 +37,6 @@ class CreateAdminAttributeDefinitionRequest extends AbstractRequest
     public ?bool $required = null;
 
     /**
-     * @var string|null The table name
-     */
-    public ?string $tableName = null;
-
-    /**
      * CreateAdminAttributeDefinitionRequest constructor.
      *
      * @param string $name The attribute name
@@ -49,7 +44,6 @@ class CreateAdminAttributeDefinitionRequest extends AbstractRequest
      * @param int|null $order The attribute order
      * @param string|null $defaultValue The default value
      * @param bool|null $required Whether the attribute is required
-     * @param string|null $tableName The table name
      */
     public function __construct(
         string $name,
@@ -57,13 +51,11 @@ class CreateAdminAttributeDefinitionRequest extends AbstractRequest
         ?int $order = null,
         ?string $defaultValue = null,
         ?bool $required = null,
-        ?string $tableName = null
     ) {
         $this->name = $name;
         $this->type = $type;
         $this->order = $order;
         $this->defaultValue = $defaultValue;
         $this->required = $required;
-        $this->tableName = $tableName;
     }
 }

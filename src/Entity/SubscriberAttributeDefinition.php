@@ -43,8 +43,6 @@ class SubscriberAttributeDefinition extends AbstractResponse
 
     public ?int $listOrder = null;
 
-    public ?string $tableName = null;
-
     public function __construct(array $data)
     {
         $this->id = isset($data['id']) ? (int)$data['id'] : 0;
@@ -55,6 +53,5 @@ class SubscriberAttributeDefinition extends AbstractResponse
         $this->defaultValue = isset($data['default_value']) ? (string)$data['default_value'] : null;
         $this->description = isset($data['description']) ? (string)$data['description'] : null;
         $this->listOrder = isset($data['list_order']) ? (int)$data['list_order'] : null;
-        $this->tableName = isset($data['table_name']) ? (string)$data['table_name'] : null;
     }
 }

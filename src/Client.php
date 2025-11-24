@@ -144,7 +144,11 @@ class Client
      */
     public function post(string $endpoint, array $data = []): array
     {
-        return $this->request('POST', $endpoint, ['json' => $data]);
+        $options = [];
+        if (!empty($data)) {
+            $options['json'] = $data;
+        }
+        return $this->request('POST', $endpoint, $options);
     }
 
     /**
@@ -170,6 +174,25 @@ class Client
     public function delete(string $endpoint, array $queryParams = []): array
     {
         return $this->request('DELETE', $endpoint, ['query' => $queryParams]);
+    }
+
+    /**
+     * Make a GET request to the API expecting a non-JSON (raw) response, e.g., text/html.
+     *
+     * This method is useful for endpoints that return HTML or plain text.
+     *
+     * @param string $endpoint The API endpoint
+     * @param array $queryParams Query parameters
+     * @param array $headers Additional headers to send (will be merged)
+     * @return string The raw response body
+     * @throws ApiException If an API error occurs
+     */
+    public function getRaw(string $endpoint, array $queryParams = [], array $headers = []): string
+    {
+        return $this->requestRaw('GET', $endpoint, [
+            'query' => $queryParams,
+            'headers' => $headers,
+        ]);
     }
 
     /**
@@ -215,6 +238,46 @@ class Client
     }
 
     /**
+     * Make a request to the API and return the raw body (no JSON decoding on success).
+     *
+     * @param string $method
+     * @param string $endpoint
+     * @param array $options
+     * @return string
+     * @throws ApiException
+     */
+    private function requestRaw(string $method, string $endpoint, array $options = []): string
+    {
+        $endpoint = ltrim($endpoint, '/');
+        $url = '/api/v2/' . $endpoint;
+
+        // Ensure headers array exists and set default Accept for raw responses
+        $options['headers'] = $options['headers'] ?? [];
+        // Prefer text/html but accept anything
+        if (!isset($options['headers']['Accept'])) {
+            $options['headers']['Accept'] = 'text/html, */*;q=0.8';
+        }
+
+        if ($this->sessionId) {
+            $options['headers']['php-auth-pw'] = $this->sessionId;
+        }
+
+        $this->logger->info('Making API raw request', [
+            'method' => $method,
+            'url' => $url,
+            'options' => $options,
+        ]);
+
+        try {
+            $response = $this->httpClient->request($method, $url, $options);
+            return $this->handleRawResponse($response);
+        } catch (GuzzleException $e) {
+            $this->logger->error('API raw request failed', ['error' => $e->getMessage()]);
+            throw new ApiException('API request failed: ' . $e->getMessage(), 0, $e);
+        }
+    }
+
+    /**
      * Handle the API response.
      *
      * @param ResponseInterface $response The HTTP response
@@ -239,6 +302,35 @@ class Client
             return $data;
         }
 
+        $this->handleErrorResponse($statusCode, $data);
+    }
+
+    /**
+     * Handle raw (non-JSON) API responses.
+     *
+     * On success (2xx), returns the raw body string. On error, tries to decode JSON
+     * to extract error details; if decoding fails, passes an empty array to the error handler.
+     *
+     * @param ResponseInterface $response
+     * @return string
+     * @throws ApiException
+     */
+    private function handleRawResponse(ResponseInterface $response): string
+    {
+        $statusCode = $response->getStatusCode();
+        $body = (string) $response->getBody();
+
+        $this->logger->debug('API raw response received', [
+            'status_code' => $statusCode,
+            'body_preview' => substr($body, 0, 512),
+        ]);
+
+        if ($statusCode >= 200 && $statusCode < 300) {
+            return $body;
+        }
+
+        // Try to decode error details; if not JSON, use empty array
+        $data = json_decode($body, true) ?? [];
         $this->handleErrorResponse($statusCode, $data);
     }
 
