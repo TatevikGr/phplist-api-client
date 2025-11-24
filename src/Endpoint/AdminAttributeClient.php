@@ -133,7 +133,7 @@ class AdminAttributeClient
             $queryParams['after_id'] = $afterId;
         }
 
-        $data = $this->client->get('administrators/attribute-values/' . $adminId, $queryParams);
+        $data = $this->client->get('administrators/' . $adminId . '/attributes', $queryParams);
         return new AdminAttributeValueCollection($data);
     }
 
@@ -148,7 +148,7 @@ class AdminAttributeClient
      */
     public function getAttributeValue(int $adminId, int $definitionId): AdminAttributeValue
     {
-        $data = $this->client->get('administrators/attribute-values/' . $adminId . '/' . $definitionId);
+        $data = $this->client->get('administrators/' . $adminId . '/attributes/' . $definitionId);
         return new AdminAttributeValue($data);
     }
 
@@ -163,7 +163,7 @@ class AdminAttributeClient
      */
     public function setAttributeValue(int $adminId, int $definitionId, string $value): AdminAttributeValue
     {
-        $data = $this->client->post('administrators/attribute-values/' . $adminId . '/' . $definitionId, [
+        $data = $this->client->post('administrators/' . $adminId . '/attributes/' . $definitionId, [
             'value' => $value,
         ]);
         return new AdminAttributeValue($data);
@@ -179,6 +179,6 @@ class AdminAttributeClient
      */
     public function deleteAttributeValue(int $adminId, int $definitionId): void
     {
-        $this->client->delete('administrators/attribute-values/' . $adminId . '/' . $definitionId);
+        $this->client->delete('administrators/' . $adminId . '/attributes/' . $definitionId);
     }
 }
