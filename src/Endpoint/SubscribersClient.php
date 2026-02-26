@@ -14,6 +14,7 @@ use PhpList\RestApiClient\Request\Subscriber\GetSubscriberHistoryRequest;
 use PhpList\RestApiClient\Request\Subscriber\ImportSubscribersRequest;
 use PhpList\RestApiClient\Request\Subscriber\UpdateSubscriberRequest;
 use PhpList\RestApiClient\Response\Subscribers\SubscriberHistoryCollection;
+use PhpList\RestApiClient\Response\Subscribers\SubscriberCollection;
 
 /**
  * Client for subscriber-related API endpoints.
@@ -158,6 +159,26 @@ class SubscribersClient
         return $this->client->getRaw('subscribers/confirm', [
             'uniqueId' => $uniqueId,
         ]);
+    }
+
+    /**
+     * Gets a paginated list of subscribers.
+     *
+     * @param int|null $afterId The ID to start from for pagination
+     * @param int $limit The maximum number of items to return
+     * @return SubscriberCollection The list of subscribers
+     * @throws ApiException If an API error occurs
+     */
+    public function getSubscribers(?int $afterId = null, int $limit = 25): SubscriberCollection
+    {
+        $queryParams = ['limit' => $limit];
+
+        if ($afterId !== null) {
+            $queryParams['after_id'] = $afterId;
+        }
+
+        $response = $this->client->get('subscribers', $queryParams);
+        return new SubscriberCollection($response);
     }
 
     /**
