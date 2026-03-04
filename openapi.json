@@ -1243,6 +1243,47 @@
                 }
             }
         },
+        "/api/v2/attachments/download/{id}": {
+            "get": {
+                "tags": [
+                    "attachments"
+                ],
+                "summary": "Download attachment",
+                "description": "Download an attachment by ID. `uid` query parameter is required.",
+                "operationId": "adf9081332610a149939c162b95e5286",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Attachment ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "uid",
+                        "in": "query",
+                        "description": "Download token (subscriber email or word \"forwarded\")",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "File stream"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
         "/api/v2/bounces/regex": {
             "get": {
                 "tags": [
@@ -1939,6 +1980,89 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/UnauthorizedResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/email-forward/{messageId}": {
+            "post": {
+                "tags": [
+                    "campaigns"
+                ],
+                "summary": "Forward a message to recipients.",
+                "description": "🚧 **Status: Beta** – This method is under development. Avoid using in production. Queues forwarding of a campaign/message to provided recipient emails.",
+                "operationId": "c41e27bcaf3409ec2efda8660574850e",
+                "parameters": [
+                    {
+                        "name": "php-auth-pw",
+                        "in": "header",
+                        "description": "Session key obtained from login",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "messageId",
+                        "in": "path",
+                        "description": "message ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Forwarding payload",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ForwardMessageRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ForwardResult"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Failure",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Failure",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Failure",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
                                 }
                             }
                         }
@@ -2928,6 +3052,41 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/api/v2/t/open.gif": {
+            "get": {
+                "tags": [
+                    "tracking"
+                ],
+                "summary": "Track user message open",
+                "description": "1x1 tracking pixel endpoint that records a message view. Requires `u` (subscriber UID) and `m` (message ID) as query parameters.",
+                "operationId": "bc130b3f141501cd88e212b74a9b58c5",
+                "parameters": [
+                    {
+                        "name": "u",
+                        "in": "query",
+                        "description": "Subscriber unique identifier (UID)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "m",
+                        "in": "query",
+                        "description": "Message ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transparent 1x1 GIF"
                     }
                 }
             }
@@ -4644,6 +4803,81 @@
             }
         },
         "/api/v2/subscribers": {
+            "get": {
+                "tags": [
+                    "subscribers"
+                ],
+                "summary": "Gets a list of all subscribers.",
+                "description": "🚧 **Status: Beta** – This method is under development. Avoid using in production. Returns a JSON list of all subscribers.",
+                "operationId": "6e0a4ae724df948b624a52b8349fa9df",
+                "parameters": [
+                    {
+                        "name": "php-auth-pw",
+                        "in": "header",
+                        "description": "Session key obtained from login",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "after_id",
+                        "in": "query",
+                        "description": "Last id (starting from 0)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 25,
+                            "maximum": 100,
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Subscriber"
+                                            }
+                                        },
+                                        "pagination": {
+                                            "$ref": "#/components/schemas/CursorPagination"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Failure",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "subscribers"
@@ -5899,6 +6133,46 @@
                 },
                 "type": "object"
             },
+            "ForwardMessageRequest": {
+                "required": [
+                    "recipients"
+                ],
+                "properties": {
+                    "recipients": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "example": [
+                            "friend1@example.com",
+                            "friend2@example.com"
+                        ]
+                    },
+                    "uid": {
+                        "type": "string",
+                        "example": "fwd-123e4567-e89b-12d3-a456-426614174000",
+                        "nullable": false
+                    },
+                    "note": {
+                        "type": "string",
+                        "example": "Thought you might like this.",
+                        "nullable": true
+                    },
+                    "from_name": {
+                        "type": "string",
+                        "example": "Alice",
+                        "nullable": false
+                    },
+                    "from_email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "alice@example.com",
+                        "nullable": false
+                    }
+                },
+                "type": "object"
+            },
             "MessageContentRequest": {
                 "required": [
                     "subject",
@@ -6074,6 +6348,52 @@
                 },
                 "type": "object"
             },
+            "ForwardRecipientResult": {
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "friend@example.com"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "sent"
+                    },
+                    "reason": {
+                        "type": "string",
+                        "example": "precache_failed",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "ForwardResult": {
+                "properties": {
+                    "total_requested": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "total_sent": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "total_failed": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "total_already_sent": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "recipients": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ForwardRecipientResult"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "ListMessage": {
                 "properties": {
                     "id": {
@@ -6145,16 +6465,6 @@
                                 "type": "string",
                                 "example": "text",
                                 "nullable": true
-                            },
-                            "format_options": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                },
-                                "example": [
-                                    "as_html",
-                                    "as_text"
-                                ]
                             }
                         },
                         "type": "object"
@@ -6660,6 +6970,45 @@
                 },
                 "type": "object"
             },
+            "SubscribersFilterRequest": {
+                "properties": {
+                    "is_confirmed": {
+                        "description": "Filter by confirmed status",
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "is_blacklisted": {
+                        "description": "Filter by blacklisted status",
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "sort_by": {
+                        "description": "Column to sort by",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "sort_direction": {
+                        "description": "Sort direction",
+                        "type": "string",
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
+                        "nullable": true
+                    },
+                    "find_column": {
+                        "description": "Column to search in (requires find_value)",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "find_value": {
+                        "description": "Value to search for (requires find_column)",
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
             "UpdateSubscriberRequest": {
                 "required": [
                     "email"
@@ -6978,6 +7327,10 @@
             "description": "sessions"
         },
         {
+            "name": "attachments",
+            "description": "attachments"
+        },
+        {
             "name": "bounces",
             "description": "bounces"
         },
@@ -6996,6 +7349,10 @@
         {
             "name": "analytics",
             "description": "analytics"
+        },
+        {
+            "name": "tracking",
+            "description": "tracking"
         },
         {
             "name": "blacklist",
