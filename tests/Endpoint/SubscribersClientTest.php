@@ -147,4 +147,37 @@ class SubscribersClientTest extends TestCase
         $this->subscribersClient->deleteSubscriber($subscriber->id);
         $this->assertTrue(true);
     }
+
+    public function testGetSubscribersSendsFilterParameters(): void
+    {
+        $mockClient = $this->createMock(Client::class);
+
+        $filterRequest = new \PhpList\RestApiClient\Request\Subscriber\SubscribersFilterRequest(
+            isConfirmed: true,
+            isBlacklisted: false,
+            sortBy: 'email',
+            sortDirection: 'desc',
+            findColumn: 'email',
+            findValue: 'test@example.com'
+        );
+
+        $expectedQueryParams = [
+            'is_confirmed' => true,
+            'is_blacklisted' => false,
+            'sort_by' => 'email',
+            'sort_direction' => 'desc',
+            'find_column' => 'email',
+            'find_value' => 'test@example.com',
+            'limit' => 50,
+            'after_id' => 100
+        ];
+
+        $mockClient->expects($this->once())
+            ->method('get')
+            ->with('subscribers', $expectedQueryParams)
+            ->willReturn(['items' => [], 'meta' => []]);
+
+        $subscribersClient = new SubscribersClient($mockClient);
+        $subscribersClient->getSubscribers($filterRequest, 100, 50);
+    }
 }

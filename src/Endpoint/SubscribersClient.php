@@ -12,6 +12,7 @@ use PhpList\RestApiClient\Request\Subscriber\CreateSubscriberRequest;
 use PhpList\RestApiClient\Request\Subscriber\ExportSubscriberRequest;
 use PhpList\RestApiClient\Request\Subscriber\GetSubscriberHistoryRequest;
 use PhpList\RestApiClient\Request\Subscriber\ImportSubscribersRequest;
+use PhpList\RestApiClient\Request\Subscriber\SubscribersFilterRequest;
 use PhpList\RestApiClient\Request\Subscriber\UpdateSubscriberRequest;
 use PhpList\RestApiClient\Response\Subscribers\SubscriberHistoryCollection;
 use PhpList\RestApiClient\Response\Subscribers\SubscriberCollection;
@@ -164,14 +165,20 @@ class SubscribersClient
     /**
      * Gets a paginated list of subscribers.
      *
+     * @param SubscribersFilterRequest $request Filter parameters for subscribers
      * @param int|null $afterId The ID to start from for pagination
      * @param int $limit The maximum number of items to return
      * @return SubscriberCollection The list of subscribers
      * @throws ApiException If an API error occurs
      */
-    public function getSubscribers(?int $afterId = null, int $limit = 25): SubscriberCollection
-    {
-        $queryParams = ['limit' => $limit];
+    public function getSubscribers(
+        SubscribersFilterRequest $request,
+        ?int $afterId = null,
+        int $limit = 25
+    ): SubscriberCollection {
+        $queryParams = array_merge($request->toArray(), [
+            'limit' => $limit,
+        ]);
 
         if ($afterId !== null) {
             $queryParams['after_id'] = $afterId;
