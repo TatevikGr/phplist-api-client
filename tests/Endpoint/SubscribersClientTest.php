@@ -9,6 +9,7 @@ use PhpList\RestApiClient\Endpoint\SubscribersClient;
 use PhpList\RestApiClient\Entity\Subscriber;
 use PhpList\RestApiClient\Entity\SubscriberHistory;
 use PhpList\RestApiClient\Request\Subscriber\CreateSubscriberRequest;
+use PhpList\RestApiClient\Request\Subscriber\SubscribersFilterRequest;
 use PhpList\RestApiClient\Request\Subscriber\UpdateSubscriberRequest;
 use PhpList\RestApiClient\Request\Subscriber\ExportSubscriberRequest;
 use PhpList\RestApiClient\Request\Subscriber\ImportSubscribersRequest;
@@ -152,11 +153,9 @@ class SubscribersClientTest extends TestCase
     {
         $mockClient = $this->createMock(Client::class);
 
-        $filterRequest = new \PhpList\RestApiClient\Request\Subscriber\SubscribersFilterRequest(
+        $filterRequest = new SubscribersFilterRequest(
             isConfirmed: true,
             isBlacklisted: false,
-            sortBy: 'email',
-            sortDirection: 'desc',
             findColumn: 'email',
             findValue: 'test@example.com'
         );
