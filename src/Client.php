@@ -29,6 +29,8 @@ class Client
      */
     private ?string $sessionId = null;
 
+    private ?int $id = null;
+
     /**
      * @var LoggerInterface The logger instance
      */
@@ -87,6 +89,7 @@ class Client
 
             if (isset($data['key'])) {
                 $this->sessionId = $data['key'];
+                $this->id = (int) $data['id'];
                 $this->logger->info('Successfully authenticated with the API');
             } else {
                 throw new AuthenticationException('Session ID not found in response');
@@ -119,6 +122,17 @@ class Client
     public function getSessionId(): ?string
     {
         return $this->sessionId;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**

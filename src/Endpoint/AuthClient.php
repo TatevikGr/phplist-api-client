@@ -47,7 +47,7 @@ class AuthClient
         if (!$sessionId) {
             throw new AuthenticationException('Not authenticated');
         }
-        $result = $this->client->delete('sessions/' . $sessionId);
+        $result = $this->client->delete('sessions/' . $this->client->getId());
         $this->client->setSessionId('');
 
         return $result;
