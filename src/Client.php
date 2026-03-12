@@ -89,7 +89,7 @@ class Client
 
             if (isset($data['key'])) {
                 $this->sessionId = $data['key'];
-                $this->id = (int) $data['id'];
+                $this->id = (int) ($data['id'] ?? 0);
                 $this->logger->info('Successfully authenticated with the API');
             } else {
                 throw new AuthenticationException('Session ID not found in response');

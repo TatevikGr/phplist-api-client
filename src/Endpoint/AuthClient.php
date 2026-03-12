@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
+use PhpList\RestApiClient\Entity\Administrator;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\AuthenticationException;
 
@@ -51,5 +52,23 @@ class AuthClient
         $this->client->setSessionId('');
 
         return $result;
+    }
+
+    /**
+     * Get the current admin user data.
+     *
+     * @throws AuthenticationException If not authenticated
+     */
+    public function getSessionUser(): Administrator
+    {
+        $sessionId = $this->client->getSessionId();
+
+        if (!$sessionId) {
+            throw new AuthenticationException('Not authenticated');
+        }
+
+        $data = $this->client->get('sessions/me');
+
+        return new Administrator($data);
     }
 }

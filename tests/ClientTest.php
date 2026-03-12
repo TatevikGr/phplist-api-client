@@ -47,6 +47,7 @@ class ClientTest extends TestCase
 
         $response = new Response(200, [], json_encode([
             'key' => $sessionId,
+            'id' => 1,
             'expires' => '2023-12-31T23:59:59Z',
         ]));
 
@@ -65,6 +66,7 @@ class ClientTest extends TestCase
         $this->assertArrayHasKey('key', $result);
         $this->assertEquals($sessionId, $result['key']);
         $this->assertEquals($sessionId, $this->client->getSessionId());
+        $this->assertEquals(1, $this->client->getId());
     }
 
     public function testLoginFailure(): void

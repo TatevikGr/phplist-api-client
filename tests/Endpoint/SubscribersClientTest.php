@@ -163,8 +163,6 @@ class SubscribersClientTest extends TestCase
         $expectedQueryParams = [
             'is_confirmed' => true,
             'is_blacklisted' => false,
-            'sort_by' => 'email',
-            'sort_direction' => 'desc',
             'find_column' => 'email',
             'find_value' => 'test@example.com',
             'limit' => 50,
