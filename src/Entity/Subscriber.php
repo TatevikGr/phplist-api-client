@@ -61,6 +61,11 @@ class Subscriber extends AbstractResponse
      */
     public ?array $subscribedLists = null;
 
+    /**
+     * @var array|null The array of subscriber history entries
+     */
+    public ?array $history = null;
+
     public function __construct(array $data)
     {
         $this->id = isset($data['id']) ? (int)$data['id'] : 0;
@@ -75,5 +80,8 @@ class Subscriber extends AbstractResponse
 
         $hasLists = isset($data['subscribed_lists']) && is_array($data['subscribed_lists']);
         $this->subscribedLists = $hasLists ? $data['subscribed_lists'] : null;
+
+        $hasHistory = isset($data['history']) && is_array($data['history']);
+        $this->history = $hasHistory ? $data['history'] : null;
     }
 }
