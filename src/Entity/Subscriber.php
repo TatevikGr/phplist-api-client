@@ -27,6 +27,11 @@ class Subscriber extends AbstractResponse
     public string $createdAt;
 
     /**
+     * @var string The updated date
+     */
+    public string $updatedAt;
+
+    /**
      * @var bool Whether the subscriber is confirmed
      */
     public bool $confirmed;
@@ -45,6 +50,11 @@ class Subscriber extends AbstractResponse
      * @var string The unique identifier
      */
     public string $uniqueId;
+
+    /**
+     * @var string The unique identifier - uuid
+     */
+    public string $uuid;
 
     /**
      * @var bool Whether the subscriber prefers HTML email
@@ -71,10 +81,12 @@ class Subscriber extends AbstractResponse
         $this->id = isset($data['id']) ? (int)$data['id'] : 0;
         $this->email = isset($data['email']) ? (string)$data['email'] : '';
         $this->createdAt = isset($data['created_at']) ? (string)$data['created_at'] : '';
+        $this->updatedAt = isset($data['updated_at']) ? (string)$data['updated_at'] : '';
         $this->confirmed = isset($data['confirmed']) && (bool)$data['confirmed'];
         $this->blacklisted = isset($data['blacklisted']) && (bool)$data['blacklisted'];
         $this->bounceCount = isset($data['bounce_count']) ? (int)$data['bounce_count'] : 0;
         $this->uniqueId = isset($data['unique_id']) ? (string)$data['unique_id'] : '';
+        $this->uuid = isset($data['uuid']) ? (string)$data['uuid'] : '';
         $this->htmlEmail = isset($data['html_email']) && (bool)$data['html_email'];
         $this->disabled = isset($data['disabled']) && (bool)$data['disabled'];
 
