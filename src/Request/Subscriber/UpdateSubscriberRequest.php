@@ -13,7 +13,6 @@ class UpdateSubscriberRequest extends AbstractRequest
     public bool $blacklisted = false;
     public bool $htmlEmail = false;
     public bool $disabled = false;
-    public ?string $additionalData = null;
 
     /**
      * @SuppressWarnings("BooleanArgumentFlag")
@@ -23,14 +22,12 @@ class UpdateSubscriberRequest extends AbstractRequest
         bool $confirmed = false,
         bool $blacklisted = false,
         bool $htmlEmail = false,
-        bool $disabled = false,
-        ?string $additionalData = null
+        bool $disabled = false
     ) {
         $this->email = $email;
         $this->confirmed = $confirmed;
         $this->blacklisted = $blacklisted;
         $this->htmlEmail = $htmlEmail;
         $this->disabled = $disabled;
-        $this->additionalData = $additionalData;
     }
 }
