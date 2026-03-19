@@ -10,6 +10,7 @@ use PhpList\RestApiClient\Entity\Statistics\TopLocalPart;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Response\Statistics\CampaignStatisticsCollection;
+use PhpList\RestApiClient\Response\Statistics\DashboardStatisticsResponse;
 use PhpList\RestApiClient\Response\Statistics\ViewOpensCollection;
 use PhpList\RestApiClient\Response\Statistics\TopDomainsCollection;
 
@@ -117,5 +118,17 @@ class StatisticsClient
 
         $response = $this->client->get('analytics/local-parts/top', $queryParams);
         return new TopLocalPart($response);
+    }
+
+    /**
+     * Get dashboard statistics.
+     *
+     * @return DashboardStatisticsResponse The dashboard statistics.
+     * @throws ApiException If an API error occurs
+     */
+    public function getDashboardStats(): DashboardStatisticsResponse
+    {
+        $response = $this->client->get('analytics/dashboard');
+        return new DashboardStatisticsResponse($response);
     }
 }

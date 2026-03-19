@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use PhpList\RestApiClient\Client;
 use PhpList\RestApiClient\Endpoint\StatisticsClient;
 use PhpList\RestApiClient\Response\Statistics\CampaignStatisticsCollection;
+use PhpList\RestApiClient\Response\Statistics\DashboardStatisticsResponse;
 use PhpList\RestApiClient\Response\Statistics\ViewOpensCollection;
 use PhpList\RestApiClient\Response\Statistics\TopDomainsCollection;
 use PhpList\RestApiClient\Entity\Statistics\DomainConfirmation;
@@ -101,5 +102,11 @@ class StatisticsClientTest extends TestCase
     {
         $statistics = $this->statisticsClient->getTopLocalParts(10);
         $this->assertInstanceOf(TopLocalPart::class, $statistics);
+    }
+
+    public function testCanFetchDashboardStatistics(): void
+    {
+        $statistics = $this->statisticsClient->getDashboardStats();
+        $this->assertInstanceOf(DashboardStatisticsResponse::class, $statistics);
     }
 }
