@@ -291,11 +291,12 @@ The library includes unit tests to ensure functionality works as expected. To ru
 
 ```bash
 # Run all tests
+prism mock ./openapi.json
 vendor/bin/phpunit
+```
 
 # Run a specific test class
 vendor/bin/phpunit tests/Endpoint/SubscriptionClientTest.php
-```
 
 ### Writing Tests
 

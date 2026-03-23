@@ -21,6 +21,10 @@ class CreateSubscriberListRequest extends AbstractRequest
     /** @var string|null The list description */
     public ?string $description = null;
 
+    public ?string $category = null;
+    public ?string $rssFeed = null;
+    public ?string $subjectPrefix = null;
+
     /**
      * @SuppressWarnings("BooleanArgumentFlag")
      */
@@ -28,11 +32,17 @@ class CreateSubscriberListRequest extends AbstractRequest
         string $name,
         bool $public = false,
         ?int $listPosition = null,
-        ?string $description = null
+        ?string $description = null,
+        ?string $category = null,
+        ?string $rssFeed = null,
+        ?string $subjectPrefix = null
     ) {
         $this->name = $name;
         $this->public = $public;
         $this->listPosition = $listPosition;
         $this->description = $description;
+        $this->category = $category;
+        $this->rssFeed = $rssFeed;
+        $this->subjectPrefix = $subjectPrefix;
     }
 }

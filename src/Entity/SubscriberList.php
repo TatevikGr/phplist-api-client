@@ -52,6 +52,7 @@ class SubscriberList extends AbstractResponse
      * @var string|null The list category
      */
     public ?string $category;
+    public ?string $rssFeed;
 
     /**
      * @throws Exception
@@ -67,5 +68,6 @@ class SubscriberList extends AbstractResponse
         $this->subjectPrefix = isset($data['subject_prefix']) ? (string)$data['subject_prefix'] : null;
         $this->public = isset($data['public']) && (bool)$data['public'];
         $this->category = isset($data['category']) ? (string)$data['category'] : null;
+        $this->rssFeed = isset($data['rss_feed']) ? (string)$data['rss_feed'] : null;
     }
 }

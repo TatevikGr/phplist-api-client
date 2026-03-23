@@ -91,4 +91,17 @@ class ListClientTest extends TestCase
 
         $this->assertTrue(true);
     }
+
+    public function testUpdateListCallsApi(): void
+    {
+        $mockClient = $this->createMock(Client::class);
+        $mockClient->expects($this->once())
+            ->method('put')
+            ->with('/lists/1', ['name' => 'Updated List', 'public' => false]);
+
+        $listClient = new ListClient($mockClient);
+        $listClient->updateList(1, new CreateSubscriberListRequest('Updated List'));
+
+        $this->assertTrue(true);
+    }
 }

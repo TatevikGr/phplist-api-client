@@ -77,4 +77,18 @@ class ListClient
     {
         $this->client->delete('/lists/' . $listId);
     }
+
+    /**
+     * Updates a subscriber list by ID.
+     *
+     * PUT /api/v2/lists/{listId}
+     *
+     * @throws ApiException
+     */
+    public function updateList(int $listId, CreateSubscriberListRequest $request): SubscriberList
+    {
+        $response = $this->client->put('/lists/' . $listId, $request->toArray());
+
+        return new SubscriberList($response);
+    }
 }
