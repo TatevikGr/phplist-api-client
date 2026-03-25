@@ -209,6 +209,41 @@ class Client
         ]);
     }
 
+    public function postRawResponse(string $endpoint, array $json = [], array $headers = []): ResponseInterface
+    {
+        return $this->requestRawResponse('POST', $endpoint, [
+            'json' => $json,
+            'headers' => $headers,
+        ]);
+    }
+
+    private function requestRawResponse(string $method, string $endpoint, array $options = []): ResponseInterface
+    {
+        $endpoint = ltrim($endpoint, '/');
+        $url = '/api/v2/' . $endpoint;
+
+        $options['headers'] = $options['headers'] ?? [];
+        if (!isset($options['headers']['Accept'])) {
+            $options['headers']['Accept'] = 'text/csv, */*;q=0.8';
+        }
+
+        if ($this->sessionId) {
+            $options['headers']['php-auth-pw'] = $this->sessionId;
+        }
+
+        $this->logger->info('Making API raw request', [
+            'method' => $method,
+            'url' => $url,
+        ]);
+
+        try {
+            return $this->httpClient->request($method, $url, $options);
+        } catch (GuzzleException $e) {
+            $this->logger->error('API raw request failed', ['error' => $e->getMessage()]);
+            throw new ApiException('API request failed: ' . $e->getMessage(), 0, $e);
+        }
+    }
+
     /**
      * Make a request to the API.
      *

@@ -16,6 +16,7 @@ use PhpList\RestApiClient\Request\Subscriber\SubscribersFilterRequest;
 use PhpList\RestApiClient\Request\Subscriber\UpdateSubscriberRequest;
 use PhpList\RestApiClient\Response\Subscribers\SubscriberHistoryCollection;
 use PhpList\RestApiClient\Response\Subscribers\SubscriberCollection;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Client for subscriber-related API endpoints.
@@ -97,9 +98,9 @@ class SubscribersClient
      * @return array The export data
      * @throws ApiException If an API error occurs
      */
-    public function exportSubscribers(?ExportSubscriberRequest $filters = null): array
+    public function exportSubscribers(?ExportSubscriberRequest $filters = null): ResponseInterface
     {
-        return $this->client->get('subscribers/export', $filters->toArray());
+        return $this->client->postRawResponse('subscribers/export', $filters?->toArray() ?? []);
     }
 
     /**
