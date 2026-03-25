@@ -50,7 +50,7 @@ class SubscriberAttributesClient
             $queryParams['after_id'] = $afterId;
         }
 
-        $response = $this->client->get('subscribers/attributes', $queryParams);
+        $response = $this->client->get('attributes', $queryParams);
         return new SubscriberAttributeCollection($response);
     }
 
