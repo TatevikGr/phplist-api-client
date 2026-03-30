@@ -25,6 +25,8 @@ class ExportSubscriberRequest extends AbstractRequest
         'disabled',
         'extraData'
     ];
+    public ?bool $isConfirmed = null;
+    public ?bool $isBlacklisted = null;
 
     public function __construct(
         string $dateType = 'any',
@@ -43,12 +45,16 @@ class ExportSubscriberRequest extends AbstractRequest
             'htmlEmail',
             'disabled',
             'extraData'
-        ]
+        ],
+        ?bool $isConfirmed = null,
+        ?bool $isBlacklisted = null,
     ) {
         $this->dateType = $dateType;
         $this->listId = $listId;
         $this->dateFrom = $dateFrom;
         $this->dateTo = $dateTo;
         $this->columns = $columns;
+        $this->isConfirmed = $isConfirmed;
+        $this->isBlacklisted = $isBlacklisted;
     }
 }

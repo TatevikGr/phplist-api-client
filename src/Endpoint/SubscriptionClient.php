@@ -124,17 +124,21 @@ class SubscriptionClient
     }
 
     /**
-     * Create subscription / add subscribers to list
+     * Create a subscription / add subscribers to the list
      *
      * @param array $emails
      * @param int $listId
+     * @param bool|null $autoConfirm - Whether to automatically confirm subscriptions
      * @return Subscription[]
      * @throws ApiException If an API error occurs
      * @throws Exception
      */
-    public function createSubscriptions(array $emails, int $listId): array
+    public function createSubscriptions(array $emails, int $listId, ?bool $autoConfirm = false): array
     {
-        $response = $this->client->post('lists/' . $listId . '/subscribers', ['emails' => $emails]);
+        $response = $this->client->post(
+            'lists/' . $listId . '/subscribers',
+            ['emails' => $emails, 'autoConfirm' => $autoConfirm],
+        );
         return array_map(fn($item) => new Subscription($item), $response);
     }
 
