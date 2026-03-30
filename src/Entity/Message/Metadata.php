@@ -45,6 +45,11 @@ class Metadata extends AbstractResponse
     public ?DateTimeInterface $sent = null;
 
     /**
+     * @var DateTimeInterface|null The date when the message sending started
+     */
+    public ?DateTimeInterface $sendStart = null;
+
+    /**
      * @throws Exception
      */
     public function __construct(array $data)
@@ -55,5 +60,6 @@ class Metadata extends AbstractResponse
         $this->bounceCount = isset($data['bounce_count']) ? (int)$data['bounce_count'] : null;
         $this->entered = !empty($data['entered']) ? new DateTimeImmutable($data['entered']) : null;
         $this->sent = !empty($data['sent']) ? new DateTimeImmutable($data['sent']) : null;
+        $this->sendStart = !empty($data['send_start']) ? new DateTimeImmutable($data['send_start']) : null;
     }
 }
