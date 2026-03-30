@@ -20,9 +20,9 @@ class Metadata extends AbstractResponse
     public ?string $status = null;
 
     /**
-     * @var bool|null Whether the message has been processed
+     * @var int|null How many times the message was sent while processing
      */
-    public ?bool $processed = null;
+    public ?int $processed = null;
 
     /**
      * @var int|null The number of views for the message
@@ -55,7 +55,7 @@ class Metadata extends AbstractResponse
     public function __construct(array $data)
     {
         $this->status = isset($data['status']) ? (string)$data['status'] : null;
-        $this->processed = isset($data['processed']) ? (bool)$data['processed'] : null;
+        $this->processed = isset($data['processed']) ? (int)$data['processed'] : null;
         $this->views = isset($data['views']) ? (int)$data['views'] : null;
         $this->bounceCount = isset($data['bounce_count']) ? (int)$data['bounce_count'] : null;
         $this->entered = !empty($data['entered']) ? new DateTimeImmutable($data['entered']) : null;
