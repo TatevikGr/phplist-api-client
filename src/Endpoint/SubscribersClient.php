@@ -20,6 +20,7 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Client for subscriber-related API endpoints.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SubscribersClient
 {
@@ -95,8 +96,7 @@ class SubscribersClient
      * Export subscribers.
      *
      * @param ExportSubscriberRequest|null $filters Filters to apply to the export
-     * @return array The export data
-     * @throws ApiException If an API error occurs
+     * @return ResponseInterface The export data
      */
     public function exportSubscribers(?ExportSubscriberRequest $filters = null): ResponseInterface
     {

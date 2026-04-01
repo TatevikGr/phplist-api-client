@@ -16,6 +16,7 @@ use PhpList\RestApiClient\Request\Subscriber\ImportSubscribersRequest;
 use PhpList\RestApiClient\Request\Subscriber\GetSubscriberHistoryRequest;
 use PhpList\RestApiClient\Response\Subscribers\SubscriberHistoryCollection;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
 
 class SubscribersClientTest extends TestCase
 {
@@ -73,8 +74,34 @@ class SubscribersClientTest extends TestCase
     {
         $filters = new ExportSubscriberRequest();
 
-        $exported = $this->subscribersClient->exportSubscribers($filters);
-        $this->assertIsArray($exported);
+        $expectedPayload = [
+            'date_type' => 'any',
+            'columns' => [
+                'id',
+                'email',
+                'confirmed',
+                'blacklisted',
+                'bounceCount',
+                'createdAt',
+                'updatedAt',
+                'uniqueId',
+                'htmlEmail',
+                'disabled',
+                'extraData',
+            ],
+        ];
+
+        $mockResponse = $this->createMock(ResponseInterface::class);
+        $mockClient = $this->createMock(Client::class);
+        $mockClient->expects($this->once())
+            ->method('postRawResponse')
+            ->with('subscribers/export', $expectedPayload)
+            ->willReturn($mockResponse);
+
+        $subscribersClient = new SubscribersClient($mockClient);
+        $exported = $subscribersClient->exportSubscribers($filters);
+
+        $this->assertSame($mockResponse, $exported);
     }
 
     public function testCanImportSubscribers(): void

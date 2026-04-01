@@ -17,6 +17,7 @@ use PhpList\RestApiClient\Response\Subscribers\SubscriberListCollection;
 /**
  * Client for subscription-related API endpoints.
  * @SuppressWarnings("TooManyPublicMethods")
+ * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
  */
 class SubscriptionClient
 {
