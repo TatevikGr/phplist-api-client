@@ -108,4 +108,29 @@ class CampaignClient
     {
         $this->client->delete('campaigns/' . $id);
     }
+
+    /**
+     * send campaign.
+     *
+     * @param int $id The campaign ID
+     * @throws NotFoundException If the campaign is not found
+     * @throws ApiException If an API error occurs
+     */
+    public function sendCampaign(int $id): void
+    {
+        $this->client->post('campaigns/' . $id . '/send');
+    }
+
+    /**
+     * resend campaign to specified lists subscribers
+     *
+     * @param int $id The campaign ID
+     * @param array $listIds The list IDs to resend to
+     * @throws NotFoundException If the campaign is not found
+     * @throws ApiException If an API error occurs
+     */
+    public function resendCampaign(int $id, array $listIds): void
+    {
+        $this->client->post('campaigns/' . $id . '/resend', ['list_ids' => $listIds]);
+    }
 }
