@@ -97,6 +97,18 @@ class CampaignClient
         return new Campaign($response);
     }
 
+    public function updateCampaignStatus(int $id, string $status): Campaign
+    {
+        $response = $this->client->patch('campaigns/' . $id, ['status' => $status]);
+        return new Campaign($response);
+    }
+
+    public function copyCampaign(int $id): Campaign
+    {
+        $response = $this->client->post('campaigns/' . $id);
+        return new Campaign($response);
+    }
+
     /**
      * Delete a campaign.
      *

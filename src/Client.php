@@ -178,6 +178,11 @@ class Client
         return $this->request('PUT', $endpoint, ['json' => $data]);
     }
 
+    public function patch(string $endpoint, array $data = []): array
+    {
+        return $this->request('PATCH', $endpoint, ['json' => $data]);
+    }
+
     /**
      * Make a DELETE request to the API.
      *
