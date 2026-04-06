@@ -145,4 +145,17 @@ class CampaignClient
     {
         $this->client->post('campaigns/' . $id . '/resend', ['list_ids' => $listIds]);
     }
+
+    /**
+     * test send campaign to specified lists subscribers
+     *
+     * @param int $id The campaign ID
+     * @param array $emails The target subscribers emails
+     * @throws NotFoundException If the campaign is not found
+     * @throws ApiException If an API error occurs
+     */
+    public function testSendCampaign(int $id, array $emails): void
+    {
+        $this->client->post('campaigns/' . $id . '/test-send', ['emails' => $emails]);
+    }
 }
