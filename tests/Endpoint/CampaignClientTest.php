@@ -72,7 +72,6 @@ class CampaignClientTest extends TestCase
             $format = [
                 'html_formated' => false,
                 'send_format' => 'html',
-                'format_options' => ['text'],
             ];
 
             $metadata = [
