@@ -46,9 +46,6 @@ jobs:
       - name: Install Prism
         run: npm install -g @stoplight/prism-cli
 
-      - name: List files
-        run: ls -al
-
       - name: Start Prism Mock Server
         run: prism mock ./openapi.json &
 

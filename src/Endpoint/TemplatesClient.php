@@ -81,6 +81,21 @@ class TemplatesClient
     }
 
     /**
+     * Update template.
+     *
+     * @param CreateTemplateRequest $request The template request
+     * @param int $templateId The template ID
+     * @return Template The updated template
+     * @throws ValidationException If validation fails
+     * @throws ApiException If an API error occurs
+     */
+    public function updateTemplate(CreateTemplateRequest $request, int $templateId): Template
+    {
+        $response = $this->client->put('templates/' . $templateId, $request->toArray());
+        return new Template($response);
+    }
+
+    /**
      * Delete a template.
      *
      * @param string $id The template ID
