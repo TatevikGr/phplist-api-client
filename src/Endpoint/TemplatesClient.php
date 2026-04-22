@@ -106,4 +106,14 @@ class TemplatesClient
     {
         $this->client->delete('templates/' . $id);
     }
+
+    public function getDefaultTemplates(): void
+    {
+        $this->client->get('templates/defaults');
+    }
+
+    public function createFromDefault(string $key): void
+    {
+        $this->client->post('templates/defaults/' . $key);
+    }
 }
