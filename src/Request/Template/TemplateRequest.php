@@ -9,7 +9,7 @@ use PhpList\RestApiClient\Request\AbstractRequest;
 /**
  * Request class for creating a new template.
  */
-class CreateTemplateRequest extends AbstractRequest
+class TemplateRequest extends AbstractRequest
 {
     /**
      * @var string The title of the template
@@ -45,6 +45,7 @@ class CreateTemplateRequest extends AbstractRequest
      * @var bool|null Check that all external images exist
      */
     public ?bool $checkExternalImages = null;
+    public ?int $listOrder = null;
 
     /**
      * CreateTemplateRequest constructor.
@@ -56,6 +57,7 @@ class CreateTemplateRequest extends AbstractRequest
      * @param bool|null $checkLinks Check that all links have full URLs
      * @param bool|null $checkImages Check that all images have full URLs
      * @param bool|null $checkExternalImages Check that all external images exist
+     * @param int|null $listOrder The order in which the template should appear in lists
      */
     public function __construct(
         string $title,
@@ -64,7 +66,8 @@ class CreateTemplateRequest extends AbstractRequest
         ?string $file = null,
         ?bool $checkLinks = null,
         ?bool $checkImages = null,
-        ?bool $checkExternalImages = null
+        ?bool $checkExternalImages = null,
+        ?int $listOrder = null,
     ) {
         $this->title = $title;
         $this->content = $content;
@@ -73,5 +76,6 @@ class CreateTemplateRequest extends AbstractRequest
         $this->checkLinks = $checkLinks;
         $this->checkImages = $checkImages;
         $this->checkExternalImages = $checkExternalImages;
+        $this->listOrder = $listOrder;
     }
 }

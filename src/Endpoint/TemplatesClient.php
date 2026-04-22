@@ -9,7 +9,7 @@ use PhpList\RestApiClient\Entity\Template;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Exception\ValidationException;
-use PhpList\RestApiClient\Request\Template\CreateTemplateRequest;
+use PhpList\RestApiClient\Request\Template\TemplateRequest;
 use PhpList\RestApiClient\Response\TemplateCollection;
 
 /**
@@ -69,12 +69,12 @@ class TemplatesClient
     /**
      * Create a new template.
      *
-     * @param CreateTemplateRequest $request The template request
+     * @param TemplateRequest $request The template request
      * @return Template The created template
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function createTemplate(CreateTemplateRequest $request): Template
+    public function createTemplate(TemplateRequest $request): Template
     {
         $response = $this->client->post('templates', $request->toArray());
         return new Template($response);
@@ -83,13 +83,13 @@ class TemplatesClient
     /**
      * Update template.
      *
-     * @param CreateTemplateRequest $request The template request
+     * @param TemplateRequest $request The template request
      * @param int $templateId The template ID
      * @return Template The updated template
      * @throws ValidationException If validation fails
      * @throws ApiException If an API error occurs
      */
-    public function updateTemplate(CreateTemplateRequest $request, int $templateId): Template
+    public function updateTemplate(TemplateRequest $request, int $templateId): Template
     {
         $response = $this->client->put('templates/' . $templateId, $request->toArray());
         return new Template($response);
