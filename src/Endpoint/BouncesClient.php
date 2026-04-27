@@ -6,6 +6,7 @@ namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
 use PhpList\RestApiClient\Exception\ApiException;
+use PhpList\RestApiClient\Response\Bounces\BounceCollection;
 
 /**
  * Client for bounce-related API endpoints.
@@ -30,6 +31,20 @@ class BouncesClient
     public function listRegex(): array
     {
         return $this->client->get('bounces/regex');
+    }
+
+    /**
+     * Get a list of all bounces.
+     *
+     * GET /api/v2/bounces
+     *
+     * @return BounceCollection
+     * @throws ApiException If an API error occurs
+     */
+    public function list(): BounceCollection
+    {
+        $response = $this->client->get('bounces');
+        return new BounceCollection($response);
     }
 
     /**
@@ -72,5 +87,19 @@ class BouncesClient
     public function deleteRegexByHash(string $regexHash): array
     {
         return $this->client->delete('bounces/regex/' . rawurlencode($regexHash));
+    }
+
+    /**
+     * Delete a bounce by its id.
+     *
+     * DELETE /api/v2/bounces/{bounceId}
+     *
+     * @param string $bounceId The bounce id
+     * @return array Empty response on success
+     * @throws ApiException If an API error occurs
+     */
+    public function deleteById(string $bounceId): array
+    {
+        return $this->client->delete('bounces/' . rawurlencode($bounceId));
     }
 }
