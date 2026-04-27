@@ -41,9 +41,14 @@ class BouncesClient
      * @return BounceCollection
      * @throws ApiException If an API error occurs
      */
-    public function list(): BounceCollection
+    public function list(?int $afterId = null, int $limit = 25): BounceCollection
     {
-        $response = $this->client->get('bounces');
+        $queryParams = ['limit' => $limit];
+
+        if ($afterId !== null) {
+            $queryParams['after_id'] = $afterId;
+        }
+        $response = $this->client->get('bounces', ['query' => $queryParams]);
         return new BounceCollection($response);
     }
 
