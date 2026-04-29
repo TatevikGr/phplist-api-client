@@ -56,6 +56,42 @@ class BouncesClient
     }
 
     /**
+     * Get a list of bounce counts by campaign.
+     *
+     * GET /api/v2/bounces/by/campaign
+     *
+     * @return array<int, array{
+     *     message_id: int,
+     *     subject: string,
+     *     total_bounces: int
+     * }> Raw API response
+     * @throws ApiException If an API error occurs
+     */
+    public function listByCampaign(): array
+    {
+        return $this->client->get('bounces/by/campaign');
+    }
+
+    /**
+     * Get a list of bounce counts by subscriber.
+     *
+     * GET /api/v2/bounces/by/subscriber
+     *
+     * @return array<int, array{
+     *     subscriber_id: int,
+     *     email: string,
+     *     confirmed: bool,
+     *     blacklisted: bool,
+     *     total_bounces: int
+     * }> Raw API response
+     * @throws ApiException If an API error occurs
+     */
+    public function listBySubscriber(): array
+    {
+        return $this->client->get('bounces/by/subscriber');
+    }
+
+    /**
      * Create or update a bounce regex rule.
      *
      * POST /api/v2/bounces/regex

@@ -39,4 +39,50 @@ class BouncesClientMethodTest extends TestCase
         $this->assertSame(123, $result->items[0]->messageId);
         $this->assertSame('user@example.com', $result->items[0]->subscriberEmail);
     }
+
+    public function testListByCampaignReturnsRawArray(): void
+    {
+        $mockClient = $this->createMock(Client::class);
+        $mockClient->expects($this->once())
+            ->method('get')
+            ->with('bounces/by/campaign')
+            ->willReturn([
+                [
+                    'message_id' => 1,
+                    'subject' => 'System',
+                    'total_bounces' => 3,
+                ],
+            ]);
+
+        $bouncesClient = new BouncesClient($mockClient);
+        $result = $bouncesClient->listByCampaign();
+
+        $this->assertIsArray($result);
+        $this->assertSame(1, $result[0]['message_id']);
+        $this->assertSame(3, $result[0]['total_bounces']);
+    }
+
+    public function testListBySubscriberReturnsRawArray(): void
+    {
+        $mockClient = $this->createMock(Client::class);
+        $mockClient->expects($this->once())
+            ->method('get')
+            ->with('bounces/by/subscriber')
+            ->willReturn([
+                [
+                    'subscriber_id' => 1,
+                    'email' => 'example@email.com',
+                    'confirmed' => true,
+                    'blacklisted' => false,
+                    'total_bounces' => 2,
+                ],
+            ]);
+
+        $bouncesClient = new BouncesClient($mockClient);
+        $result = $bouncesClient->listBySubscriber();
+
+        $this->assertIsArray($result);
+        $this->assertSame(1, $result[0]['subscriber_id']);
+        $this->assertSame(2, $result[0]['total_bounces']);
+    }
 }
