@@ -106,31 +106,31 @@ class BouncesClient
     }
 
     /**
-     * Get a bounce regex rule by its hash.
+     * Get a bounce regex rule by its id.
      *
-     * GET /api/v2/bounces/regex/{regexHash}
+     * GET /api/v2/bounces/regex/{ruleId}
      *
-     * @param string $regexHash The regex hash
+     * @param int $ruleId The regex id
      * @return array The regex data
      * @throws ApiException If an API error occurs
      */
-    public function getRegexByHash(string $regexHash): array
+    public function getOne(int $ruleId): array
     {
-        return $this->client->get('bounces/regex/' . rawurlencode($regexHash));
+        return $this->client->get('bounces/regex/' . $ruleId);
     }
 
     /**
-     * Delete a bounce regex rule by its hash.
+     * Delete a bounce regex rule by its id.
      *
-     * DELETE /api/v2/bounces/regex/{regexHash}
+     * DELETE /api/v2/bounces/regex/{ruleId}
      *
-     * @param string $regexHash The regex hash
+     * @param int $ruleId The regex id
      * @return array Empty response on success
      * @throws ApiException If an API error occurs
      */
-    public function deleteRegexByHash(string $regexHash): array
+    public function delete(int $ruleId): array
     {
-        return $this->client->delete('bounces/regex/' . rawurlencode($regexHash));
+        return $this->client->delete('bounces/regex/' . $ruleId);
     }
 
     /**

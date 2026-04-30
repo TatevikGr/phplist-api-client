@@ -41,13 +41,13 @@ class BouncesClientTest extends TestCase
         $this->assertIsArray($created);
 
         // If service returns regex_hash, try fetch + delete
-        if (isset($created['regex_hash']) && is_string($created['regex_hash'])) {
-            $hash = $created['regex_hash'];
-            $fetched = $this->bouncesClient->getRegexByHash($hash);
+        if (isset($created['id']) && is_int($created['id'])) {
+            $ruleId = $created['id'];
+            $fetched = $this->bouncesClient->getOne($ruleId);
             $this->assertIsArray($fetched);
 
             // Delete may return empty array (204)
-            $deleted = $this->bouncesClient->deleteRegexByHash($hash);
+            $deleted = $this->bouncesClient->delete($ruleId);
             $this->assertIsArray($deleted);
         }
 
