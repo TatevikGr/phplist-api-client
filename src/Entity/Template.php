@@ -34,7 +34,7 @@ class Template extends AbstractResponse
     /**
      * @var string|null
      */
-    public ?string $order = null;
+    public ?string $listOrder = null;
 
     /**
      * @var ?array
@@ -47,7 +47,7 @@ class Template extends AbstractResponse
         $this->title = isset($data['title']) ? (string)$data['title'] : '';
         $this->text = isset($data['text']) ? (string)$data['text'] : null;
         $this->content = isset($data['content']) ? (string)$data['content'] : null;
-        $this->order = isset($data['order']) ? (string)$data['order'] : null;
+        $this->listOrder = isset($data['list_order']) ? (string)$data['list_order'] : null;
 
         $this->images  = isset($data['images']) && is_array($data['images']) ? $data['images'] : null;
     }

@@ -33,20 +33,26 @@ class CampaignClient
         $this->client = $client;
     }
 
+
     /**
      * Get a list of campaigns.
      *
      * @param int|null $afterId The ID to start from for pagination
      * @param int $limit The maximum number of items to return
+     * @param string|null $subject Filter campaigns by subject
      * @return CampaignCollection The list of campaigns
      * @throws ApiException If an API error occurs
      */
-    public function getCampaigns(?int $afterId = null, int $limit = 25): CampaignCollection
+    public function getCampaigns(?int $afterId = null, int $limit = 25, ?string $subject = null): CampaignCollection
     {
         $queryParams = ['limit' => $limit];
 
         if ($afterId !== null) {
             $queryParams['after_id'] = $afterId;
+        }
+
+        if ($subject !== null) {
+            $queryParams['subject'] = $subject;
         }
 
         $response = $this->client->get('campaigns', $queryParams);
