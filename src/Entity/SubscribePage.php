@@ -23,6 +23,8 @@ class SubscribePage extends AbstractResponse
     /** @var Administrator|null */
     public ?Administrator $owner = null;
 
+    public array $data = [];
+
     public function __construct(array $data)
     {
         $this->id = isset($data['id']) ? (int)$data['id'] : 0;
@@ -36,5 +38,7 @@ class SubscribePage extends AbstractResponse
                 $this->owner = null;
             }
         }
+
+        $this->data = $data['data'] ?? [];
     }
 }
