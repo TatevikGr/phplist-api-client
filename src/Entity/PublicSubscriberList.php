@@ -21,6 +21,8 @@ class PublicSubscriberList extends AbstractResponse
      */
     public string $name;
 
+    public ?int $listPosition;
+
     /**
      * @var string|null The list description
      */
@@ -30,6 +32,7 @@ class PublicSubscriberList extends AbstractResponse
     {
         $this->id = isset($data['id']) ? (int)$data['id'] : 0;
         $this->name = isset($data['name']) ? (string)$data['name'] : '';
+        $this->listPosition = isset($data['list_position']) ? (int)$data['list_position'] : null;
         $this->description = isset($data['description']) ? (string)$data['description'] : null;
     }
 }
