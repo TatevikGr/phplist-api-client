@@ -6,6 +6,7 @@ namespace PhpList\RestApiClient\Tests\Endpoint;
 
 use PhpList\RestApiClient\Client;
 use PhpList\RestApiClient\Endpoint\ListClient;
+use PhpList\RestApiClient\Entity\PublicSubscriberList;
 use PhpList\RestApiClient\Entity\SubscriberList;
 use PhpList\RestApiClient\Request\CreateSubscriberListRequest;
 use PhpList\RestApiClient\Response\Subscribers\SubscriberListCollection;
@@ -77,6 +78,27 @@ class ListClientTest extends TestCase
         $this->assertInstanceOf(SubscriberList::class, $result);
         $this->assertSame(7, $result->id);
         $this->assertSame('Customers', $result->name);
+    }
+
+    public function testGetPublicListCallsApiAndReturnsEntity(): void
+    {
+        $mockClient = $this->createMock(Client::class);
+        $mockClient->expects($this->once())
+            ->method('get')
+            ->with('/lists/7/public')
+            ->willReturn([
+                'id' => 7,
+                'name' => 'Newsletter subscribers',
+                'description' => 'Main public list',
+            ]);
+
+        $listClient = new ListClient($mockClient);
+        $result = $listClient->getPublicList(7);
+
+        $this->assertInstanceOf(PublicSubscriberList::class, $result);
+        $this->assertSame(7, $result->id);
+        $this->assertSame('Newsletter subscribers', $result->name);
+        $this->assertSame('Main public list', $result->description);
     }
 
     public function testDeleteListCallsApi(): void

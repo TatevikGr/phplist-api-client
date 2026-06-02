@@ -6,6 +6,7 @@ namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
 use PhpList\RestApiClient\Entity\SubscribePage;
+use PhpList\RestApiClient\Entity\SubscribePagePublic;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Request\SubscribePage\CreateSubscribePageRequest;
@@ -32,6 +33,12 @@ class SubscribePagesClient
     {
         $data = $this->client->get('subscribe-pages/' . $id);
         return new SubscribePage($data);
+    }
+
+    public function getPublicSubscribePage(int $id): SubscribePagePublic
+    {
+        $data = $this->client->get('subscribe-pages/' . $id . '/public');
+        return new SubscribePagePublic($data);
     }
 
     /**

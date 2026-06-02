@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
+use PhpList\RestApiClient\Entity\PublicSubscriberList;
 use PhpList\RestApiClient\Entity\SubscriberList;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Request\CreateSubscriberListRequest;
@@ -64,6 +65,19 @@ class ListClient
     {
         $response = $this->client->get('/lists/' . $listId);
         return new SubscriberList($response);
+    }
+
+    /**
+     * Returns a public subscriber list by ID.
+     *
+     * GET /api/v2/lists/{listId}/public
+     *
+     * @throws ApiException
+     */
+    public function getPublicList(int $listId): PublicSubscriberList
+    {
+        $response = $this->client->get('/lists/' . $listId . '/public');
+        return new PublicSubscriberList($response);
     }
 
     /**
