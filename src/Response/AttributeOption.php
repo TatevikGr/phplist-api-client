@@ -12,9 +12,9 @@ class AttributeOption
 
     public function __construct(array $data)
     {
-        $this->id = (int)$data['id'] ?? 0;
+        $this->id = (int)$data['id'];
         $this->name = $data['name'] ?? '';
-        $this->listOrder = (int)$data['list_order'] ?? 0;
+        $this->listOrder = (int)$data['list_order'];
     }
 
     public function toArray(): array
