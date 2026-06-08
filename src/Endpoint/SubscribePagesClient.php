@@ -55,6 +55,12 @@ class SubscribePagesClient
         return array_map(static fn(array $item): Subscription => new Subscription($item), $data);
     }
 
+    public function deletePublicSubscription(int $pageId, string $email): array
+    {
+        $data = $this->client->delete('public/subscribe-pages/' . $pageId, ['email' => $email]);
+        return array_map(static fn(array $item): Subscription => new Subscription($item), $data);
+    }
+
     /**
      * Create a new subscribe page.
      *

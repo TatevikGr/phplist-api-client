@@ -68,19 +68,6 @@ class ListClient
     }
 
     /**
-     * Returns a public subscriber list by ID.
-     *
-     * GET /api/v2/lists/{listId}/public
-     *
-     * @throws ApiException
-     */
-    public function getPublicList(int $listId): PublicSubscriberList
-    {
-        $response = $this->client->get('/lists/' . $listId . '/public');
-        return new PublicSubscriberList($response);
-    }
-
-    /**
      * Deletes a subscriber list by ID.
      *
      * DELETE /api/v2/lists/{listId}
