@@ -57,7 +57,7 @@ class AuthClient
     /**
      * Get the current admin user data.
      *
-     * @throws AuthenticationException|ApiException If not authenticated
+     * @throws AuthenticationException | ApiException If not authenticated
      */
     public function getSessionUser(): Administrator
     {
