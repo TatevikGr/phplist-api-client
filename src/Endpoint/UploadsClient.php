@@ -71,4 +71,21 @@ class UploadsClient
             $multipart,
         );
     }
+
+    /**
+     * Get an uploaded file by name.
+     *
+     * @param string $filename Name of the uploaded image file
+     * @return string Raw file contents
+     * @throws NotFoundException If the file does not exist
+     * @throws ApiException If an API error occurs
+     */
+    public function getUploadedFile(string $filename): string
+    {
+        return $this->client->getRaw(
+            'editor-uploads/' . $filename,
+            [],
+            ['Accept' => 'application/octet-stream, */*;q=0.8'],
+        );
+    }
 }
