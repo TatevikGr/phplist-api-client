@@ -37,7 +37,7 @@ class UploadsClient
      * @throws NotFoundException If the directory does not exist
      * @throws ApiException If an API error occurs
      */
-    public function getUploads(string $directory = 'uploads'): array
+    public function getUploads(string $directory = '/'): array
     {
         return $this->client->get('editor-uploads', [
             'directory' => $directory,
