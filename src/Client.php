@@ -6,6 +6,7 @@ namespace PhpList\RestApiClient;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
+use PhpList\RestApiClient\Exception\AuthorizationException;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\AuthenticationException;
 use PhpList\RestApiClient\Exception\NotFoundException;
@@ -402,7 +403,8 @@ class Client
     private function handleErrorResponse(int $statusCode, array $data): never
     {
         throw match ($statusCode) {
-            401, 403 => new AuthenticationException($data['message'] ?? 'Authentication failed', $statusCode),
+            401 => $this->authenticationException($statusCode, $data),
+            403 => $this->authorizationException($statusCode, $data),
             404 => new NotFoundException($data['message'] ?? 'Resource not found', $statusCode),
             400,422 => new ValidationException(
                 message: $data['message'] ?? 'Validation failed',
@@ -414,5 +416,21 @@ class Client
                 statusCode: $statusCode
             ),
         };
+    }
+
+    private function authenticationException(int $statusCode, array $data): AuthenticationException
+    {
+        return new AuthenticationException(
+            $data['message'] ?? 'Authentication failed',
+            $statusCode,
+        );
+    }
+
+    private function authorizationException(int $statusCode, array $data): AuthorizationException
+    {
+        return new AuthorizationException(
+            $data['message'] ?? 'Access denied',
+            $statusCode,
+        );
     }
 }

@@ -6,6 +6,7 @@ namespace PhpList\RestApiClient\Tests\Endpoint;
 
 use PhpList\RestApiClient\Client;
 use PhpList\RestApiClient\Endpoint\ListClient;
+use PhpList\RestApiClient\Entity\PublicSubscriberList;
 use PhpList\RestApiClient\Entity\SubscriberList;
 use PhpList\RestApiClient\Request\CreateSubscriberListRequest;
 use PhpList\RestApiClient\Response\Subscribers\SubscriberListCollection;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
+use PhpList\RestApiClient\Entity\PublicSubscriberList;
 use PhpList\RestApiClient\Entity\SubscriberList;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Request\CreateSubscriberListRequest;
