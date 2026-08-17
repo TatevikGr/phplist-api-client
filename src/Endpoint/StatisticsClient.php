@@ -9,8 +9,10 @@ use PhpList\RestApiClient\Entity\Statistics\DomainConfirmation;
 use PhpList\RestApiClient\Entity\Statistics\TopLocalPart;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
+use PhpList\RestApiClient\Response\Statistics\CampaignPerformanceCollection;
 use PhpList\RestApiClient\Response\Statistics\CampaignStatisticsCollection;
-use PhpList\RestApiClient\Response\Statistics\DashboardStatisticsResponse;
+use PhpList\RestApiClient\Response\Statistics\DashboardSummaryResponse;
+use PhpList\RestApiClient\Response\Statistics\RecentCampaignsCollection;
 use PhpList\RestApiClient\Response\Statistics\ViewOpensCollection;
 use PhpList\RestApiClient\Response\Statistics\TopDomainsCollection;
 
@@ -121,14 +123,38 @@ class StatisticsClient
     }
 
     /**
-     * Get dashboard statistics.
+     * Get dashboard summary statistics.
      *
-     * @return DashboardStatisticsResponse The dashboard statistics.
+     * @return DashboardSummaryResponse The dashboard summary statistics.
      * @throws ApiException If an API error occurs
      */
-    public function getDashboardStats(): DashboardStatisticsResponse
+    public function getDashboardSummary(): DashboardSummaryResponse
     {
-        $response = $this->client->get('analytics/dashboard');
-        return new DashboardStatisticsResponse($response);
+        $response = $this->client->get('analytics/dashboard/summary');
+        return new DashboardSummaryResponse($response);
+    }
+
+    /**
+     * Get the recent campaigns dashboard data.
+     *
+     * @return RecentCampaignsCollection The recent campaigns.
+     * @throws ApiException If an API error occurs
+     */
+    public function getRecentCampaigns(): RecentCampaignsCollection
+    {
+        $response = $this->client->get('analytics/dashboard/recent-campaigns');
+        return new RecentCampaignsCollection($response);
+    }
+
+    /**
+     * Get the campaign performance dashboard data.
+     *
+     * @return CampaignPerformanceCollection The campaign performance data points.
+     * @throws ApiException If an API error occurs
+     */
+    public function getCampaignPerformance(): CampaignPerformanceCollection
+    {
+        $response = $this->client->get('analytics/dashboard/performance');
+        return new CampaignPerformanceCollection($response);
     }
 }
