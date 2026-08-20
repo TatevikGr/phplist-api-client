@@ -40,11 +40,18 @@ class CampaignClient
      * @param int|null $afterId The ID to start from for pagination
      * @param int $limit The maximum number of items to return
      * @param string|null $subject Filter campaigns by subject
+     * @param string|null $status Filter by one or more comma-separated statuses
+     * @param string $sort Sort direction by campaign id - 'asc' or 'desc'
      * @return CampaignCollection The list of campaigns
      * @throws ApiException If an API error occurs
      */
-    public function getCampaigns(?int $afterId = null, int $limit = 25, ?string $subject = null): CampaignCollection
-    {
+    public function getCampaigns(
+        ?int $afterId = null,
+        int $limit = 25,
+        ?string $subject = null,
+        ?string $status = null,
+        string $sort = 'asc'
+    ): CampaignCollection {
         $queryParams = ['limit' => $limit];
 
         if ($afterId !== null) {
@@ -53,6 +60,14 @@ class CampaignClient
 
         if ($subject !== null) {
             $queryParams['subject'] = $subject;
+        }
+
+        if ($status !== null) {
+            $queryParams['status'] = $status;
+        }
+
+        if ($sort !== 'asc') {
+            $queryParams['sort'] = $sort;
         }
 
         $response = $this->client->get('campaigns', $queryParams);
