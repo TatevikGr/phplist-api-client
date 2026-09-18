@@ -12,6 +12,7 @@ use PhpList\RestApiClient\Exception\ValidationException;
 use PhpList\RestApiClient\Request\Campaign\CreateCampaignRequest;
 use PhpList\RestApiClient\Request\Campaign\UpdateCampaignRequest;
 use PhpList\RestApiClient\Response\Campaign\CampaignCollection;
+use PhpList\RestApiClient\Response\Campaign\StuckCampaignCollection;
 
 /**
  * Client for campaign-related API endpoints.
@@ -178,5 +179,31 @@ class CampaignClient
     public function testSendCampaign(int $id, array $emails): void
     {
         $this->client->post('campaigns/' . $id . '/test-send', ['emails' => $emails]);
+    }
+
+    /**
+     * Resume a campaign stuck in processing.
+     *
+     * @param int $id The campaign ID
+     * @return Campaign The resumed campaign
+     * @throws NotFoundException If the campaign is not found
+     * @throws ApiException If an API error occurs, e.g. the campaign is not currently stuck in processing
+     */
+    public function resumeCampaign(int $id): Campaign
+    {
+        $response = $this->client->post('campaigns/' . $id . '/resume');
+        return new Campaign($response);
+    }
+
+    /**
+     * Get a list of campaigns stuck in processing.
+     *
+     * @return StuckCampaignCollection The list of stuck campaigns
+     * @throws ApiException If an API error occurs
+     */
+    public function getStuckCampaigns(): StuckCampaignCollection
+    {
+        $response = $this->client->get('campaigns/stuck');
+        return new StuckCampaignCollection($response);
     }
 }
