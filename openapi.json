@@ -8463,6 +8463,10 @@
                     },
                     "status": {
                         "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ],
                         "example": "active",
                         "nullable": false
                     }
