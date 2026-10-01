@@ -6,7 +6,6 @@ namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
 use PhpList\RestApiClient\Entity\Statistics\DomainConfirmation;
-use PhpList\RestApiClient\Entity\Statistics\TopLocalPart;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Response\Statistics\CampaignPerformanceCollection;
@@ -15,6 +14,7 @@ use PhpList\RestApiClient\Response\Statistics\DashboardSummaryResponse;
 use PhpList\RestApiClient\Response\Statistics\RecentCampaignsCollection;
 use PhpList\RestApiClient\Response\Statistics\ViewOpensCollection;
 use PhpList\RestApiClient\Response\Statistics\TopDomainsCollection;
+use PhpList\RestApiClient\Response\Statistics\TopLocalPartsCollection;
 
 /**
  * Client for statistics and analytics-related API endpoints.
@@ -111,15 +111,15 @@ class StatisticsClient
      * Get top local-parts statistics.
      *
      * @param int $limit Maximum number of local-parts to return
-     * @return TopLocalPart The top local-parts statistics
+     * @return TopLocalPartsCollection The top local-parts statistics
      * @throws ApiException If an API error occurs
      */
-    public function getTopLocalParts(int $limit = 25): TopLocalPart
+    public function getTopLocalParts(int $limit = 25): TopLocalPartsCollection
     {
         $queryParams = ['limit' => $limit];
 
         $response = $this->client->get('analytics/local-parts/top', $queryParams);
-        return new TopLocalPart($response);
+        return new TopLocalPartsCollection($response);
     }
 
     /**
