@@ -6,6 +6,7 @@ namespace PhpList\RestApiClient\Response;
 
 /**
  * Abstract base class for all API collection response classes.
+ * @SuppressWarnings("NumberOfChildren")
  */
 abstract class AbstractCollectionResponse extends AbstractResponse
 {

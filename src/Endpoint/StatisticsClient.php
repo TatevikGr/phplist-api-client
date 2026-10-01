@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
-use PhpList\RestApiClient\Entity\Statistics\DomainConfirmation;
-use PhpList\RestApiClient\Entity\Statistics\TopLocalPart;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
+use PhpList\RestApiClient\Response\Statistics\CampaignPerformanceCollection;
 use PhpList\RestApiClient\Response\Statistics\CampaignStatisticsCollection;
-use PhpList\RestApiClient\Response\Statistics\DashboardStatisticsResponse;
+use PhpList\RestApiClient\Response\Statistics\DashboardSummaryResponse;
+use PhpList\RestApiClient\Response\Statistics\DomainConfirmationCollection;
+use PhpList\RestApiClient\Response\Statistics\RecentCampaignsCollection;
 use PhpList\RestApiClient\Response\Statistics\ViewOpensCollection;
 use PhpList\RestApiClient\Response\Statistics\TopDomainsCollection;
+use PhpList\RestApiClient\Response\Statistics\TopLocalPartsCollection;
 
 /**
  * Client for statistics and analytics-related API endpoints.
@@ -94,41 +96,65 @@ class StatisticsClient
      * Get domain confirmation statistics.
      *
      * @param int $limit Maximum number of domains to return
-     * @return DomainConfirmation The domain confirmation statistics
+     * @return DomainConfirmationCollection The domain confirmation statistics
      * @throws ApiException If an API error occurs
      */
-    public function getDomainConfirmationStatistics(int $limit = 50): DomainConfirmation
+    public function getDomainConfirmationStatistics(int $limit = 50): DomainConfirmationCollection
     {
         $queryParams = ['limit' => $limit];
 
         $response = $this->client->get('analytics/domains/confirmation', $queryParams);
-        return new DomainConfirmation($response);
+        return new DomainConfirmationCollection($response);
     }
 
     /**
      * Get top local-parts statistics.
      *
      * @param int $limit Maximum number of local-parts to return
-     * @return TopLocalPart The top local-parts statistics
+     * @return TopLocalPartsCollection The top local-parts statistics
      * @throws ApiException If an API error occurs
      */
-    public function getTopLocalParts(int $limit = 25): TopLocalPart
+    public function getTopLocalParts(int $limit = 25): TopLocalPartsCollection
     {
         $queryParams = ['limit' => $limit];
 
         $response = $this->client->get('analytics/local-parts/top', $queryParams);
-        return new TopLocalPart($response);
+        return new TopLocalPartsCollection($response);
     }
 
     /**
-     * Get dashboard statistics.
+     * Get dashboard summary statistics.
      *
-     * @return DashboardStatisticsResponse The dashboard statistics.
+     * @return DashboardSummaryResponse The dashboard summary statistics.
      * @throws ApiException If an API error occurs
      */
-    public function getDashboardStats(): DashboardStatisticsResponse
+    public function getDashboardSummary(): DashboardSummaryResponse
     {
-        $response = $this->client->get('analytics/dashboard');
-        return new DashboardStatisticsResponse($response);
+        $response = $this->client->get('analytics/dashboard/summary');
+        return new DashboardSummaryResponse($response);
+    }
+
+    /**
+     * Get the recent campaigns dashboard data.
+     *
+     * @return RecentCampaignsCollection The recent campaigns.
+     * @throws ApiException If an API error occurs
+     */
+    public function getRecentCampaigns(): RecentCampaignsCollection
+    {
+        $response = $this->client->get('analytics/dashboard/recent-campaigns');
+        return new RecentCampaignsCollection($response);
+    }
+
+    /**
+     * Get the campaign performance dashboard data.
+     *
+     * @return CampaignPerformanceCollection The campaign performance data points.
+     * @throws ApiException If an API error occurs
+     */
+    public function getCampaignPerformance(): CampaignPerformanceCollection
+    {
+        $response = $this->client->get('analytics/dashboard/performance');
+        return new CampaignPerformanceCollection($response);
     }
 }
