@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
-use PhpList\RestApiClient\Entity\Statistics\DomainConfirmation;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Response\Statistics\CampaignPerformanceCollection;
 use PhpList\RestApiClient\Response\Statistics\CampaignStatisticsCollection;
 use PhpList\RestApiClient\Response\Statistics\DashboardSummaryResponse;
+use PhpList\RestApiClient\Response\Statistics\DomainConfirmationCollection;
 use PhpList\RestApiClient\Response\Statistics\RecentCampaignsCollection;
 use PhpList\RestApiClient\Response\Statistics\ViewOpensCollection;
 use PhpList\RestApiClient\Response\Statistics\TopDomainsCollection;
@@ -96,15 +96,15 @@ class StatisticsClient
      * Get domain confirmation statistics.
      *
      * @param int $limit Maximum number of domains to return
-     * @return DomainConfirmation The domain confirmation statistics
+     * @return DomainConfirmationCollection The domain confirmation statistics
      * @throws ApiException If an API error occurs
      */
-    public function getDomainConfirmationStatistics(int $limit = 50): DomainConfirmation
+    public function getDomainConfirmationStatistics(int $limit = 50): DomainConfirmationCollection
     {
         $queryParams = ['limit' => $limit];
 
         $response = $this->client->get('analytics/domains/confirmation', $queryParams);
-        return new DomainConfirmation($response);
+        return new DomainConfirmationCollection($response);
     }
 
     /**
