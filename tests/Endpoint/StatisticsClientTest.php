@@ -14,7 +14,7 @@ use PhpList\RestApiClient\Response\Statistics\RecentCampaignsCollection;
 use PhpList\RestApiClient\Response\Statistics\ViewOpensCollection;
 use PhpList\RestApiClient\Response\Statistics\TopDomainsCollection;
 use PhpList\RestApiClient\Entity\Statistics\DomainConfirmation;
-use PhpList\RestApiClient\Entity\Statistics\TopLocalPart;
+use PhpList\RestApiClient\Response\Statistics\TopLocalPartsCollection;
 use PhpList\RestApiClient\Exception\AuthenticationException;
 
 class StatisticsClientTest extends TestCase
@@ -97,13 +97,13 @@ class StatisticsClientTest extends TestCase
     public function testCanFetchTopLocalParts(): void
     {
         $statistics = $this->statisticsClient->getTopLocalParts();
-        $this->assertInstanceOf(TopLocalPart::class, $statistics);
+        $this->assertInstanceOf(TopLocalPartsCollection::class, $statistics);
     }
 
     public function testCanFetchTopLocalPartsWithCustomLimit(): void
     {
         $statistics = $this->statisticsClient->getTopLocalParts(10);
-        $this->assertInstanceOf(TopLocalPart::class, $statistics);
+        $this->assertInstanceOf(TopLocalPartsCollection::class, $statistics);
     }
 
     public function testCanFetchDashboardSummary(): void
