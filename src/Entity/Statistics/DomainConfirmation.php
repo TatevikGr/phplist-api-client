@@ -17,31 +17,31 @@ class DomainConfirmation extends AbstractResponse
     public string $domain;
 
     /**
-     * @var int The total number of subscribers with this domain
+     * @var DomainConfirmationBreakdown The confirmed subscribers breakdown
      */
-    public int $total;
+    public DomainConfirmationBreakdown $confirmed;
 
     /**
-     * @var int The number of confirmed subscribers
+     * @var DomainConfirmationBreakdown The unconfirmed subscribers breakdown
      */
-    public int $confirmed;
+    public DomainConfirmationBreakdown $unconfirmed;
 
     /**
-     * @var int The number of unconfirmed subscribers
+     * @var DomainConfirmationBreakdown The blacklisted subscribers breakdown
      */
-    public int $unconfirmed;
+    public DomainConfirmationBreakdown $blacklisted;
 
     /**
-     * @var float The confirmation rate (percentage)
+     * @var DomainConfirmationBreakdown The total subscribers breakdown
      */
-    public float $confirmationRate;
+    public DomainConfirmationBreakdown $total;
 
     public function __construct(array $data)
     {
         $this->domain = isset($data['domain']) ? (string)$data['domain'] : '';
-        $this->total = isset($data['total']) ? (int)$data['total'] : 0;
-        $this->confirmed = isset($data['confirmed']) ? (int)$data['confirmed'] : 0;
-        $this->unconfirmed = isset($data['unconfirmed']) ? (int)$data['unconfirmed'] : 0;
-        $this->confirmationRate = isset($data['confirmation_rate']) ? (float)$data['confirmation_rate'] : 0.0;
+        $this->confirmed = new DomainConfirmationBreakdown($data['confirmed'] ?? []);
+        $this->unconfirmed = new DomainConfirmationBreakdown($data['unconfirmed'] ?? []);
+        $this->blacklisted = new DomainConfirmationBreakdown($data['blacklisted'] ?? []);
+        $this->total = new DomainConfirmationBreakdown($data['total'] ?? []);
     }
 }

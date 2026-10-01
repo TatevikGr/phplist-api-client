@@ -13,7 +13,7 @@ use PhpList\RestApiClient\Response\Statistics\DashboardSummaryResponse;
 use PhpList\RestApiClient\Response\Statistics\RecentCampaignsCollection;
 use PhpList\RestApiClient\Response\Statistics\ViewOpensCollection;
 use PhpList\RestApiClient\Response\Statistics\TopDomainsCollection;
-use PhpList\RestApiClient\Entity\Statistics\DomainConfirmation;
+use PhpList\RestApiClient\Response\Statistics\DomainConfirmationCollection;
 use PhpList\RestApiClient\Response\Statistics\TopLocalPartsCollection;
 use PhpList\RestApiClient\Exception\AuthenticationException;
 
@@ -85,13 +85,13 @@ class StatisticsClientTest extends TestCase
     public function testCanFetchDomainConfirmationStatistics(): void
     {
         $statistics = $this->statisticsClient->getDomainConfirmationStatistics();
-        $this->assertInstanceOf(DomainConfirmation::class, $statistics);
+        $this->assertInstanceOf(DomainConfirmationCollection::class, $statistics);
     }
 
     public function testCanFetchDomainConfirmationStatisticsWithCustomLimit(): void
     {
         $statistics = $this->statisticsClient->getDomainConfirmationStatistics(20);
-        $this->assertInstanceOf(DomainConfirmation::class, $statistics);
+        $this->assertInstanceOf(DomainConfirmationCollection::class, $statistics);
     }
 
     public function testCanFetchTopLocalParts(): void
