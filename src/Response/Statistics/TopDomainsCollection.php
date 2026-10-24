@@ -20,7 +20,7 @@ class TopDomainsCollection
     public function __construct(array $data)
     {
         $this->total = (int)$data['total'];
-        foreach ($data['domains'] as $item) {
+        foreach ($data['items'] as $item) {
             $this->domains[] = new TopDomain($item);
         }
     }
