@@ -7,6 +7,7 @@ namespace PhpList\RestApiClient\Tests\Endpoint;
 use PhpList\RestApiClient\Client;
 use PhpList\RestApiClient\Endpoint\CampaignClient;
 use PhpList\RestApiClient\Entity\Campaign;
+use PhpList\RestApiClient\Request\Campaign\UpdateMessageDataRequest;
 use PhpList\RestApiClient\Response\Campaign\StuckCampaignCollection;
 use PHPUnit\Framework\TestCase;
 
@@ -97,5 +98,24 @@ class CampaignClientMethodTest extends TestCase
         $this->assertCount(1, $stuckCampaigns->items);
         $this->assertSame(654, $stuckCampaigns->items[0]->id);
         $this->assertSame(1845, $stuckCampaigns->items[0]->stuckSeconds);
+    }
+
+    public function testUpdateMessageData(): void
+    {
+        $mockClient = $this->createMock(Client::class);
+        $mockClient->expects($this->once())
+            ->method('patch')
+            ->with('campaigns/5/message-data', ['google_track' => true, 'exclude_lists' => [4, 5]])
+            ->willReturn(['google_track' => true, 'utm_source' => null, 'exclude_lists' => [4, 5]]);
+
+        $request = new UpdateMessageDataRequest();
+        $request->googleTrack = true;
+        $request->excludeLists = [4, 5];
+
+        $result = (new CampaignClient($mockClient))->updateMessageData(5, $request);
+
+        $this->assertTrue($result->googleTrack);
+        $this->assertNull($result->utmSource);
+        $this->assertSame([4, 5], $result->excludeLists);
     }
 }

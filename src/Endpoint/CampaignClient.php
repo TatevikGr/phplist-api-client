@@ -6,11 +6,13 @@ namespace PhpList\RestApiClient\Endpoint;
 
 use PhpList\RestApiClient\Client;
 use PhpList\RestApiClient\Entity\Campaign;
+use PhpList\RestApiClient\Entity\Campaign\MessageData;
 use PhpList\RestApiClient\Exception\ApiException;
 use PhpList\RestApiClient\Exception\NotFoundException;
 use PhpList\RestApiClient\Exception\ValidationException;
 use PhpList\RestApiClient\Request\Campaign\CreateCampaignRequest;
 use PhpList\RestApiClient\Request\Campaign\UpdateCampaignRequest;
+use PhpList\RestApiClient\Request\Campaign\UpdateMessageDataRequest;
 use PhpList\RestApiClient\Response\Campaign\CampaignCollection;
 use PhpList\RestApiClient\Response\Campaign\StuckCampaignCollection;
 
@@ -205,5 +207,21 @@ class CampaignClient
     {
         $response = $this->client->get('campaigns/stuck');
         return new StuckCampaignCollection($response);
+    }
+
+    /**
+     * Set campaign settings that are not part of the campaign itself. Only the fields that are set are changed.
+     *
+     * @param int $id The campaign ID
+     * @param UpdateMessageDataRequest $request The settings to change
+     * @return MessageData All the settings of the campaign
+     * @throws NotFoundException If the campaign is not found
+     * @throws ValidationException If the request is invalid
+     * @throws ApiException If an API error occurs
+     */
+    public function updateMessageData(int $id, UpdateMessageDataRequest $request): MessageData
+    {
+        $response = $this->client->patch('campaigns/' . $id . '/message-data', $request->toArray());
+        return new MessageData($response);
     }
 }
