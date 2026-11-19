@@ -242,4 +242,39 @@ class ClientTest extends TestCase
         $this->assertEquals($expectedData, $result);
         $this->assertEquals($sessionId, $this->client->getSessionId());
     }
+
+    public function testSetLocaleSendsAcceptLanguageHeader(): void
+    {
+        $response = new Response(200, [], json_encode(['key' => 'value']));
+
+        $this->guzzleClientMock->expects($this->once())
+            ->method('request')
+            ->with(
+                'GET',
+                '/api/v2/test-endpoint',
+                $this->callback(fn ($options) => ($options['headers']['Accept-Language'] ?? null) === 'es-ES')
+            )
+            ->willReturn($response);
+
+        $this->client->setLocale('es_ES');
+        $this->client->get('test-endpoint');
+
+        $this->assertSame('es-ES', $this->client->getLocale());
+    }
+
+    public function testNoAcceptLanguageHeaderByDefault(): void
+    {
+        $response = new Response(200, [], json_encode([]));
+
+        $this->guzzleClientMock->expects($this->once())
+            ->method('request')
+            ->with(
+                'GET',
+                '/api/v2/test-endpoint',
+                $this->callback(fn ($options) => !isset($options['headers']['Accept-Language']))
+            )
+            ->willReturn($response);
+
+        $this->client->get('test-endpoint');
+    }
 }

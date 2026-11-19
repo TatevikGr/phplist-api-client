@@ -33,6 +33,11 @@ class Client
     private ?int $id = null;
 
     /**
+     * @var string|null Locale sent as the Accept-Language header so the API returns translated messages
+     */
+    private ?string $locale = null;
+
+    /**
      * @var LoggerInterface The logger instance
      */
     private LoggerInterface $logger;
@@ -79,12 +84,16 @@ class Client
         $this->logger->info('Authenticating with the API', ['username' => $username]);
 
         try {
-            $response = $this->httpClient->post('api/v2/sessions', [
+            $options = [
                 'json' => [
                     'login_name' => $username,
                     'password' => $password,
                 ],
-            ]);
+            ];
+            if ($this->locale !== null) {
+                $options['headers'] = ['Accept-Language' => $this->locale];
+            }
+            $response = $this->httpClient->post('api/v2/sessions', $options);
 
             $data = $this->handleResponse($response);
 
@@ -113,6 +122,21 @@ class Client
     {
         $this->sessionId = $sessionId;
         return $this;
+    }
+
+    /**
+     * Set the locale (e.g. "es" or "es_ES") sent as Accept-Language header with every request.
+     * Pass null to stop sending the header and use the API's default language.
+     */
+    public function setLocale(?string $locale): self
+    {
+        $this->locale = $locale !== null ? str_replace('_', '-', $locale) : null;
+        return $this;
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
     }
 
     /**
@@ -236,6 +260,9 @@ class Client
         if ($this->sessionId) {
             $options['headers']['php-auth-pw'] = $this->sessionId;
         }
+        if ($this->locale !== null) {
+            $options['headers']['Accept-Language'] = $this->locale;
+        }
 
         $this->logger->info('Making API raw request', [
             'method' => $method,
@@ -267,6 +294,10 @@ class Client
         if ($this->sessionId) {
             $options['headers'] = $options['headers'] ?? [];
             $options['headers']['php-auth-pw'] = $this->sessionId;
+        }
+        if ($this->locale !== null) {
+            $options['headers'] = $options['headers'] ?? [];
+            $options['headers']['Accept-Language'] = $this->locale;
         }
 
         $this->logger->info('Making API request', [
@@ -315,6 +346,9 @@ class Client
 
         if ($this->sessionId) {
             $options['headers']['php-auth-pw'] = $this->sessionId;
+        }
+        if ($this->locale !== null) {
+            $options['headers']['Accept-Language'] = $this->locale;
         }
 
         $this->logger->info('Making API raw request', [
