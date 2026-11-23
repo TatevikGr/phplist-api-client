@@ -1,0 +1,3 @@
+vendor/bin/phpcs --standard=phpCodeSnifferRules.xml src/ tests/ || exit 1
+vendor/bin/phpmd src/ text phpMdRules.xml || exit 1
+vendor/bin/phpstan analyse -l 5 src/ tests/ || exit 1
