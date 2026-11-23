@@ -25,21 +25,37 @@ class MessageData extends AbstractResponse
 
     public function __construct(array $data)
     {
-        $this->googleTrack = isset($data['google_track']) && (bool)$data['google_track'];
-        $this->utmSource = self::nullableString($data['utm_source'] ?? null);
-        $this->utmMedium = self::nullableString($data['utm_medium'] ?? null);
-        $this->utmCampaign = self::nullableString($data['utm_campaign'] ?? null);
-        $this->pkSource = self::nullableString($data['pk_source'] ?? null);
-        $this->pkMedium = self::nullableString($data['pk_medium'] ?? null);
-        $this->pkCampaign = self::nullableString($data['pk_campaign'] ?? null);
-        $this->notifyStart = self::nullableString($data['notify_start'] ?? null);
-        $this->notifyEnd = self::nullableString($data['notify_end'] ?? null);
-        $excluded = $data['exclude_lists'] ?? [];
-        $this->excludeLists = is_array($excluded) ? array_map('intval', $excluded) : [];
+        $this->googleTrack = self::toBool($data, 'google_track');
+        $this->utmSource = self::nullableString($data, 'utm_source');
+        $this->utmMedium = self::nullableString($data, 'utm_medium');
+        $this->utmCampaign = self::nullableString($data, 'utm_campaign');
+        $this->pkSource = self::nullableString($data, 'pk_source');
+        $this->pkMedium = self::nullableString($data, 'pk_medium');
+        $this->pkCampaign = self::nullableString($data, 'pk_campaign');
+        $this->notifyStart = self::nullableString($data, 'notify_start');
+        $this->notifyEnd = self::nullableString($data, 'notify_end');
+        $this->excludeLists = self::intList($data, 'exclude_lists');
     }
 
-    private static function nullableString(mixed $value): ?string
+    private static function toBool(array $data, string $key): bool
     {
+        return isset($data[$key]) && (bool)$data[$key];
+    }
+
+    private static function nullableString(array $data, string $key): ?string
+    {
+        $value = $data[$key] ?? null;
+
         return $value === null ? null : (string)$value;
+    }
+
+    /**
+     * @return int[]
+     */
+    private static function intList(array $data, string $key): array
+    {
+        $value = $data[$key] ?? [];
+
+        return is_array($value) ? array_map('intval', $value) : [];
     }
 }

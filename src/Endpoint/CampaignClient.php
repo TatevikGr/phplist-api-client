@@ -18,6 +18,7 @@ use PhpList\RestApiClient\Response\Campaign\StuckCampaignCollection;
 
 /**
  * Client for campaign-related API endpoints.
+ * @SuppressWarnings("TooManyPublicMethods")
  */
 class CampaignClient
 {
